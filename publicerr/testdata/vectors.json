@@ -1,0 +1,393 @@
+{
+ "home": "/Users/neo",
+ "root": "/Users/neo/NeoAgent",
+ "technical": [
+  {
+   "text": "",
+   "technical": false
+  },
+  {
+   "text": "Something simple",
+   "technical": false
+  },
+  {
+   "text": "Invalid credentials",
+   "technical": false
+  },
+  {
+   "text": "Error: boom",
+   "technical": true
+  },
+  {
+   "text": "TypeError: x is not a function",
+   "technical": true
+  },
+  {
+   "text": "connect ECONNREFUSED 127.0.0.1:5432",
+   "technical": true
+  },
+  {
+   "text": "at Object.<anonymous> (/Users/a/b.js:1:1)",
+   "technical": true
+  },
+  {
+   "text": "SQLITE_CONSTRAINT: UNIQUE constraint failed: users.username",
+   "technical": true
+  },
+  {
+   "text": "Cannot read properties of undefined (reading 'x')",
+   "technical": true
+  },
+  {
+   "text": "HTTP 500 from upstream",
+   "technical": true
+  },
+  {
+   "text": "status code: 502",
+   "technical": true
+  },
+  {
+   "text": "404 not found",
+   "technical": true
+  },
+  {
+   "text": "{\"a\":1}",
+   "technical": true
+  },
+  {
+   "text": "[ \"x\" ]",
+   "technical": true
+  },
+  {
+   "text": "path /var/log/app.log missing",
+   "technical": true
+  },
+  {
+   "text": "~/secrets/file",
+   "technical": true
+  },
+  {
+   "text": "C:\\Users\\bob\\x.txt",
+   "technical": true
+  },
+  {
+   "text": "node_modules/foo/index.js",
+   "technical": true
+  },
+  {
+   "text": "a_error occurred",
+   "technical": true
+  },
+  {
+   "text": "upload_failed",
+   "technical": true
+  },
+  {
+   "text": "Username is already taken",
+   "technical": false
+  },
+  {
+   "text": "Too many attempts, try again later",
+   "technical": false
+  },
+  {
+   "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "technical": true
+  },
+  {
+   "text": "line1\nline2",
+   "technical": true
+  },
+  {
+   "text": "fetch failed",
+   "technical": true
+  },
+  {
+   "text": "getaddrinfo ENOTFOUND api.example.com",
+   "technical": true
+  },
+  {
+   "text": "not valid JSON",
+   "technical": true
+  },
+  {
+   "text": "sql statement",
+   "technical": true
+  },
+  {
+   "text": "The email address looks wrong.",
+   "technical": false
+  },
+  {
+   "text": "You can register at most 20 security keys.",
+   "technical": false
+  },
+  {
+   "text": "Password min 8 chars",
+   "technical": false
+  },
+  {
+   "text": "Session error",
+   "technical": false
+  }
+ ],
+ "redact": [
+  {
+   "body": {
+    "error": "Invalid credentials"
+   },
+   "status": 401,
+   "result": {
+    "error": "Invalid credentials"
+   }
+  },
+  {
+   "body": {
+    "error": "TypeError: x is not a function"
+   },
+   "status": 400,
+   "result": {
+    "error": "Something went wrong. Please try again."
+   }
+  },
+  {
+   "body": {
+    "error": "boom",
+    "message": "detail",
+    "stack": "s",
+    "code": "X"
+   },
+   "status": 500,
+   "result": {
+    "error": "Something went wrong. Please try again.",
+    "code": "X"
+   }
+  },
+  {
+   "body": {
+    "error": "Something",
+    "details": {
+     "a": 1
+    }
+   },
+   "status": 503,
+   "result": {
+    "error": "Something went wrong. Please try again."
+   }
+  },
+  {
+   "body": {
+    "ok": true,
+    "items": [
+     {
+      "lastError": "ECONNRESET happened"
+     },
+     {
+      "last_error": "fine text"
+     }
+    ]
+   },
+   "status": 200,
+   "result": {
+    "ok": true,
+    "items": [
+     {
+      "lastError": "Something went wrong. Please try again."
+     },
+     {
+      "last_error": "fine text"
+     }
+    ]
+   }
+  },
+  {
+   "body": [
+    {
+     "error": "at x (/a/b.js:1:1)"
+    }
+   ],
+   "status": 200,
+   "result": [
+    {
+     "error": "Something went wrong. Please try again."
+    }
+   ]
+  },
+  {
+   "body": {
+    "nested": {
+     "deep": {
+      "errorMessage": "SQLITE_BUSY: db"
+     }
+    }
+   },
+   "status": 200,
+   "result": {
+    "nested": {
+     "deep": {
+      "errorMessage": "Something went wrong. Please try again."
+     }
+    }
+   }
+  },
+  {
+   "body": {
+    "error": "ok",
+    "code": "LOGIN_LOCKED",
+    "retryAfter": 5
+   },
+   "status": 429,
+   "result": {
+    "error": "ok",
+    "code": "LOGIN_LOCKED",
+    "retryAfter": 5
+   }
+  },
+  {
+   "body": {
+    "error": 42
+   },
+   "status": 500,
+   "result": {
+    "error": 42
+   }
+  },
+  {
+   "body": {
+    "error": "Origin not allowed"
+   },
+   "status": 403,
+   "result": {
+    "error": "Origin not allowed"
+   }
+  },
+  {
+   "body": "plain string",
+   "status": 200,
+   "result": "plain string"
+  },
+  {
+   "body": null,
+   "status": 200,
+   "result": null
+  }
+ ],
+ "sanitize": [
+  {
+   "in": "",
+   "out": "An unexpected error occurred"
+  },
+  {
+   "in": "Failed at /Users/neo/NeoAgent/server/x.js:1",
+   "out": "Failed at ~/NeoAgent/server/x.js:1"
+  },
+  {
+   "in": "open /home/other/a/b/c.txt failed",
+   "out": "open [path] failed"
+  },
+  {
+   "in": "Cannot find module '/Users/neo/NeoAgent/node_modules/foo/index.js'",
+   "out": "Cannot find module [module]"
+  },
+  {
+   "in": "see C:\\Users\\bob\\proj\\file.txt now",
+   "out": "see [path] now"
+  },
+  {
+   "in": "//server/share/folder/file",
+   "out": "[path]"
+  },
+  {
+   "in": "  spaced  ",
+   "out": "spaced"
+  },
+  {
+   "in": "[object Object]",
+   "out": "An unexpected error occurred"
+  },
+  {
+   "in": "plain",
+   "out": "plain"
+  }
+ ],
+ "codes": [
+  {
+   "err": {
+    "status": 400,
+    "message": "Bad thing"
+   },
+   "public": null,
+   "nonAdmin": "Bad thing"
+  },
+  {
+   "err": {
+    "statusCode": 404,
+    "message": "Not here"
+   },
+   "public": null,
+   "nonAdmin": "Not here"
+  },
+  {
+   "err": {
+    "code": "INVITE_EXPIRED",
+    "message": "This invite expired"
+   },
+   "public": "INVITE_EXPIRED",
+   "nonAdmin": "This invite expired"
+  },
+  {
+   "err": {
+    "code": "ENOENT",
+    "message": "ENOENT: no such file"
+   },
+   "public": null,
+   "nonAdmin": "Something went wrong. Please try again."
+  },
+  {
+   "err": {
+    "message": "TypeError: boom"
+   },
+   "public": null,
+   "nonAdmin": "Something went wrong. Please try again."
+  },
+  {
+   "err": {
+    "status": 422,
+    "message": "/Users/neo/x/y/z broke"
+   },
+   "public": null,
+   "nonAdmin": "Something went wrong. Please try again."
+  },
+  {
+   "err": {
+    "status": 500,
+    "message": "Database down"
+   },
+   "public": null,
+   "nonAdmin": "Something went wrong. Please try again."
+  },
+  {
+   "err": "a plain string error",
+   "public": null,
+   "nonAdmin": "a plain string error"
+  },
+  {
+   "err": {
+    "code": "SQLITE_BUSY",
+    "status": 400,
+    "message": "busy"
+   },
+   "public": null,
+   "nonAdmin": "busy"
+  },
+  {
+   "err": {
+    "code": "lowercase",
+    "message": "m"
+   },
+   "public": null,
+   "nonAdmin": "Something went wrong. Please try again."
+  }
+ ],
+ "generic": "Something went wrong. Please try again."
+}

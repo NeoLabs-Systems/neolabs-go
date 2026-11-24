@@ -4,12 +4,14 @@
 package httpx
 
 import (
+	"bytes"
 	"encoding/json"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"regexp"
 	"runtime/debug"
+	"strconv"
 	"strings"
 )
 
@@ -26,9 +28,21 @@ func Chain(h http.Handler, mws ...Middleware) http.Handler {
 
 // WriteJSON writes v as JSON with the given status.
 func WriteJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	// Express writes JSON without HTML escaping and without a trailing newline;
+	// stay identical so message text and byte counts match the Node servers.
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(v); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	body := bytes.TrimRight(buf.Bytes(), "\n")
+	h := w.Header()
+	h.Set("Content-Type", "application/json; charset=utf-8")
+	h.Set("Content-Length", strconv.Itoa(len(body)))
 	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(v)
+	_, _ = w.Write(body)
 }
 
 // Error writes the `{"error": message}` envelope the Flutter clients parse.

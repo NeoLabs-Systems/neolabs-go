@@ -1,0 +1,1604 @@
+{
+ "cases": [
+  {
+   "password": "",
+   "context": {},
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 0,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "a",
+   "context": {},
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 1,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "short",
+   "context": {},
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 5,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "longenoughbutlower",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "LongEnough1",
+   "context": {},
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "Tr0ub4dor&3",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "correct horse battery staple",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 28,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Passw0rd!Passw0rd!",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "neoagent-rocks-12345",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 20,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "qwertyuiop12",
+   "context": {},
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcd1234ZZ!!",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "aaaa1111BBBB",
+   "context": {},
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Ünïcödé-Pässwörd-99",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 19,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "P@ssw0rd-xyz-ZZZ",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "alice-smith-2024!",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "NEO-agent-secret",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "x9#Lm2$Qp7!zR4",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "1234567890abcdef",
+   "context": {},
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "zyxw-9876-Ab!",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 13,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Abc123!@#def",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "mmmm-ZZZZ-1111",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "日本語のパスワード12345",
+   "context": {},
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcdEFGH12!?",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "            ",
+   "context": {},
+   "result": {
+    "score": 1,
+    "label": "weak",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Tr0ub4dor&3xYz",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Gr33n!Tr33s",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "letmein-please-NOW-77",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 21,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Welcome-2025-Home",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "admin-Panel-99-X",
+   "context": {},
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "a1!A1!a1!A1!a1!A1!",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "kK9$kK9$kK9$kK9$",
+   "context": {},
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 0,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "a",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 1,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "short",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 5,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "longenoughbutlower",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "LongEnough1",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "Tr0ub4dor&3",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "correct horse battery staple",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 28,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Passw0rd!Passw0rd!",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "neoagent-rocks-12345",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 20,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid using your username or email in the password.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid using your username or email in the password."
+  },
+  {
+   "password": "qwertyuiop12",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcd1234ZZ!!",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "aaaa1111BBBB",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Ünïcödé-Pässwörd-99",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 19,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "P@ssw0rd-xyz-ZZZ",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "alice-smith-2024!",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "NEO-agent-secret",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid using your username or email in the password."
+    ]
+   },
+   "error": "Password is too weak. Avoid using your username or email in the password."
+  },
+  {
+   "password": "x9#Lm2$Qp7!zR4",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "1234567890abcdef",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "zyxw-9876-Ab!",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 13,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Abc123!@#def",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "mmmm-ZZZZ-1111",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "日本語のパスワード12345",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcdEFGH12!?",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "            ",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 1,
+    "label": "weak",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Tr0ub4dor&3xYz",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Gr33n!Tr33s",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "letmein-please-NOW-77",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 21,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Welcome-2025-Home",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "admin-Panel-99-X",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "a1!A1!a1!A1!a1!A1!",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "kK9$kK9$kK9$kK9$",
+   "context": {
+    "username": "neo",
+    "email": "neo@example.com"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 0,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "a",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 1,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "short",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 0,
+    "label": "very weak",
+    "length": 5,
+    "hasMinimumLength": false,
+    "isAcceptable": false,
+    "feedback": [
+     "Use at least 8 characters.",
+     "Mix uppercase, lowercase, numbers, or symbols."
+    ]
+   },
+   "error": "Password is too weak. Use at least 8 characters."
+  },
+  {
+   "password": "longenoughbutlower",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "LongEnough1",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "Tr0ub4dor&3",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "correct horse battery staple",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 28,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Passw0rd!Passw0rd!",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "neoagent-rocks-12345",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 20,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "qwertyuiop12",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcd1234ZZ!!",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "aaaa1111BBBB",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Ünïcödé-Pässwörd-99",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 19,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "P@ssw0rd-xyz-ZZZ",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "alice-smith-2024!",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "NEO-agent-secret",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "x9#Lm2$Qp7!zR4",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "1234567890abcdef",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "zyxw-9876-Ab!",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 13,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Abc123!@#def",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "mmmm-ZZZZ-1111",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "日本語のパスワード12345",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 2,
+    "label": "fair",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "abcdEFGH12!?",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "            ",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 1,
+    "label": "weak",
+    "length": 12,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Mix uppercase, lowercase, numbers, or symbols.",
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Tr0ub4dor&3xYz",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 14,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "Gr33n!Tr33s",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 11,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "A longer password is harder to guess."
+    ]
+   },
+   "error": "Password is too weak. A longer password is harder to guess."
+  },
+  {
+   "password": "letmein-please-NOW-77",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 21,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "Welcome-2025-Home",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 17,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "admin-Panel-99-X",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 3,
+    "label": "good",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": false,
+    "feedback": [
+     "Avoid common words, repeated characters, or obvious sequences."
+    ]
+   },
+   "error": "Password is too weak. Avoid common words, repeated characters, or obvious sequences."
+  },
+  {
+   "password": "a1!A1!a1!A1!a1!A1!",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 18,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  },
+  {
+   "password": "kK9$kK9$kK9$kK9$",
+   "context": {
+    "username": "Alice_Smith",
+    "email": "alice.smith@corp.io"
+   },
+   "result": {
+    "score": 4,
+    "label": "strong",
+    "length": 16,
+    "hasMinimumLength": true,
+    "isAcceptable": true,
+    "feedback": [
+     "Password looks strong."
+    ]
+   },
+   "error": "Password is too weak. Password looks strong."
+  }
+ ]
+}
