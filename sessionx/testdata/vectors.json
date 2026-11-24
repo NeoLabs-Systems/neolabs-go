@@ -1,0 +1,25 @@
+{
+ "secret": "session-secret-vector-é",
+ "cases": [
+  {
+   "sid": "abc123",
+   "signed": "s:abc123.d2NoqX9begy3IepEh9IfrBaT86zcg2/sA+1xMWuKcp0",
+   "header": "neoagent.sid=s%3Aabc123.d2NoqX9begy3IepEh9IfrBaT86zcg2%2FsA%2B1xMWuKcp0; Path=/; HttpOnly; SameSite=Lax"
+  },
+  {
+   "sid": "Zm9vYmFy-_AAAA",
+   "signed": "s:Zm9vYmFy-_AAAA.CxB5FT9QYUTxFSQR3DQe+vyE5X01Wj+DEXCzExcgpXw",
+   "header": "neoagent.sid=s%3AZm9vYmFy-_AAAA.CxB5FT9QYUTxFSQR3DQe%2BvyE5X01Wj%2BDEXCzExcgpXw; Path=/; HttpOnly; SameSite=Lax"
+  },
+  {
+   "sid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "signed": "s:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.PXHE4tym9bSYpQndTMtEN9hWzQPIfhTM9xZv0tpyKIQ",
+   "header": "neoagent.sid=s%3Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.PXHE4tym9bSYpQndTMtEN9hWzQPIfhTM9xZv0tpyKIQ; Path=/; HttpOnly; SameSite=Lax"
+  },
+  {
+   "sid": "w0S-p8Q1kK3mNn9Oq7Rr5Tt2Uu4Vv6Xy",
+   "signed": "s:w0S-p8Q1kK3mNn9Oq7Rr5Tt2Uu4Vv6Xy.VKDNV9wJdLWZwvuwnZfHkdpMwtfXLSNnzLhfAWnx+6w",
+   "header": "neoagent.sid=s%3Aw0S-p8Q1kK3mNn9Oq7Rr5Tt2Uu4Vv6Xy.VKDNV9wJdLWZwvuwnZfHkdpMwtfXLSNnzLhfAWnx%2B6w; Path=/; HttpOnly; SameSite=Lax"
+  }
+ ]
+}

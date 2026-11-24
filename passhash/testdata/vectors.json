@@ -1,0 +1,16 @@
+{
+ "cases": [
+  {
+   "plain": "correct horse",
+   "hash": "$2b$04$NMSfg5ydd3oeQAsrdYsS7Oe6ixo7buaDyU0yZ03HGVamF7dGt/.4e"
+  },
+  {
+   "plain": "pässwörd ✓",
+   "hash": "$2b$04$C0VKURx/i7s/.TOWfTwxueXoK9xDAAJIv9d9vPHzha2IbkBJSnw9a"
+  },
+  {
+   "plain": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "hash": "$2b$04$cs2eDe/NrKqX2dD0Lbuiu.d7rm4OXfaa.lFb3THKmkWW7zP0UxUUq"
+  }
+ ]
+}
