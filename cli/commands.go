@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"slices"
 	"strings"
-	"time"
 )
 
 // Command is one subcommand of an app CLI.
@@ -80,33 +79,4 @@ func Positionals(args []string, valued ...string) []string {
 		out = append(out, a)
 	}
 	return out
-}
-
-// Step runs one named step and prints how it went.
-func (u *UI) Step(doing, done string, fn func() error) error {
-	started := time.Now()
-	if u.Interactive() {
-		fmt.Fprintf(u.Out, "  %s %s…\r", u.paint("36", "•"), doing)
-	}
-	if err := fn(); err != nil {
-		if u.Interactive() {
-			fmt.Fprintf(u.Out, "\x1b[2K")
-		}
-		u.Item("error", doing, "")
-		return err
-	}
-	if u.Interactive() {
-		fmt.Fprintf(u.Out, "\x1b[2K")
-	}
-	u.Item("ok", done, FormatDuration(time.Since(started)))
-	return nil
-}
-
-// FormatDuration renders a short human duration such as "4s" or "1m 5s".
-func FormatDuration(d time.Duration) string {
-	s := int(d.Round(time.Second) / time.Second)
-	if s < 60 {
-		return fmt.Sprintf("%ds", s)
-	}
-	return fmt.Sprintf("%dm %ds", s/60, s%60)
 }
