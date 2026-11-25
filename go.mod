@@ -3,18 +3,22 @@ module github.com/NeoLabs-Systems/neolabs-go
 go 1.27
 
 require (
+	github.com/chromedp/cdproto v0.160.1
+	github.com/chromedp/chromedp v0.24.0
 	github.com/coder/websocket v1.8.15
+	github.com/creack/pty v1.1.24
 	github.com/fxamacker/cbor/v2 v2.9.4
 	github.com/go-webauthn/webauthn v0.18.2
 	github.com/modelcontextprotocol/go-sdk v1.8.0
+	github.com/wneessen/go-mail v0.8.2
 	golang.org/x/crypto v0.59.0
+	golang.org/x/net v0.62.0
+	golang.org/x/sys v0.50.0
+	golang.org/x/term v0.48.0
 	modernc.org/sqlite v1.63.0
 )
 
 require (
-	github.com/chromedp/cdproto v0.160.1 // indirect
-	github.com/chromedp/chromedp v0.24.0 // indirect
-	github.com/creack/pty v1.1.24 // indirect
 	github.com/dustin/go-humanize v1.1.0 // indirect
 	github.com/go-json-experiment/json v0.0.0-20260213210345-44df1a37e875 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
@@ -30,14 +34,10 @@ require (
 	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/segmentio/encoding v0.5.4 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect
-	github.com/wneessen/go-mail v0.8.2 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
-	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/oauth2 v0.35.0 // indirect
 	golang.org/x/sync v0.25.0 // indirect
-	golang.org/x/sys v0.50.0 // indirect
-	golang.org/x/term v0.48.0
 	golang.org/x/text v0.44.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	modernc.org/libc v1.80.1 // indirect
