@@ -216,3 +216,25 @@ func TestResolveAndDownloadVerified(t *testing.T) {
 		t.Fatalf("http accepted: %v", err)
 	}
 }
+
+func TestResolveReleaseFindsTagMissingFromStaleReleaseList(t *testing.T) {
+	var srv *httptest.Server
+	srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/repos/o/r/releases":
+			fmt.Fprintf(w, `[{"tag_name":"v2.0.0-beta.1","prerelease":true,"assets":[{"name":"rt-manifest-1.json","browser_download_url":"%s/old"},{"name":"rt-manifest-1.json.sig","browser_download_url":"%s/sig"}]}]`, srv.URL, srv.URL)
+		case "/repos/o/r/tags":
+			fmt.Fprint(w, `[{"name":"v2.0.0-beta.2"},{"name":"v2.0.0-beta.1"}]`)
+		case "/repos/o/r/releases/tags/v2.0.0-beta.2":
+			fmt.Fprintf(w, `{"tag_name":"v2.0.0-beta.2","prerelease":true,"assets":[{"name":"rt-manifest-2.json","browser_download_url":"%s/new"},{"name":"rt-manifest-2.json.sig","browser_download_url":"%s/sig"}]}`, srv.URL, srv.URL)
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer srv.Close()
+	c := &Client{APIBase: srv.URL, AllowHTTP: true, UserAgent: "test"}
+	release, err := c.ResolveRelease(context.Background(), "o/r", Beta, "rt-manifest-")
+	if err != nil || release.Tag != "v2.0.0-beta.2" || release.ManifestName != "rt-manifest-2.json" {
+		t.Fatalf("release=%+v err=%v", release, err)
+	}
+}

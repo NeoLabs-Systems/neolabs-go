@@ -129,6 +129,33 @@ type Release struct {
 	ManifestName string
 }
 
+type githubRelease struct {
+	TagName    string `json:"tag_name"`
+	Draft      bool   `json:"draft"`
+	Prerelease bool   `json:"prerelease"`
+	Assets     []struct {
+		Name string `json:"name"`
+		URL  string `json:"browser_download_url"`
+	} `json:"assets"`
+}
+
+func releaseWithManifest(r githubRelease, channel, manifestPrefix string) (Release, bool) {
+	if r.Draft || (NormalizeChannel(channel) != Beta && r.Prerelease) {
+		return Release{}, false
+	}
+	rel := Release{Tag: r.TagName, Prerelease: r.Prerelease, Assets: map[string]string{}}
+	for _, asset := range r.Assets {
+		rel.Assets[asset.Name] = asset.URL
+	}
+	for _, asset := range r.Assets {
+		if strings.HasPrefix(asset.Name, manifestPrefix) && strings.HasSuffix(asset.Name, ".json") && rel.Assets[asset.Name+".sig"] != "" {
+			rel.ManifestName = asset.Name
+			return rel, true
+		}
+	}
+	return Release{}, false
+}
+
 // ResolveRelease returns the newest release on the channel (stable skips
 // prereleases) that carries a `<prefix>*.json` manifest and its `.sig`.
 func (c *Client) ResolveRelease(ctx context.Context, repository, channel, manifestPrefix string) (Release, error) {
@@ -140,31 +167,45 @@ func (c *Client) ResolveRelease(ctx context.Context, repository, channel, manife
 	if err != nil {
 		return Release{}, err
 	}
-	var releases []struct {
-		TagName    string `json:"tag_name"`
-		Draft      bool   `json:"draft"`
-		Prerelease bool   `json:"prerelease"`
-		Assets     []struct {
-			Name string `json:"name"`
-			URL  string `json:"browser_download_url"`
-		} `json:"assets"`
-	}
+	var releases []githubRelease
 	if err := json.Unmarshal(data, &releases); err != nil {
 		return Release{}, cli.Errorf("SETUP_MANIFEST_INVALID", "The release list could not be read.")
 	}
-	for _, r := range releases {
-		if r.Draft || (NormalizeChannel(channel) != Beta && r.Prerelease) {
-			continue
+	// GitHub's releases collection can briefly lag a newly published beta.
+	// Tags are indexed independently, so resolve the newest version tag
+	// directly before falling back to the collection response.
+	tagData, tagErr := c.Fetch(ctx, fmt.Sprintf("%s/repos/%s/tags?per_page=100", base, repository), 2<<20)
+	if tagErr == nil {
+		var tags []struct {
+			Name string `json:"name"`
 		}
-		rel := Release{Tag: r.TagName, Prerelease: r.Prerelease, Assets: map[string]string{}}
-		for _, a := range r.Assets {
-			rel.Assets[a.Name] = a.URL
-		}
-		for _, a := range r.Assets {
-			if strings.HasPrefix(a.Name, manifestPrefix) && strings.HasSuffix(a.Name, ".json") && rel.Assets[a.Name+".sig"] != "" {
-				rel.ManifestName = a.Name
-				return rel, nil
+		if json.Unmarshal(tagData, &tags) == nil {
+			byTag := make(map[string]githubRelease, len(releases))
+			for _, r := range releases {
+				byTag[r.TagName] = r
 			}
+			for _, tag := range tags {
+				version, err := NormalizeVersion(tag.Name)
+				if err != nil || (NormalizeChannel(channel) != Beta && strings.Contains(version, "-")) {
+					continue
+				}
+				r, ok := byTag[tag.Name]
+				if !ok {
+					tagURL := fmt.Sprintf("%s/repos/%s/releases/tags/%s", base, repository, url.PathEscape(tag.Name))
+					body, err := c.Fetch(ctx, tagURL, 4<<20)
+					if err != nil || json.Unmarshal(body, &r) != nil {
+						continue
+					}
+				}
+				if rel, ok := releaseWithManifest(r, channel, manifestPrefix); ok {
+					return rel, nil
+				}
+			}
+		}
+	}
+	for _, r := range releases {
+		if rel, ok := releaseWithManifest(r, channel, manifestPrefix); ok {
+			return rel, nil
 		}
 	}
 	return Release{}, cli.Errorf("SETUP_RUNTIME_NOT_PUBLISHED", "No verified %s runtime is published yet.", NormalizeChannel(channel))
