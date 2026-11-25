@@ -18,12 +18,18 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 | `cli` | app CLI building blocks: `--json` setup event stream, terminal output and prompts, port probes, command list |
 | `cli/envfile` | `.env` read/edit with atomic private (0600) writes |
 | `cli/service` | per-user service: launchd agent, systemd user unit, Windows logon task, detached fallback |
-| `cli/release` | release channels, version order, Ed25519-signed manifests, verified HTTPS downloads, safe zip extraction |
+| `cli/release` | release channels, version order, Ed25519-signed manifests, verified HTTPS downloads, safe zip extraction, tag-based release lookup, and invocation-aware launcher refresh |
 | `cli/oauthcli` | command-line OAuth sign-in: PKCE browser flow with a loopback redirect, device-code polling |
 | `googleauth` | access tokens from Google Application Default Credentials files (service account JWT or authorized user), no SDK |
 | `llm/openaiimages` | OpenAI-compatible `/images/generations` client (OpenAI, xAI) returning base64 images |
 
 Compatibility with the existing Node servers is tested with vectors generated from the Node implementations (sealed values, cookie signatures, bcrypt hashes, helmet and rate-limit captures).
+
+## Shared installers and GitHub Actions
+
+Apps keep their identity, setup configuration, data migrations and release asset build steps in their own repositories. They use `cli/release` for signed runtime updates and launcher replacement, and `scripts/select-release-asset.sh OWNER/REPO stable|beta ASSET_PREFIX` for bootstrap CLI downloads. The selector checks version tags directly so a stale GitHub release-list response does not pin an installer to an older build.
+
+The reusable Go and Flutter setup actions live in `.github/actions/setup-go` and `.github/actions/setup-flutter`. App workflows should reference these actions by an immutable commit SHA.
 
 ```bash
 go vet ./... && go test -race ./...
