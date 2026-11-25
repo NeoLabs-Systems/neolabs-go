@@ -132,3 +132,20 @@ func TestMaxBody(t *testing.T) {
 		t.Fatalf("%d", rec.Code)
 	}
 }
+
+func TestClientIPTrustsOnlyTheProxyEntry(t *testing.T) {
+	r := httptest.NewRequest("GET", "/", nil)
+	r.RemoteAddr = "10.0.0.5:4000"
+	r.Header.Set("X-Forwarded-For", "1.2.3.4, 198.51.100.7")
+	if got := ClientIP(r, true); got != "198.51.100.7" {
+		t.Fatalf("trusted proxy: forged left entries must be ignored, got %s", got)
+	}
+	if got := ClientIP(r, false); got != "10.0.0.5" {
+		t.Fatalf("untrusted: header must be ignored, got %s", got)
+	}
+	r.RemoteAddr = "[::ffff:192.0.2.9]:1"
+	r.Header.Del("X-Forwarded-For")
+	if got := ClientIP(r, true); got != "192.0.2.9" {
+		t.Fatalf("mapped address: %s", got)
+	}
+}

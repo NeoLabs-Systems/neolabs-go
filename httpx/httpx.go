@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -234,4 +235,23 @@ func OriginGuard(o Origins) Middleware {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+// ClientIP is the address of the client. Behind a trusted proxy it is the last
+// X-Forwarded-For entry, the one the proxy itself appended; earlier entries are
+// supplied by the client and can be forged, so they are never used.
+func ClientIP(r *http.Request, trustProxy bool) string {
+	if trustProxy {
+		if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+			parts := strings.Split(xff, ",")
+			if ip := strings.TrimSpace(parts[len(parts)-1]); ip != "" {
+				return strings.TrimPrefix(ip, "::ffff:")
+			}
+		}
+	}
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		host = r.RemoteAddr
+	}
+	return strings.TrimPrefix(host, "::ffff:")
 }

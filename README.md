@@ -14,6 +14,13 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 | `runtimecfg` | data directories (0700), private files (0600), `.env` loading |
 | `dbx` | SQLite (pure Go, FTS5), writer/reader pools, `user_version` migrations |
 | `testkit` | test helpers that never touch a real data directory |
+| `cli` | app CLI building blocks: `--json` setup event stream, terminal output and prompts, port probes, command list |
+| `cli/envfile` | `.env` read/edit with atomic private (0600) writes |
+| `cli/service` | per-user service: launchd agent, systemd user unit, Windows logon task, detached fallback |
+| `cli/release` | release channels, version order, Ed25519-signed manifests, verified HTTPS downloads, safe zip extraction |
+| `cli/oauthcli` | command-line OAuth sign-in: PKCE browser flow with a loopback redirect, device-code polling |
+| `googleauth` | access tokens from Google Application Default Credentials files (service account JWT or authorized user), no SDK |
+| `llm/openaiimages` | OpenAI-compatible `/images/generations` client (OpenAI, xAI) returning base64 images |
 
 Compatibility with the existing Node servers is tested with vectors generated from the Node implementations (sealed values, cookie signatures, bcrypt hashes, helmet and rate-limit captures).
 

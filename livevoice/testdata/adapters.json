@@ -1,0 +1,1041 @@
+{
+ "taskStarted": "The task is now running in the background. Nothing is done, saved, or sent yet. If you have not acknowledged this request yet, do it now in a few words of your own, in the owner's language, that name the actual thing you are about to do; otherwise say nothing more about it. Its outcome arrives later as a separate message; only then say what happened.",
+ "scenarios": [
+  {
+   "protocol": "gemini",
+   "options": {
+    "inputMode": "ptt",
+    "thinking": true
+   },
+   "connect": {
+    "params": {
+     "instructions": "Be brief.",
+     "history": [
+      {
+       "role": "user",
+       "text": "hi"
+      },
+      {
+       "role": "assistant",
+       "text": "hello, how can I help?"
+      }
+     ]
+    },
+    "onSetup": [
+     {
+      "setupComplete": {}
+     }
+    ]
+   },
+   "steps": [
+    {
+     "audio": "AQIDBA=="
+    },
+    {
+     "call": "startInput"
+    },
+    {
+     "call": "endInput"
+    },
+    {
+     "call": "say",
+     "text": "Call me back at 5."
+    },
+    {
+     "call": "note",
+     "text": "It rained."
+    },
+    {
+     "server": {
+      "sessionResumptionUpdate": {
+       "resumable": false,
+       "newHandle": "ignored"
+      }
+     }
+    },
+    {
+     "server": {
+      "sessionResumptionUpdate": {
+       "resumable": true,
+       "newHandle": "h-1"
+      }
+     }
+    },
+    {
+     "server": {
+      "serverContent": {
+       "inputTranscription": {
+        "text": "hello "
+       }
+      }
+     }
+    },
+    {
+     "server": {
+      "serverContent": {
+       "modelTurn": {
+        "parts": [
+         {
+          "inlineData": {
+           "data": "CQgHBg=="
+          }
+         },
+         {
+          "text": "ignored"
+         }
+        ]
+       },
+       "outputTranscription": {
+        "text": "Hi there"
+       }
+      }
+     }
+    },
+    {
+     "server": {
+      "serverContent": {
+       "interrupted": true
+      }
+     }
+    },
+    {
+     "server": {
+      "serverContent": {
+       "turnComplete": true,
+       "interactionStatus": "IN_PROGRESS"
+      }
+     }
+    },
+    {
+     "server": {
+      "serverContent": {
+       "turnComplete": true
+      }
+     }
+    },
+    {
+     "server": {
+      "toolCall": {
+       "functionCalls": [
+        {
+         "id": "c1",
+         "name": "run_task",
+         "args": {
+          "request": "Check the weather"
+         }
+        },
+        {
+         "id": "c2",
+         "name": "check_tasks"
+        },
+        {
+         "id": "c3",
+         "name": "update_task",
+         "args": {
+          "task_id": "1",
+          "instruction": "make it short"
+         }
+        },
+        {
+         "name": "check_tasks"
+        },
+        {
+         "id": "c4",
+         "name": "end_call"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "server": {
+      "error": {
+       "message": "quota used up"
+      }
+     }
+    },
+    {
+     "server": "not json at all"
+    },
+    {
+     "server": {
+      "goAway": {
+       "timeLeft": "10s"
+      }
+     }
+    }
+   ],
+   "request": {
+    "url": "/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=KEY",
+    "authorization": null
+   },
+   "connectError": null,
+   "frames": [
+    {
+     "setup": {
+      "model": "models/m-1",
+      "generationConfig": {
+       "responseModalities": [
+        "AUDIO"
+       ],
+       "speechConfig": {
+        "voiceConfig": {
+         "prebuiltVoiceConfig": {
+          "voiceName": "Kore"
+         }
+        }
+       },
+       "thinkingConfig": {
+        "thinkingLevel": "low"
+       }
+      },
+      "systemInstruction": {
+       "parts": [
+        {
+         "text": "Be brief.\n\nRecent conversation:\nOwner: hi\nYou: hello, how can I help?"
+        }
+       ]
+      },
+      "tools": [
+       {
+        "functionDeclarations": [
+         {
+          "name": "run_task",
+          "description": "Start new work in the NeoAgent task runtime, which does it with the owner's tools, integrations, memory, and approvals. Returns at once with the task_id while the task runs in the background, so the conversation can go on and more tasks can start. Progress and the outcome, success or failure, arrive later as separate messages.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "request": {
+             "type": "STRING",
+             "description": "The complete, self-contained request in the owner's words, including every detail from the conversation the task needs."
+            }
+           },
+           "required": [
+            "request"
+           ]
+          }
+         },
+         {
+          "name": "check_tasks",
+          "description": "See how the owner's running tasks are going right now: each task_id, request, status, how long it has been running, and its latest steps."
+         },
+         {
+          "name": "update_task",
+          "description": "Pass a change, an addition, or the owner's answer to its question on to a running task; it applies it at its next step.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            },
+            "instruction": {
+             "type": "STRING",
+             "description": "The change in the owner's words, complete enough to apply without the conversation."
+            }
+           },
+           "required": [
+            "instruction"
+           ]
+          }
+         },
+         {
+          "name": "cancel_task",
+          "description": "Stop a running task.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            }
+           }
+          }
+         },
+         {
+          "name": "end_call",
+          "description": "Hang up the call. Use it when the conversation is over or the owner wants to end the call, after you have said goodbye; nothing can be said after it. Tasks already running keep going and report in chat."
+         }
+        ]
+       }
+      ],
+      "inputAudioTranscription": {},
+      "outputAudioTranscription": {},
+      "realtimeInputConfig": {
+       "automaticActivityDetection": {
+        "disabled": true
+       }
+      },
+      "sessionResumption": {},
+      "contextWindowCompression": {
+       "slidingWindow": {}
+      }
+     }
+    },
+    {
+     "realtimeInput": {
+      "audio": {
+       "mimeType": "audio/pcm;rate=16000",
+       "data": "AQIDBA=="
+      }
+     }
+    },
+    {
+     "realtimeInput": {
+      "activityStart": {}
+     }
+    },
+    {
+     "realtimeInput": {
+      "activityEnd": {}
+     }
+    },
+    {
+     "clientContent": {
+      "turns": [
+       {
+        "role": "user",
+        "parts": [
+         {
+          "text": "Tell the owner now, in your own words:\nCall me back at 5."
+         }
+        ]
+       }
+      ],
+      "turnComplete": true
+     }
+    },
+    {
+     "clientContent": {
+      "turns": [
+       {
+        "role": "user",
+        "parts": [
+         {
+          "text": "Context update (do not read aloud unless it becomes relevant):\nIt rained."
+         }
+        ]
+       }
+      ],
+      "turnComplete": false
+     }
+    },
+    {
+     "toolResponse": {
+      "functionResponses": [
+       {
+        "id": "c1",
+        "name": "run_task",
+        "response": {
+         "result": "The task is now running in the background. Nothing is done, saved, or sent yet. If you have not acknowledged this request yet, do it now in a few words of your own, in the owner's language, that name the actual thing you are about to do; otherwise say nothing more about it. Its outcome arrives later as a separate message; only then say what happened.",
+         "task_id": "task-1"
+        }
+       },
+       {
+        "id": "c2",
+        "name": "check_tasks",
+        "response": {
+         "tasks": [],
+         "note": "No task is running."
+        }
+       },
+       {
+        "id": "c3",
+        "name": "update_task",
+        "response": {
+         "tasks": [],
+         "note": "No task is running."
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "events": [
+    [
+     "inputTranscript",
+     "hello "
+    ],
+    [
+     "audio",
+     "CQgHBg=="
+    ],
+    [
+     "outputTranscript",
+     "Hi there"
+    ],
+    [
+     "interrupted"
+    ],
+    [
+     "turnComplete",
+     false
+    ],
+    [
+     "turnComplete",
+     true
+    ],
+    [
+     "delegation",
+     "c1",
+     "Check the weather"
+    ],
+    [
+     "taskTool",
+     "check_tasks",
+     {}
+    ],
+    [
+     "taskTool",
+     "update_task",
+     {
+      "task_id": "1",
+      "instruction": "make it short"
+     }
+    ],
+    [
+     "hangUp"
+    ],
+    [
+     "error",
+     "quota used up"
+    ],
+    [
+     "closed",
+     "go_away",
+     "h-1"
+    ]
+   ],
+   "closeCodes": [
+    1000
+   ]
+  },
+  {
+   "protocol": "gemini",
+   "options": {
+    "inputMode": "hands_free",
+    "thinking": false
+   },
+   "connect": {
+    "params": {
+     "instructions": "No history.",
+     "history": [],
+     "resumeHandle": "resume-9"
+    },
+    "onSetup": [
+     {
+      "setupComplete": {}
+     }
+    ]
+   },
+   "steps": [
+    {
+     "audio": "AQIDBA=="
+    },
+    {
+     "call": "startInput"
+    },
+    {
+     "call": "endInput"
+    },
+    {
+     "call": "say",
+     "text": "Call me back at 5."
+    },
+    {
+     "call": "note",
+     "text": "It rained."
+    }
+   ],
+   "request": {
+    "url": "/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=KEY",
+    "authorization": null
+   },
+   "connectError": null,
+   "frames": [
+    {
+     "setup": {
+      "model": "models/m-1",
+      "generationConfig": {
+       "responseModalities": [
+        "AUDIO"
+       ],
+       "speechConfig": {
+        "voiceConfig": {
+         "prebuiltVoiceConfig": {
+          "voiceName": "Kore"
+         }
+        }
+       }
+      },
+      "systemInstruction": {
+       "parts": [
+        {
+         "text": "No history."
+        }
+       ]
+      },
+      "tools": [
+       {
+        "functionDeclarations": [
+         {
+          "name": "run_task",
+          "description": "Start new work in the NeoAgent task runtime, which does it with the owner's tools, integrations, memory, and approvals. Returns at once with the task_id while the task runs in the background, so the conversation can go on and more tasks can start. Progress and the outcome, success or failure, arrive later as separate messages.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "request": {
+             "type": "STRING",
+             "description": "The complete, self-contained request in the owner's words, including every detail from the conversation the task needs."
+            }
+           },
+           "required": [
+            "request"
+           ]
+          }
+         },
+         {
+          "name": "check_tasks",
+          "description": "See how the owner's running tasks are going right now: each task_id, request, status, how long it has been running, and its latest steps."
+         },
+         {
+          "name": "update_task",
+          "description": "Pass a change, an addition, or the owner's answer to its question on to a running task; it applies it at its next step.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            },
+            "instruction": {
+             "type": "STRING",
+             "description": "The change in the owner's words, complete enough to apply without the conversation."
+            }
+           },
+           "required": [
+            "instruction"
+           ]
+          }
+         },
+         {
+          "name": "cancel_task",
+          "description": "Stop a running task.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            }
+           }
+          }
+         },
+         {
+          "name": "end_call",
+          "description": "Hang up the call. Use it when the conversation is over or the owner wants to end the call, after you have said goodbye; nothing can be said after it. Tasks already running keep going and report in chat."
+         }
+        ]
+       }
+      ],
+      "inputAudioTranscription": {},
+      "outputAudioTranscription": {},
+      "realtimeInputConfig": {
+       "automaticActivityDetection": {
+        "startOfSpeechSensitivity": "START_SENSITIVITY_LOW"
+       }
+      },
+      "sessionResumption": {
+       "handle": "resume-9"
+      },
+      "contextWindowCompression": {
+       "slidingWindow": {}
+      }
+     }
+    },
+    {
+     "realtimeInput": {
+      "audio": {
+       "mimeType": "audio/pcm;rate=16000",
+       "data": "AQIDBA=="
+      }
+     }
+    },
+    {
+     "realtimeInput": {
+      "audioStreamEnd": true
+     }
+    },
+    {
+     "clientContent": {
+      "turns": [
+       {
+        "role": "user",
+        "parts": [
+         {
+          "text": "Tell the owner now, in your own words:\nCall me back at 5."
+         }
+        ]
+       }
+      ],
+      "turnComplete": true
+     }
+    },
+    {
+     "clientContent": {
+      "turns": [
+       {
+        "role": "user",
+        "parts": [
+         {
+          "text": "Context update (do not read aloud unless it becomes relevant):\nIt rained."
+         }
+        ]
+       }
+      ],
+      "turnComplete": false
+     }
+    }
+   ],
+   "events": [],
+   "closeCodes": [
+    1000
+   ]
+  },
+  {
+   "protocol": "gemini",
+   "options": {
+    "inputMode": "hands_free"
+   },
+   "connect": {
+    "params": {
+     "instructions": "Be brief.",
+     "history": [
+      {
+       "role": "user",
+       "text": "hi"
+      },
+      {
+       "role": "assistant",
+       "text": "hello, how can I help?"
+      }
+     ]
+    },
+    "onSetup": [
+     {
+      "error": {
+       "message": "bad model"
+      }
+     }
+    ]
+   },
+   "steps": [],
+   "request": {
+    "url": "/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=KEY",
+    "authorization": null
+   },
+   "connectError": "bad model",
+   "frames": [
+    {
+     "setup": {
+      "model": "models/m-1",
+      "generationConfig": {
+       "responseModalities": [
+        "AUDIO"
+       ],
+       "speechConfig": {
+        "voiceConfig": {
+         "prebuiltVoiceConfig": {
+          "voiceName": "Kore"
+         }
+        }
+       }
+      },
+      "systemInstruction": {
+       "parts": [
+        {
+         "text": "Be brief.\n\nRecent conversation:\nOwner: hi\nYou: hello, how can I help?"
+        }
+       ]
+      },
+      "tools": [
+       {
+        "functionDeclarations": [
+         {
+          "name": "run_task",
+          "description": "Start new work in the NeoAgent task runtime, which does it with the owner's tools, integrations, memory, and approvals. Returns at once with the task_id while the task runs in the background, so the conversation can go on and more tasks can start. Progress and the outcome, success or failure, arrive later as separate messages.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "request": {
+             "type": "STRING",
+             "description": "The complete, self-contained request in the owner's words, including every detail from the conversation the task needs."
+            }
+           },
+           "required": [
+            "request"
+           ]
+          }
+         },
+         {
+          "name": "check_tasks",
+          "description": "See how the owner's running tasks are going right now: each task_id, request, status, how long it has been running, and its latest steps."
+         },
+         {
+          "name": "update_task",
+          "description": "Pass a change, an addition, or the owner's answer to its question on to a running task; it applies it at its next step.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            },
+            "instruction": {
+             "type": "STRING",
+             "description": "The change in the owner's words, complete enough to apply without the conversation."
+            }
+           },
+           "required": [
+            "instruction"
+           ]
+          }
+         },
+         {
+          "name": "cancel_task",
+          "description": "Stop a running task.",
+          "parameters": {
+           "type": "OBJECT",
+           "properties": {
+            "task_id": {
+             "type": "STRING",
+             "description": "The task_id from run_task or check_tasks. May be left out when only one task is running."
+            }
+           }
+          }
+         },
+         {
+          "name": "end_call",
+          "description": "Hang up the call. Use it when the conversation is over or the owner wants to end the call, after you have said goodbye; nothing can be said after it. Tasks already running keep going and report in chat."
+         }
+        ]
+       }
+      ],
+      "inputAudioTranscription": {},
+      "outputAudioTranscription": {},
+      "realtimeInputConfig": {
+       "automaticActivityDetection": {
+        "startOfSpeechSensitivity": "START_SENSITIVITY_LOW"
+       }
+      },
+      "sessionResumption": {},
+      "contextWindowCompression": {
+       "slidingWindow": {}
+      }
+     }
+    }
+   ],
+   "events": [],
+   "closeCodes": [
+    1000
+   ]
+  },
+  {
+   "protocol": "gemini",
+   "options": {
+    "inputMode": "hands_free",
+    "apiKey": ""
+   },
+   "connect": {
+    "params": {
+     "instructions": "Be brief.",
+     "history": [
+      {
+       "role": "user",
+       "text": "hi"
+      },
+      {
+       "role": "assistant",
+       "text": "hello, how can I help?"
+      }
+     ]
+    },
+    "onSetup": [
+     {
+      "setupComplete": {}
+     }
+    ]
+   },
+   "steps": [],
+   "request": null,
+   "connectError": "Gemini Live is selected but no Google AI API key is configured.",
+   "frames": [],
+   "events": [],
+   "closeCodes": []
+  },
+  {
+   "protocol": "gpt",
+   "options": {
+    "model": "gpt-live-1",
+    "voice": "marin"
+   },
+   "connect": {
+    "params": {
+     "instructions": "Be brief.",
+     "history": [
+      {
+       "role": "user",
+       "text": "hi"
+      },
+      {
+       "role": "assistant",
+       "text": "hello, how can I help?"
+      }
+     ]
+    },
+    "onStart": [
+     {
+      "type": "session.started"
+     }
+    ]
+   },
+   "steps": [
+    {
+     "audio": "AQIDBA=="
+    },
+    {
+     "call": "startInput"
+    },
+    {
+     "call": "endInput"
+    },
+    {
+     "server": {
+      "type": "session.output_audio.delta",
+      "delta": "BQY="
+     }
+    },
+    {
+     "server": {
+      "type": "session.input_transcript.delta",
+      "delta": "hello"
+     }
+    },
+    {
+     "server": {
+      "type": "session.output_transcript.delta",
+      "delta": " there"
+     }
+    },
+    {
+     "server": {
+      "type": "session.delegation.created",
+      "delegation": {
+       "id": "d1",
+       "target": "client"
+      }
+     }
+    },
+    {
+     "server": {
+      "type": "session.delegation.created",
+      "delegation": {
+       "id": "d2",
+       "target": "server"
+      }
+     }
+    },
+    {
+     "call": "say",
+     "text": "Done: the file is ready.",
+     "handle": "d1"
+    },
+    {
+     "call": "say",
+     "text": "Unknown handle.",
+     "handle": "zzz"
+    },
+    {
+     "call": "note",
+     "text": "This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. The end.",
+     "handle": "d1"
+    },
+    {
+     "server": {
+      "type": "error",
+      "error": {
+       "message": "rate limited",
+       "code": "rl"
+      }
+     }
+    },
+    {
+     "server": {
+      "type": "session.closed",
+      "reason": "timeout"
+     }
+    }
+   ],
+   "request": {
+    "url": "/live/sessions",
+    "authorization": "Bearer KEY"
+   },
+   "connectError": null,
+   "frames": [
+    {
+     "type": "session.start",
+     "session": {
+      "model": "gpt-live-1",
+      "instructions": "Be brief.",
+      "input": [
+       {
+        "type": "message",
+        "role": "user",
+        "content": [
+         {
+          "type": "input_text",
+          "text": "hi"
+         }
+        ]
+       },
+       {
+        "type": "message",
+        "role": "assistant",
+        "content": [
+         {
+          "type": "output_text",
+          "text": "hello, how can I help?"
+         }
+        ]
+       }
+      ],
+      "audio": {
+       "output": {
+        "voice": "marin"
+       }
+      },
+      "delegation": {
+       "type": "client"
+      }
+     }
+    },
+    {
+     "type": "session.input_audio.append",
+     "audio": "AQIDBA=="
+    },
+    {
+     "type": "session.commentary.append",
+     "delegation_id": "d1",
+     "content": "Done: the file is ready."
+    },
+    {
+     "type": "session.commentary.append",
+     "delegation_id": null,
+     "content": "Unknown handle."
+    },
+    {
+     "type": "session.thinking.append",
+     "delegation_id": "d1",
+     "content": "This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long."
+    },
+    {
+     "type": "session.thinking.append",
+     "delegation_id": "d1",
+     "content": "This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long."
+    },
+    {
+     "type": "session.thinking.append",
+     "delegation_id": "d1",
+     "content": "This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. This sentence is padded to be long. The end."
+    },
+    {
+     "type": "session.close"
+    }
+   ],
+   "events": [
+    [
+     "audio",
+     "BQY="
+    ],
+    [
+     "inputTranscript",
+     "hello"
+    ],
+    [
+     "outputTranscript",
+     " there"
+    ],
+    [
+     "delegation",
+     "d1",
+     ""
+    ],
+    [
+     "error",
+     "rate limited"
+    ],
+    [
+     "closed",
+     "timeout",
+     null
+    ]
+   ],
+   "closeCodes": [
+    1000
+   ]
+  },
+  {
+   "protocol": "gpt",
+   "options": {
+    "model": "gpt-live-1",
+    "voice": "marin"
+   },
+   "connect": {
+    "params": {
+     "instructions": "x",
+     "history": []
+    },
+    "onStart": [
+     {
+      "type": "error",
+      "error": {
+       "message": "no access",
+       "code": "x"
+      }
+     }
+    ]
+   },
+   "steps": [],
+   "request": {
+    "url": "/live/sessions",
+    "authorization": "Bearer KEY"
+   },
+   "connectError": "no access",
+   "frames": [
+    {
+     "type": "session.start",
+     "session": {
+      "model": "gpt-live-1",
+      "instructions": "x",
+      "input": [],
+      "audio": {
+       "output": {
+        "voice": "marin"
+       }
+      },
+      "delegation": {
+       "type": "client"
+      }
+     }
+    },
+    {
+     "type": "session.close"
+    }
+   ],
+   "events": [],
+   "closeCodes": [
+    1000
+   ]
+  }
+ ]
+}

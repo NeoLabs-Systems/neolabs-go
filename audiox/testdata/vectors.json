@@ -1,0 +1,133 @@
+{
+ "wav": [
+  {
+   "pcmHex": "",
+   "format": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "wavHex": "524946462400000057415645666d74201000000001000100803e0000007d0000020010006461746100000000"
+  },
+  {
+   "pcmHex": "0100ff7f0080",
+   "format": {
+    "sampleRate": 24000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "wavHex": "524946462a00000057415645666d74201000000001000100c05d000080bb00000200100064617461060000000100ff7f0080"
+  },
+  {
+   "pcmHex": "0102030405060708",
+   "format": {
+    "sampleRate": 44100,
+    "channels": 2,
+    "bitsPerSample": 16
+   },
+   "wavHex": "524946462c00000057415645666d7420100000000100020044ac000010b102000400100064617461080000000102030405060708"
+  }
+ ],
+ "mime": [
+  {
+   "input": "audio/pcm;rate=16000;channels=1",
+   "parsed": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "extension": "wav"
+  },
+  {
+   "input": "audio/pcm",
+   "parsed": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "extension": "wav"
+  },
+  {
+   "input": "AUDIO/PCM; rate=24000; channels=2",
+   "parsed": {
+    "sampleRate": 24000,
+    "channels": 2,
+    "bitsPerSample": 16
+   },
+   "extension": "wav"
+  },
+  {
+   "input": "audio/pcm;rate=0",
+   "parsed": null,
+   "extension": "wav"
+  },
+  {
+   "input": "audio/pcm;channels=0",
+   "parsed": null,
+   "extension": "wav"
+  },
+  {
+   "input": "audio/pcm;rate=8000",
+   "parsed": {
+    "sampleRate": 8000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "extension": "wav"
+  },
+  {
+   "input": "audio/wav",
+   "parsed": null,
+   "extension": "wav"
+  },
+  {
+   "input": "audio/mpeg",
+   "parsed": null,
+   "extension": "mp3"
+  },
+  {
+   "input": "audio/mp3",
+   "parsed": null,
+   "extension": "mp3"
+  },
+  {
+   "input": "audio/webm;codecs=opus",
+   "parsed": null,
+   "extension": "webm"
+  },
+  {
+   "input": "audio/ogg",
+   "parsed": null,
+   "extension": "ogg"
+  },
+  {
+   "input": "audio/mp4",
+   "parsed": null,
+   "extension": "m4a"
+  },
+  {
+   "input": "audio/x-m4a",
+   "parsed": null,
+   "extension": "m4a"
+  },
+  {
+   "input": "application/octet-stream",
+   "parsed": null,
+   "extension": "wav"
+  },
+  {
+   "input": "",
+   "parsed": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bitsPerSample": 16
+   },
+   "extension": "wav"
+  },
+  {
+   "input": "  Audio/Wav  ",
+   "parsed": null,
+   "extension": "wav"
+  }
+ ]
+}

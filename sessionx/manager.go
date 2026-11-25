@@ -3,9 +3,14 @@ package sessionx
 import (
 	"bufio"
 	"context"
+	"crypto/hmac"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"strings"
@@ -58,7 +63,8 @@ type Session struct {
 	isNew     bool
 	modified  bool
 	destroyed bool
-	oldID     string // set by Regenerate so the old row is removed
+	oldID     string        // set by Regenerate so the old row is removed
+	maxAge    time.Duration // per-session lifetime override, 0 = manager default
 }
 
 type ctxKey struct{}
@@ -88,8 +94,33 @@ func (s *Session) String(key string) string {
 		return t
 	case interface{ String() string }:
 		return t.String()
+	case int, int32, int64, uint, uint32, uint64, float64:
+		return fmt.Sprint(t)
 	}
 	return ""
+}
+
+// ID is the session identifier (the signed cookie carries it).
+func (s *Session) ID() string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.id
+}
+
+// SetMaxAge gives this session its own lifetime, e.g. for long-lived devices.
+func (s *Session) SetMaxAge(d time.Duration) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.maxAge = d
+	s.modified = true
+}
+
+// HashID is the stable, non-reversible handle for a session id that account
+// pages store and show instead of the id itself.
+func HashID(secret, sid string) string {
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write([]byte(sid))
+	return hex.EncodeToString(mac.Sum(nil))
 }
 
 // Set stores a value; it is persisted when the response is written.
@@ -118,9 +149,25 @@ func (s *Session) Destroy() {
 	s.data = map[string]any{}
 }
 
-// Regenerate issues a fresh session id and keeps the data. Call it right after
-// authentication so a pre-login id can never be reused (session fixation).
+// Regenerate issues a fresh session id and empties the data, like
+// express-session's regenerate. Call it right after authentication so neither a
+// pre-login id nor pre-login state (a half-finished two-factor challenge) can
+// carry into the signed-in session (session fixation).
 func (s *Session) Regenerate() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if !s.isNew {
+		s.oldID = s.id
+	}
+	s.id = newID()
+	s.isNew = true
+	s.data = map[string]any{}
+	s.modified = true
+}
+
+// Rotate issues a fresh session id and keeps the data, for privilege changes
+// inside an established session.
+func (s *Session) Rotate() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if !s.isNew {
@@ -131,6 +178,26 @@ func (s *Session) Regenerate() {
 	s.modified = true
 }
 
+// Int64 reads an integer stored under key (numbers load back as json.Number).
+func (s *Session) Int64(key string) (int64, bool) {
+	v, ok := s.Get(key)
+	if !ok {
+		return 0, false
+	}
+	switch n := v.(type) {
+	case int64:
+		return n, true
+	case int:
+		return int64(n), true
+	case float64:
+		return int64(n), true
+	case json.Number:
+		i, err := n.Int64()
+		return i, err == nil
+	}
+	return 0, false
+}
+
 func newID() string {
 	buf := make([]byte, 24)
 	if _, err := rand.Read(buf); err != nil {
@@ -139,7 +206,9 @@ func newID() string {
 	return base64.RawURLEncoding.EncodeToString(buf)
 }
 
-func (m *Manager) isSecureRequest(r *http.Request) bool {
+// IsSecureRequest reports whether r arrived over TLS (or through a trusted
+// proxy that terminated it).
+func (m *Manager) IsSecureRequest(r *http.Request) bool {
 	if r.TLS != nil {
 		return true
 	}
@@ -148,6 +217,16 @@ func (m *Manager) isSecureRequest(r *http.Request) bool {
 		return strings.EqualFold(proto, "https")
 	}
 	return false
+}
+
+// Lifetime is how long s lives: its own override or the manager default.
+func (m *Manager) Lifetime(s *Session) time.Duration {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.maxAge > 0 {
+		return s.maxAge
+	}
+	return m.opt.MaxAge
 }
 
 // Middleware attaches the session to the request context.
@@ -204,23 +283,27 @@ func (c *commitWriter) commit() {
 	if !save {
 		return
 	}
-	expires := time.Now().Add(m.opt.MaxAge)
+	maxAge := m.opt.MaxAge
+	if s.maxAge > 0 {
+		maxAge = s.maxAge
+	}
+	expires := time.Now().Add(maxAge)
 	payload := map[string]any{}
 	for k, v := range s.data {
 		payload[k] = v
 	}
 	payload["cookie"] = map[string]any{
-		"originalMaxAge": m.opt.MaxAge.Milliseconds(),
+		"originalMaxAge": maxAge.Milliseconds(),
 		"expires":        expires.UTC().Format("2006-01-02T15:04:05.000Z"),
 		"secure":         m.opt.Secure,
 		"httpOnly":       true,
 		"path":           m.opt.Path,
 		"sameSite":       "lax",
 	}
-	if err := m.store.Set(ctx, s.id, payload, m.opt.MaxAge); err != nil {
+	if err := m.store.Set(ctx, s.id, payload, maxAge); err != nil {
 		return
 	}
-	if m.opt.Secure && !m.isSecureRequest(c.r) {
+	if m.opt.Secure && !m.IsSecureRequest(c.r) {
 		return // a Secure cookie would never come back over plain http
 	}
 	http.SetCookie(c.ResponseWriter, &http.Cookie{

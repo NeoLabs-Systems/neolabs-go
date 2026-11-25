@@ -1,0 +1,3760 @@
+[
+ {
+  "options": {
+   "model": "gpt-5.2",
+   "maxTokens": 2000,
+   "reasoningEffort": "high"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openai chat reasoning model",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-2",
+    "object": "chat.completion",
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "tool_calls",
+      "message": {
+       "role": "assistant",
+       "content": null,
+       "tool_calls": [
+        {
+         "id": "call_7",
+         "type": "function",
+         "function": {
+          "name": "get_weather",
+          "arguments": "{\"city\":\"Paris\"}"
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "",
+   "toolCalls": [
+    {
+     "id": "call_7",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": null,
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-5.2\",\"messages\":[{\"role\":\"developer\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_completion_tokens\":2000,\"reasoning_effort\":\"high\",\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}},{\"type\":\"function\",\"function\":{\"name\":\"ping\",\"parameters\":{\"properties\":{},\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1",
+   "temperature": 0.2,
+   "toolChoice": "required"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openai chat classic model",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "call_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoning_content": "I should look it up."
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "call_1"
+   },
+   {
+    "role": "user",
+    "content": "Thanks. And in Paris?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_1\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"}}],\"reasoning_content\":\"I should look it up.\"},{\"role\":\"tool\",\"content\":\"Sunny, 21C\",\"tool_call_id\":\"call_1\"},{\"role\":\"user\",\"content\":\"Thanks. And in Paris?\"}],\"temperature\":0.2,\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"required\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1"
+  },
+  "tools": [],
+  "name": "openai stream content",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"It is \"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"sunny.\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "It is ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "It is sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "stop",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openai stream tool calls with reasoning content",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "call_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoning_content": "I should look it up."
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "call_1"
+   },
+   {
+    "role": "user",
+    "content": "Thanks. And in Paris?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":null,\"reasoning_content\":\"Need weather. \"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"reasoning_content\":\"Call it.\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_7\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"city\\\":\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\"Paris\\\"}\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "tool_calls",
+    "content": "",
+    "toolCalls": [
+     {
+      "id": "call_7",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Paris\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "tool_calls",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": {
+     "reasoning_content": "Need weather. Call it."
+    },
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_1\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"}}],\"reasoning_content\":\"I should look it up.\"},{\"role\":\"tool\",\"content\":\"Sunny, 21C\",\"tool_call_id\":\"call_1\"},{\"role\":\"user\",\"content\":\"Thanks. And in Paris?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\",\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1"
+  },
+  "tools": [],
+  "name": "openai stream truncated",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Half an answ\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}]}\n\ndata: {\"id\":\"c\",\"choices\":[],\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":9,\"total_tokens\":14}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "Half an answ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "Half an answ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "length",
+    "truncated": true,
+    "usage": {
+     "input": 5,
+     "output": 9,
+     "reasoning": 0,
+     "cachedRead": 0,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openai stream undeclared argument key",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_g\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"content=\"}}]},\"finish_reason\":null}]}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "tool_calls",
+    "content": "",
+    "toolCalls": [
+     {
+      "id": "call_g",
+      "name": "get_weather",
+      "arguments": "{\"content="
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "served-model",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\",\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-4.1"
+  },
+  "tools": [],
+  "name": "openai error 400",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "status": 400,
+   "json": {
+    "error": {
+     "message": "Unsupported value: temperature",
+     "type": "invalid_request_error",
+     "code": "unsupported_value",
+     "param": "temperature"
+    }
+   }
+  },
+  "error": {
+   "message": "400 Unsupported value: temperature",
+   "status": 400,
+   "code": "unsupported_value"
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {},
+  "tools": [],
+  "name": "openai no model",
+  "provider": "openai",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "error": {
+   "message": "Provider 'openai' requires a model selected from its live catalog.",
+   "status": null,
+   "code": "MODEL_SELECTION_REQUIRED"
+  },
+  "requests": []
+ },
+ {
+  "options": {
+   "model": "m-1",
+   "temperature": 0.4,
+   "maxTokens": 512
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "compatible chat",
+  "provider": "openai-compatible",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "call_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoning_content": "I should look it up."
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "call_1"
+   },
+   {
+    "role": "user",
+    "content": "Thanks. And in Paris?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-2",
+    "object": "chat.completion",
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "tool_calls",
+      "message": {
+       "role": "assistant",
+       "content": null,
+       "tool_calls": [
+        {
+         "id": "call_7",
+         "type": "function",
+         "function": {
+          "name": "get_weather",
+          "arguments": "{\"city\":\"Paris\"}"
+         }
+        }
+       ],
+       "reasoning_content": "because"
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "",
+   "toolCalls": [
+    {
+     "id": "call_7",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": null,
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": {
+    "reasoning_content": "because"
+   },
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_1\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"}}],\"reasoning_content\":\"I should look it up.\"},{\"role\":\"tool\",\"content\":\"Sunny, 21C\",\"tool_call_id\":\"call_1\"},{\"role\":\"user\",\"content\":\"Thanks. And in Paris?\"}],\"max_tokens\":512,\"temperature\":0.4,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "m-1"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "compatible stream tool calls",
+  "provider": "openai-compatible",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "call_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoning_content": "I should look it up."
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "call_1"
+   },
+   {
+    "role": "user",
+    "content": "Thanks. And in Paris?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":null,\"reasoning_content\":\"Need weather. \"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"reasoning_content\":\"Call it.\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_7\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"city\\\":\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\"Paris\\\"}\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "tool_calls",
+    "content": "",
+    "toolCalls": [
+     {
+      "id": "call_7",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Paris\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "tool_calls",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": {
+     "reasoning_content": "Need weather. Call it."
+    },
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_1\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"}}],\"reasoning_content\":\"I should look it up.\"},{\"role\":\"tool\",\"content\":\"Sunny, 21C\",\"tool_call_id\":\"call_1\"},{\"role\":\"user\",\"content\":\"Thanks. And in Paris?\"}],\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\",\"stream\":true}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "m-1"
+  },
+  "tools": [],
+  "name": "compatible error wrapped",
+  "provider": "openai-compatible",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "status": 401,
+   "json": {
+    "error": {
+     "message": "Incorrect API key provided: sk-secret123",
+     "type": "invalid_request_error",
+     "code": "invalid_api_key"
+    }
+   }
+  },
+  "error": {
+   "message": "Custom OpenAI-compatible request failed: 401 Incorrect API key provided: sk-secret123",
+   "status": 401,
+   "code": "invalid_api_key"
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "m-1"
+  },
+  "tools": [],
+  "name": "nous chat",
+  "provider": "nous",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "auto:default"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "neorouter chat",
+  "provider": "neorouter",
+  "basePath": "",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"auto:default\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "grok-4",
+   "structured": true,
+   "reasoningEffort": "low"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "grok chat structured effort",
+  "provider": "grok",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"grok-4\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384,\"temperature\":0.9,\"reasoning_effort\":\"low\",\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "grok-4-reasoning"
+  },
+  "tools": [],
+  "name": "grok stream reasoning model",
+  "provider": "grok",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"It is \"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"sunny.\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "It is ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "It is sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "stop",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"grok-4-reasoning\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384,\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "grok-3-mini",
+   "structured": true,
+   "reasoningEffort": "high"
+  },
+  "tools": [],
+  "name": "grok effort rejected then retried",
+  "provider": "grok",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": [
+   {
+    "status": 400,
+    "json": {
+     "error": {
+      "message": "Model does not support parameter reasoningEffort",
+      "type": "invalid_request_error"
+     }
+    }
+   },
+   {
+    "json": {
+     "id": "chatcmpl-1",
+     "object": "chat.completion",
+     "created": 1,
+     "model": "served-model",
+     "choices": [
+      {
+       "index": 0,
+       "finish_reason": "stop",
+       "message": {
+        "role": "assistant",
+        "content": "It is sunny."
+       }
+      }
+     ],
+     "usage": {
+      "prompt_tokens": 120,
+      "completion_tokens": 30,
+      "total_tokens": 150,
+      "prompt_tokens_details": {
+       "cached_tokens": 64
+      },
+      "completion_tokens_details": {
+       "reasoning_tokens": 12
+      }
+     }
+    }
+   }
+  ],
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"grok-3-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384,\"temperature\":0.9,\"reasoning_effort\":\"high\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   },
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"grok-3-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":16384,\"temperature\":0.9}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "meta/llama-4"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "nvidia chat",
+  "provider": "nvidia",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"meta/llama-4\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":8192,\"temperature\":0.6,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "deepseek-ai/deepseek-r1"
+  },
+  "tools": [],
+  "name": "nvidia stream reasoning",
+  "provider": "nvidia",
+  "basePath": "/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"It is \"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"sunny.\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "It is ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "It is sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "stop",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "body": "{\"model\":\"deepseek-ai/deepseek-r1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"max_tokens\":8192,\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "anthropic/claude-sonnet-4.5",
+   "sessionId": "sess-1",
+   "reasoningEffort": "high"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openrouter chat anthropic cache control",
+  "provider": "openrouter",
+  "basePath": "/api/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "chatcmpl-1",
+    "object": "chat.completion",
+    "created": 1,
+    "model": "served-model",
+    "choices": [
+     {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+       "role": "assistant",
+       "content": "It is sunny."
+      }
+     }
+    ],
+    "usage": {
+     "prompt_tokens": 120,
+     "completion_tokens": 30,
+     "total_tokens": 150,
+     "prompt_tokens_details": {
+      "cached_tokens": 64
+     },
+     "completion_tokens_details": {
+      "reasoning_tokens": 12
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "It is sunny.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 120,
+    "output": 30,
+    "reasoning": 12,
+    "cachedRead": 64,
+    "cacheWrite": 0
+   },
+   "model": "served-model",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/api/v1/chat/completions",
+    "body": "{\"model\":\"anthropic/claude-sonnet-4.5\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"session_id\":\"sess-1\",\"cache_control\":{\"type\":\"ephemeral\"},\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\"}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "openai/gpt-5"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   }
+  ],
+  "name": "openrouter stream reasoning details",
+  "provider": "openrouter",
+  "basePath": "/api/v1",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"reasoning_details\":[{\"index\":0,\"type\":\"reasoning.text\",\"text\":\"Step \"}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"reasoning_details\":[{\"index\":0,\"type\":\"reasoning.text\",\"text\":\"one\",\"signature\":\"sig1\"},{\"index\":1,\"type\":\"reasoning.encrypted\",\"data\":\"abc\"}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_o\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Rome\\\"}\"}}]},\"finish_reason\":null}]}\n\ndata: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"model\":\"served-model\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\ndata: {\"id\":\"c\",\"choices\":[],\"usage\":{\"prompt_tokens\":120,\"completion_tokens\":30,\"total_tokens\":150,\"prompt_tokens_details\":{\"cached_tokens\":64},\"completion_tokens_details\":{\"reasoning_tokens\":12}}}\n\ndata: [DONE]\n\n"
+  },
+  "events": [
+   {
+    "type": "tool_calls",
+    "content": "",
+    "toolCalls": [
+     {
+      "id": "call_o",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Rome\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "tool_calls",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 30,
+     "reasoning": 12,
+     "cachedRead": 64,
+     "cacheWrite": 0
+    },
+    "model": "served-model",
+    "reasoningState": {
+     "reasoning_details": [
+      {
+       "index": 0,
+       "type": "reasoning.text",
+       "text": "Step one",
+       "signature": "sig1"
+      },
+      {
+       "index": 1,
+       "type": "reasoning.encrypted",
+       "data": "abc"
+      }
+     ]
+    },
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/api/v1/chat/completions",
+    "body": "{\"model\":\"openai/gpt-5\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384,\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}}],\"tool_choice\":\"auto\",\"stream\":true,\"stream_options\":{\"include_usage\":true}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "m-1"
+  },
+  "tools": [],
+  "name": "openrouter error inside 200",
+  "provider": "openrouter",
+  "basePath": "/api/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "error": {
+     "message": "Provider returned error",
+     "code": 429
+    }
+   }
+  },
+  "error": {
+   "message": "OpenRouter: Provider returned error (code 429)",
+   "status": null,
+   "code": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/api/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "m-1"
+  },
+  "tools": [],
+  "name": "openrouter empty choices",
+  "provider": "openrouter",
+  "basePath": "/api/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "x",
+    "choices": []
+   }
+  },
+  "error": {
+   "message": "OpenRouter: model returned no choices (may be rate-limited or unavailable)",
+   "status": null,
+   "code": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/api/v1/chat/completions",
+    "body": "{\"model\":\"m-1\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"temperature\":0.7,\"max_tokens\":16384}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "claude-sonnet-4-5",
+   "maxTokens": 4000
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "anthropic chat tools and cache breakpoints",
+  "provider": "anthropic",
+  "basePath": "",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "Let me check.",
+    "tool_calls": [
+     {
+      "id": "toolu_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "toolu_1"
+   },
+   {
+    "role": "system",
+    "content": "Note: user prefers short answers."
+   },
+   {
+    "role": "user",
+    "content": "And Paris?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "msg_1",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-5-20250929",
+    "stop_reason": "tool_use",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Paris next.",
+      "signature": "sigA"
+     },
+     {
+      "type": "text",
+      "text": "Checking."
+     },
+     {
+      "type": "tool_use",
+      "id": "toolu_2",
+      "name": "get_weather",
+      "input": {
+       "city": "Paris"
+      }
+     }
+    ],
+    "usage": {
+     "input_tokens": 100,
+     "cache_read_input_tokens": 50,
+     "cache_creation_input_tokens": 10,
+     "output_tokens": 40
+    }
+   }
+  },
+  "result": {
+   "content": "Checking.",
+   "toolCalls": [
+    {
+     "id": "toolu_2",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": null,
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 160,
+    "output": 40,
+    "reasoning": 0,
+    "cachedRead": 50,
+    "cacheWrite": 10
+   },
+   "model": "claude-sonnet-4-5-20250929",
+   "reasoningState": null,
+   "providerContentBlocks": [
+    {
+     "type": "thinking",
+     "thinking": "Paris next.",
+     "signature": "sigA"
+    },
+    {
+     "type": "text",
+     "text": "Checking."
+    },
+    {
+     "type": "tool_use",
+     "id": "toolu_2",
+     "name": "get_weather",
+     "input": {
+      "city": "Paris"
+     }
+    }
+   ]
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": "{\"model\":\"claude-sonnet-4-5\",\"max_tokens\":4000,\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Let me check.\"},{\"type\":\"tool_use\",\"id\":\"toolu_1\",\"name\":\"get_weather\",\"input\":{\"city\":\"Berlin\"}}]},{\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\"tool_use_id\":\"toolu_1\",\"content\":\"Sunny, 21C\"}]},{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Note: user prefers short answers.\"}]},{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"And Paris?\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"You are a precise assistant.\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"input_schema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"input_schema\":{\"properties\":{},\"type\":\"object\"},\"cache_control\":{\"type\":\"ephemeral\"}}]}",
+    "headers": {
+     "x-api-key": "test-key",
+     "anthropic-version": "2023-06-01",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "claude-sonnet-4-5"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "anthropic chat replays provider content blocks",
+  "provider": "anthropic",
+  "basePath": "",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "toolu_2",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Paris\"}"
+      }
+     }
+    ],
+    "providerContentBlocks": [
+     {
+      "type": "thinking",
+      "thinking": "Paris next.",
+      "signature": "sigA"
+     },
+     {
+      "type": "tool_use",
+      "id": "toolu_2",
+      "name": "get_weather",
+      "input": {
+       "city": "Paris"
+      }
+     }
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "Rainy",
+    "tool_call_id": "toolu_2"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "msg_2",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-5",
+    "stop_reason": "end_turn",
+    "content": [
+     {
+      "type": "text",
+      "text": "Bring an umbrella."
+     }
+    ],
+    "usage": {
+     "input_tokens": 10,
+     "output_tokens": 5
+    }
+   }
+  },
+  "result": {
+   "content": "Bring an umbrella.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 10,
+    "output": 5,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "claude-sonnet-4-5",
+   "reasoningState": null,
+   "providerContentBlocks": [
+    {
+     "type": "text",
+     "text": "Bring an umbrella."
+    }
+   ]
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": "{\"model\":\"claude-sonnet-4-5\",\"max_tokens\":16384,\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Paris next.\",\"signature\":\"sigA\"},{\"type\":\"tool_use\",\"id\":\"toolu_2\",\"name\":\"get_weather\",\"input\":{\"city\":\"Paris\"}}]},{\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\"tool_use_id\":\"toolu_2\",\"content\":\"Rainy\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"tools\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"input_schema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"input_schema\":{\"properties\":{},\"type\":\"object\"},\"cache_control\":{\"type\":\"ephemeral\"}}]}",
+    "headers": {
+     "x-api-key": "test-key",
+     "anthropic-version": "2023-06-01",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "claude-sonnet-4-5"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "anthropic stream thinking and tool use",
+  "provider": "anthropic",
+  "basePath": "",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_s\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-5\",\"content\":[],\"usage\":{\"input_tokens\":90,\"cache_read_input_tokens\":30,\"cache_creation_input_tokens\":0,\"output_tokens\":1}}}\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"thinking\",\"thinking\":\"\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"Hmm. \"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"signature_delta\",\"signature\":\"sigS\"}}\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":1,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"Looking \"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"it up.\"}}\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":1}\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":2,\"content_block\":{\"type\":\"tool_use\",\"id\":\"toolu_s\",\"name\":\"get_weather\",\"input\":{}}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":2,\"delta\":{\"type\":\"input_json_delta\",\"partial_json\":\"{\\\"city\\\":\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":2,\"delta\":{\"type\":\"input_json_delta\",\"partial_json\":\"\\\"Oslo\\\"}\"}}\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":2}\n\nevent: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"tool_use\"},\"usage\":{\"output_tokens\":33}}\n\nevent: message_stop\ndata: {\"type\":\"message_stop\"}\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "Looking ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "it up.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "Looking it up.",
+    "toolCalls": [
+     {
+      "id": "toolu_s",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Oslo\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "tool_calls",
+    "truncated": false,
+    "usage": {
+     "input": 120,
+     "output": 33,
+     "reasoning": 0,
+     "cachedRead": 30,
+     "cacheWrite": 0
+    },
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": [
+     {
+      "type": "thinking",
+      "thinking": "Hmm. ",
+      "signature": "sigS"
+     },
+     {
+      "type": "text",
+      "text": "Looking it up."
+     },
+     {
+      "type": "tool_use",
+      "id": "toolu_s",
+      "name": "get_weather",
+      "input": {
+       "city": "Oslo"
+      }
+     }
+    ]
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": "{\"model\":\"claude-sonnet-4-5\",\"max_tokens\":16384,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"What is the weather in Berlin?\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"stream\":true,\"system\":[{\"type\":\"text\",\"text\":\"You are a precise assistant.\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"input_schema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"input_schema\":{\"properties\":{},\"type\":\"object\"},\"cache_control\":{\"type\":\"ephemeral\"}}]}",
+    "headers": {
+     "x-api-key": "test-key",
+     "anthropic-version": "2023-06-01",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "claude-sonnet-4-5"
+  },
+  "tools": [],
+  "name": "anthropic error 400",
+  "provider": "anthropic",
+  "basePath": "",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "status": 400,
+   "json": {
+    "type": "error",
+    "error": {
+     "type": "invalid_request_error",
+     "message": "max_tokens: 99999 > 64000"
+    }
+   }
+  },
+  "error": {
+   "message": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"max_tokens: 99999 > 64000\"}}",
+   "status": 400,
+   "code": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": "{\"model\":\"claude-sonnet-4-5\",\"max_tokens\":16384,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"What is the weather in Berlin?\",\"cache_control\":{\"type\":\"ephemeral\"}}]}]}",
+    "headers": {
+     "x-api-key": "test-key",
+     "anthropic-version": "2023-06-01",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "MiniMax-M2.7"
+  },
+  "tools": [],
+  "name": "minimax chat via anthropic wire",
+  "provider": "minimax",
+  "basePath": "/anthropic",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "m",
+    "type": "message",
+    "role": "assistant",
+    "model": "MiniMax-M2.7",
+    "stop_reason": "end_turn",
+    "content": [
+     {
+      "type": "text",
+      "text": "ok"
+     }
+    ],
+    "usage": {
+     "input_tokens": 3,
+     "output_tokens": 1
+    }
+   }
+  },
+  "result": {
+   "content": "ok",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 3,
+    "output": 1,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "MiniMax-M2.7",
+   "reasoningState": null,
+   "providerContentBlocks": [
+    {
+     "type": "text",
+     "text": "ok"
+    }
+   ]
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/anthropic/v1/messages",
+    "body": "{\"model\":\"MiniMax-M2.7\",\"max_tokens\":16384,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"What is the weather in Berlin?\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"You are a precise assistant.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}",
+    "headers": {
+     "x-api-key": "test-key",
+     "anthropic-version": "2023-06-01",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gemini-2.5-flash",
+   "maxTokens": 1000
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "google chat tools",
+  "provider": "google",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "system",
+    "content": "Answer in German."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "Moment.",
+    "tool_calls": [
+     {
+      "id": "g1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ]
+   },
+   {
+    "role": "tool",
+    "name": "get_weather",
+    "content": "Sonnig",
+    "tool_call_id": "g1"
+   },
+   {
+    "role": "user",
+    "content": "Und Paris?"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "Ich sehe nach."
+        },
+        {
+         "functionCall": {
+          "id": "fc1",
+          "name": "get_weather",
+          "args": {
+           "city": "Paris"
+          }
+         },
+         "thoughtSignature": "tsig1"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 50,
+     "candidatesTokenCount": 12,
+     "thoughtsTokenCount": 4,
+     "cachedContentTokenCount": 20,
+     "totalTokenCount": 66
+    }
+   }
+  },
+  "result": {
+   "content": "Ich sehe nach.",
+   "toolCalls": [
+    {
+     "id": "fc1",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": {
+    "fc1": "tsig1"
+   },
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 50,
+    "output": 12,
+    "reasoning": 4,
+    "cachedRead": 20,
+    "cacheWrite": 0
+   },
+   "model": "gemini-2.5-flash",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1beta/models/gemini-2.5-flash:generateContent",
+    "body": "{\"contents\":[{\"parts\":[{\"text\":\"What is the weather in Berlin?\"}],\"role\":\"user\"},{\"parts\":[{\"text\":\"Moment.\"},{\"functionCall\":{\"args\":{\"city\":\"Berlin\"},\"id\":\"g1\",\"name\":\"get_weather\"}}],\"role\":\"model\"},{\"parts\":[{\"functionResponse\":{\"name\":\"get_weather\",\"response\":{\"result\":\"Sonnig\"},\"id\":\"g1\"}},{\"text\":\"Und Paris?\"}],\"role\":\"user\"}],\"systemInstruction\":{\"parts\":[{\"text\":\"You are a precise assistant.\\n\\nAnswer in German.\"}],\"role\":\"user\"},\"tools\":[{\"functionDeclarations\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parametersJsonSchema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"parametersJsonSchema\":{\"properties\":{},\"type\":\"object\"}}]}],\"generationConfig\":{\"maxOutputTokens\":1000}}",
+    "headers": {
+     "x-goog-api-key": "test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gemini-2.5-flash"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "google stream text and call",
+  "provider": "google",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "data: {\"candidates\":[{\"content\":{\"role\":\"model\",\"parts\":[{\"text\":\"Thinking...\",\"thought\":true}]}}]}\n\ndata: {\"candidates\":[{\"content\":{\"role\":\"model\",\"parts\":[{\"text\":\"Looking \"}]}}]}\n\ndata: {\"candidates\":[{\"content\":{\"role\":\"model\",\"parts\":[{\"text\":\"up.\"},{\"functionCall\":{\"name\":\"get_weather\",\"args\":{\"city\":\"Oslo\"}}}]}}]}\n\ndata: {\"candidates\":[{\"content\":{\"role\":\"model\",\"parts\":[{\"functionCall\":{\"name\":\"get_weather\",\"args\":{\"city\":\"Oslo\"}}}]}}],\"usageMetadata\":{\"promptTokenCount\":50,\"candidatesTokenCount\":12,\"thoughtsTokenCount\":4,\"cachedContentTokenCount\":20,\"totalTokenCount\":66}}\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "Looking ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "up.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "Looking up.",
+    "toolCalls": [
+     {
+      "id": "call_generated",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Oslo\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "tool_calls",
+    "truncated": false,
+    "usage": {
+     "input": 50,
+     "output": 12,
+     "reasoning": 4,
+     "cachedRead": 20,
+     "cacheWrite": 0
+    },
+    "model": "gemini-2.5-flash",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+    "body": "{\"contents\":[{\"parts\":[{\"text\":\"What is the weather in Berlin?\"}],\"role\":\"user\"}],\"tools\":[{\"functionDeclarations\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parametersJsonSchema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"parametersJsonSchema\":{\"properties\":{},\"type\":\"object\"}}]}],\"generationConfig\":{}}",
+    "headers": {
+     "x-goog-api-key": "test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gemini-2.5-flash"
+  },
+  "tools": [],
+  "name": "google chat empty conversation",
+  "provider": "google",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   }
+  ],
+  "upstream": {
+   "json": {
+    "candidates": [
+     {
+      "content": {
+       "parts": [
+        {
+         "text": "Hi"
+        }
+       ]
+      }
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 50,
+     "candidatesTokenCount": 12,
+     "thoughtsTokenCount": 4,
+     "cachedContentTokenCount": 20,
+     "totalTokenCount": 66
+    }
+   }
+  },
+  "result": {
+   "content": "Hi",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 50,
+    "output": 12,
+    "reasoning": 4,
+    "cachedRead": 20,
+    "cacheWrite": 0
+   },
+   "model": "gemini-2.5-flash",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1beta/models/gemini-2.5-flash:generateContent",
+    "body": "{\"contents\":[{\"parts\":[{\"text\":\"Provide the requested response using the system instructions.\"}],\"role\":\"user\"}],\"systemInstruction\":{\"parts\":[{\"text\":\"You are a precise assistant.\"}],\"role\":\"user\"},\"generationConfig\":{}}",
+    "headers": {
+     "x-goog-api-key": "test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gemini-2.5-pro"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "google replays signed call and unsigned text",
+  "provider": "google",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "g9",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Rome\",\"unit\":\"c\"}",
+       "thought_signature": "tsig9"
+      }
+     }
+    ]
+   },
+   {
+    "role": "tool",
+    "name": "get_weather",
+    "content": "Warm",
+    "tool_call_id": "g9"
+   }
+  ],
+  "upstream": {
+   "json": {
+    "candidates": [
+     {
+      "content": {
+       "parts": [
+        {
+         "text": "Warm today."
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "result": {
+   "content": "Warm today.",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": null,
+   "model": "gemini-2.5-pro",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1beta/models/gemini-2.5-pro:generateContent",
+    "body": "{\"contents\":[{\"parts\":[{\"text\":\"What is the weather in Berlin?\"}],\"role\":\"user\"},{\"parts\":[{\"functionCall\":{\"args\":{\"city\":\"Rome\",\"unit\":\"c\"},\"id\":\"g9\",\"name\":\"get_weather\"},\"thoughtSignature\":\"tsig9\"}],\"role\":\"model\"},{\"parts\":[{\"functionResponse\":{\"name\":\"get_weather\",\"response\":{\"result\":\"Warm\"},\"id\":\"g9\"}}],\"role\":\"user\"}],\"tools\":[{\"functionDeclarations\":[{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parametersJsonSchema\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}},{\"name\":\"ping\",\"parametersJsonSchema\":{\"properties\":{},\"type\":\"object\"}}]}],\"generationConfig\":{}}",
+    "headers": {
+     "x-goog-api-key": "test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gemini-2.5-flash"
+  },
+  "tools": [],
+  "name": "google error 400",
+  "provider": "google",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "status": 400,
+   "json": {
+    "error": {
+     "code": 400,
+     "message": "API key not valid. Please pass a valid API key.",
+     "status": "INVALID_ARGUMENT"
+    }
+   }
+  },
+  "error": {
+   "message": "{\"error\":{\"code\":400,\"message\":\"API key not valid. Please pass a valid API key.\",\"status\":\"INVALID_ARGUMENT\"}}",
+   "status": 400,
+   "code": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1beta/models/gemini-2.5-flash:generateContent",
+    "body": "{\"contents\":[{\"parts\":[{\"text\":\"What is the weather in Berlin?\"}],\"role\":\"user\"}],\"generationConfig\":{}}",
+    "headers": {
+     "x-goog-api-key": "test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "llama3",
+   "temperature": 0.1,
+   "maxTokens": 300
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "ollama chat tools",
+  "provider": "ollama",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+     {
+      "id": "call_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoning_content": "I should look it up."
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny, 21C",
+    "tool_call_id": "call_1"
+   },
+   {
+    "role": "user",
+    "content": "Thanks. And in Paris?"
+   }
+  ],
+  "upstream": [
+   {
+    "json": {
+     "models": [
+      {
+       "name": "llama3:latest"
+      }
+     ]
+    }
+   },
+   {
+    "json": {
+     "model": "llama3:latest",
+     "message": {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "function": {
+         "name": "get_weather",
+         "arguments": {
+          "city": "Paris"
+         }
+        }
+       }
+      ]
+     },
+     "done": true,
+     "prompt_eval_count": 40,
+     "eval_count": 8
+    }
+   }
+  ],
+  "result": {
+   "content": "",
+   "toolCalls": [
+    {
+     "id": "call_generated",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": null,
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 40,
+    "output": 8,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "llama3:latest",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "GET",
+    "path": "/api/tags",
+    "body": "",
+    "headers": {}
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat",
+    "body": "{\"model\":\"llama3\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"},{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_1\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":{\"city\":\"Berlin\"}}}]},{\"role\":\"tool\",\"content\":\"Sunny, 21C\",\"tool_call_id\":\"call_1\"},{\"role\":\"user\",\"content\":\"Thanks. And in Paris?\"}],\"stream\":false,\"options\":{\"temperature\":0.1,\"num_predict\":300},\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}},{\"type\":\"function\",\"function\":{\"name\":\"ping\",\"parameters\":{\"properties\":{},\"type\":\"object\"}}}]}",
+    "headers": {
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "llama3:latest"
+  },
+  "tools": [],
+  "name": "ollama stream",
+  "provider": "ollama",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": [
+   {
+    "json": {
+     "models": [
+      {
+       "name": "llama3:latest"
+      }
+     ]
+    }
+   },
+   {
+    "contentType": "application/x-ndjson",
+    "text": "{\"message\":{\"role\":\"assistant\",\"content\":\"It is \"},\"done\":false}\n{\"message\":{\"role\":\"assistant\",\"content\":\"sunny.\"},\"done\":false}\n{\"message\":{\"role\":\"assistant\",\"content\":\"\"},\"done\":true,\"prompt_eval_count\":12,\"eval_count\":4}\n"
+   }
+  ],
+  "events": [
+   {
+    "type": "content",
+    "content": "It is ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "done",
+    "content": "It is sunny.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "stop",
+    "truncated": false,
+    "usage": {
+     "input": 12,
+     "output": 4,
+     "reasoning": 0,
+     "cachedRead": 0,
+     "cacheWrite": 0
+    },
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "path": "/api/tags",
+    "body": "",
+    "headers": {}
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat",
+    "body": "{\"model\":\"llama3:latest\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a precise assistant.\"},{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"stream\":true,\"options\":{\"temperature\":0.7,\"num_predict\":16384}}",
+    "headers": {
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "llama3:latest"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "ollama tools unsupported retried without tools",
+  "provider": "ollama",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": [
+   {
+    "json": {
+     "models": [
+      {
+       "name": "llama3:latest"
+      }
+     ]
+    }
+   },
+   {
+    "status": 400,
+    "json": {
+     "error": "registry.ollama.ai/library/llama3:latest does not support tools"
+    }
+   },
+   {
+    "json": {
+     "model": "llama3:latest",
+     "message": {
+      "role": "assistant",
+      "content": "plain"
+     },
+     "done": true,
+     "prompt_eval_count": 5,
+     "eval_count": 1
+    }
+   }
+  ],
+  "result": {
+   "content": "plain",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 5,
+    "output": 1,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "llama3:latest",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "GET",
+    "path": "/api/tags",
+    "body": "",
+    "headers": {}
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat",
+    "body": "{\"model\":\"llama3:latest\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"stream\":false,\"options\":{\"temperature\":0.7,\"num_predict\":16384},\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"}}},{\"type\":\"function\",\"function\":{\"name\":\"ping\",\"parameters\":{\"properties\":{},\"type\":\"object\"}}}]}",
+    "headers": {
+     "content-type": "application/json"
+    }
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat",
+    "body": "{\"model\":\"llama3:latest\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"stream\":false,\"options\":{\"temperature\":0.7,\"num_predict\":16384}}",
+    "headers": {
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "llama3:latest"
+  },
+  "tools": [],
+  "name": "ollama stream ends early",
+  "provider": "ollama",
+  "method": "stream",
+  "messages": [
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": [
+   {
+    "json": {
+     "models": [
+      {
+       "name": "llama3:latest"
+      }
+     ]
+    }
+   },
+   {
+    "contentType": "application/x-ndjson",
+    "text": "{\"message\":{\"role\":\"assistant\",\"content\":\"part\"},\"done\":false}\n"
+   }
+  ],
+  "error": {
+   "message": "Ollama stream ended before sending a completion marker.",
+   "status": null,
+   "code": "OLLAMA_STREAM_INCOMPLETE"
+  },
+  "requests": [
+   {
+    "method": "GET",
+    "path": "/api/tags",
+    "body": "",
+    "headers": {}
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat",
+    "body": "{\"model\":\"llama3:latest\",\"messages\":[{\"role\":\"user\",\"content\":\"What is the weather in Berlin?\"}],\"stream\":true,\"options\":{\"temperature\":0.7,\"num_predict\":16384}}",
+    "headers": {
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-5.2",
+   "temperature": 0.3,
+   "reasoningEffort": "low"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "codex chat responses api",
+  "provider": "openai-codex",
+  "basePath": "/v1",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "Checking.",
+    "tool_calls": [
+     {
+      "id": "fc_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoningItems": [
+      {
+       "type": "reasoning",
+       "encrypted_content": "enc1",
+       "summary": []
+      }
+     ]
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny",
+    "tool_call_id": "fc_1"
+   },
+   {
+    "role": "user",
+    "content": [
+     {
+      "type": "text",
+      "text": "And this?"
+     },
+     {
+      "type": "image_url",
+      "image_url": {
+       "url": "data:image/png;base64,AAAA"
+      }
+     }
+    ]
+   }
+  ],
+  "upstream": {
+   "json": {
+    "id": "resp_1",
+    "object": "response",
+    "model": "gpt-5-codex",
+    "status": "completed",
+    "output": [
+     {
+      "type": "reasoning",
+      "id": "rs_1",
+      "status": "completed",
+      "encrypted_content": "enc2",
+      "summary": []
+     },
+     {
+      "type": "message",
+      "role": "assistant",
+      "content": [
+       {
+        "type": "output_text",
+        "text": "Let me look.",
+        "annotations": []
+       }
+      ]
+     },
+     {
+      "type": "function_call",
+      "call_id": "fc_2",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Paris\"}"
+     }
+    ],
+    "usage": {
+     "input_tokens": 77,
+     "output_tokens": 21,
+     "total_tokens": 98,
+     "input_tokens_details": {
+      "cached_tokens": 11
+     },
+     "output_tokens_details": {
+      "reasoning_tokens": 6
+     }
+    }
+   }
+  },
+  "result": {
+   "content": "Let me look.",
+   "toolCalls": [
+    {
+     "id": "fc_2",
+     "name": "get_weather",
+     "arguments": "{\"city\":\"Paris\"}"
+    }
+   ],
+   "thoughtSignatures": null,
+   "finishReason": "tool_calls",
+   "truncated": false,
+   "usage": {
+    "input": 77,
+    "output": 21,
+    "reasoning": 6,
+    "cachedRead": 11,
+    "cacheWrite": 0
+   },
+   "model": "gpt-5-codex",
+   "reasoningState": {
+    "reasoningItems": [
+     {
+      "type": "reasoning",
+      "encrypted_content": "enc2",
+      "summary": []
+     }
+    ]
+   },
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/responses",
+    "body": "{\"model\":\"gpt-5.2\",\"input\":[{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"What is the weather in Berlin?\"}]},{\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"Checking.\",\"annotations\":[]}]},{\"type\":\"reasoning\",\"encrypted_content\":\"enc1\",\"summary\":[]},{\"type\":\"function_call\",\"call_id\":\"fc_1\",\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"},{\"type\":\"function_call_output\",\"call_id\":\"fc_1\",\"output\":\"Sunny\"},{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"And this?\"},{\"type\":\"input_image\",\"image_url\":\"data:image/png;base64,AAAA\",\"detail\":\"auto\"}]}],\"instructions\":\"You are a precise assistant.\",\"tools\":[{\"type\":\"function\",\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"},\"strict\":false},{\"type\":\"function\",\"name\":\"ping\",\"description\":\"\",\"parameters\":{\"properties\":{},\"type\":\"object\"},\"strict\":false}],\"tool_choice\":\"auto\",\"max_output_tokens\":16384,\"temperature\":0.3,\"reasoning\":{\"effort\":\"low\"}}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-5-codex"
+  },
+  "tools": [
+   {
+    "name": "get_weather",
+    "description": "Get the current weather",
+    "parameters": {
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "unit": {
+       "enum": [
+        "c",
+        "f"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ],
+     "type": "object"
+    }
+   },
+   {
+    "name": "ping",
+    "parameters": {
+     "properties": {},
+     "type": "object"
+    }
+   }
+  ],
+  "name": "codex backend stream",
+  "provider": "openai-codex",
+  "basePath": "/codex",
+  "codexBackend": true,
+  "method": "stream",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   },
+   {
+    "role": "assistant",
+    "content": "Checking.",
+    "tool_calls": [
+     {
+      "id": "fc_1",
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Berlin\"}"
+      }
+     }
+    ],
+    "reasoningState": {
+     "reasoningItems": [
+      {
+       "type": "reasoning",
+       "encrypted_content": "enc1",
+       "summary": []
+      }
+     ]
+    }
+   },
+   {
+    "role": "tool",
+    "content": "Sunny",
+    "tool_call_id": "fc_1"
+   },
+   {
+    "role": "user",
+    "content": [
+     {
+      "type": "text",
+      "text": "And this?"
+     },
+     {
+      "type": "image_url",
+      "image_url": {
+       "url": "data:image/png;base64,AAAA"
+      }
+     }
+    ]
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "event: response.created\ndata: {\"type\":\"response.created\",\"response\":{\"id\":\"resp_s\"}}\n\nevent: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"Looking \"}\n\nevent: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"now.\"}\n\nevent: response.output_item.done\ndata: {\"type\":\"response.output_item.done\",\"item\":{\"type\":\"function_call\",\"call_id\":\"fc_s\",\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Oslo\\\"}\"}}\n\nevent: response.completed\ndata: {\"type\":\"response.completed\",\"response\":{\"id\":\"resp_s\",\"output\":[],\"usage\":{\"input_tokens\":9,\"output_tokens\":3,\"total_tokens\":12}}}\n\n"
+  },
+  "events": [
+   {
+    "type": "content",
+    "content": "Looking ",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "content",
+    "content": "now.",
+    "toolCalls": [],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": null,
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   },
+   {
+    "type": "tool_calls",
+    "content": "Looking now.",
+    "toolCalls": [
+     {
+      "id": "fc_s",
+      "name": "get_weather",
+      "arguments": "{\"city\":\"Oslo\"}"
+     }
+    ],
+    "thoughtSignatures": null,
+    "finishReason": "",
+    "truncated": false,
+    "usage": {
+     "input": 9,
+     "output": 3,
+     "reasoning": 0,
+     "cachedRead": 0,
+     "cacheWrite": 0
+    },
+    "model": "",
+    "reasoningState": null,
+    "providerContentBlocks": null
+   }
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/codex/responses",
+    "body": "{\"model\":\"gpt-5-codex\",\"input\":[{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"What is the weather in Berlin?\"}]},{\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"Checking.\",\"annotations\":[]}]},{\"type\":\"reasoning\",\"encrypted_content\":\"enc1\",\"summary\":[]},{\"type\":\"function_call\",\"call_id\":\"fc_1\",\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Berlin\\\"}\"},{\"type\":\"function_call_output\",\"call_id\":\"fc_1\",\"output\":\"Sunny\"},{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"And this?\"},{\"type\":\"input_image\",\"image_url\":\"data:image/png;base64,AAAA\",\"detail\":\"auto\"}]}],\"instructions\":\"You are a precise assistant.\",\"store\":false,\"tools\":[{\"type\":\"function\",\"name\":\"get_weather\",\"description\":\"Get the current weather\",\"parameters\":{\"properties\":{\"city\":{\"type\":\"string\"},\"unit\":{\"enum\":[\"c\",\"f\"],\"type\":\"string\"}},\"required\":[\"city\"],\"type\":\"object\"},\"strict\":false},{\"type\":\"function\",\"name\":\"ping\",\"description\":\"\",\"parameters\":{\"properties\":{},\"type\":\"object\"},\"strict\":false}],\"tool_choice\":\"auto\",\"parallel_tool_calls\":false,\"stream\":true}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "gpt-5-codex",
+   "reasoningEffort": "high"
+  },
+  "tools": [],
+  "name": "codex backend chat without tools uses reasoning",
+  "provider": "openai-codex",
+  "basePath": "/codex",
+  "codexBackend": true,
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "upstream": {
+   "contentType": "text/event-stream",
+   "text": "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"Hello\"}\n\nevent: response.output_item.done\ndata: {\"type\":\"response.output_item.done\",\"item\":{\"type\":\"reasoning\",\"id\":\"rs_9\",\"status\":\"completed\",\"encrypted_content\":\"encX\",\"summary\":[]}}\n\nevent: response.completed\ndata: {\"type\":\"response.completed\",\"response\":{\"id\":\"resp_c\",\"output\":[],\"usage\":{\"input_tokens\":4,\"output_tokens\":2,\"total_tokens\":6}}}\n\n"
+  },
+  "result": {
+   "content": "Hello",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 4,
+    "output": 2,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "gpt-5-codex",
+   "reasoningState": null,
+   "providerContentBlocks": null
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/codex/responses",
+    "body": "{\"model\":\"gpt-5-codex\",\"input\":[{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"What is the weather in Berlin?\"}]}],\"instructions\":\"You are a precise assistant.\",\"store\":false,\"tools\":[],\"tool_choice\":\"auto\",\"parallel_tool_calls\":false,\"reasoning\":{\"effort\":\"high\",\"summary\":\"auto\"},\"include\":[\"reasoning.encrypted_content\"],\"stream\":true}",
+    "headers": {
+     "authorization": "Bearer test-key",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "model": "claude-sonnet-4-5"
+  },
+  "tools": [],
+  "name": "claude-code chat adds the Claude Code system prompt",
+  "provider": "claude-code",
+  "basePath": "",
+  "method": "chat",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are a precise assistant."
+   },
+   {
+    "role": "user",
+    "content": "What is the weather in Berlin?"
+   }
+  ],
+  "config": {
+   "apiKey": "oauth-token"
+  },
+  "upstream": {
+   "json": {
+    "id": "m",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-5",
+    "stop_reason": "end_turn",
+    "content": [
+     {
+      "type": "text",
+      "text": "ok"
+     }
+    ],
+    "usage": {
+     "input_tokens": 3,
+     "output_tokens": 1
+    }
+   }
+  },
+  "result": {
+   "content": "ok",
+   "toolCalls": [],
+   "thoughtSignatures": null,
+   "finishReason": "stop",
+   "truncated": false,
+   "usage": {
+    "input": 3,
+    "output": 1,
+    "reasoning": 0,
+    "cachedRead": 0,
+    "cacheWrite": 0
+   },
+   "model": "claude-sonnet-4-5",
+   "reasoningState": null,
+   "providerContentBlocks": [
+    {
+     "type": "text",
+     "text": "ok"
+    }
+   ]
+  },
+  "requests": [
+   {
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": "{\"model\":\"claude-sonnet-4-5\",\"max_tokens\":16384,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"What is the weather in Berlin?\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"You are Claude Code, Anthropic's official CLI for Claude.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":[{\"type\":\"text\",\"text\":\"You are a precise assistant.\"}]}]}",
+    "headers": {
+     "authorization": "Bearer oauth-token",
+     "anthropic-version": "2023-06-01",
+     "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,fine-grained-tool-streaming-2025-05-14",
+     "content-type": "application/json"
+    }
+   }
+  ]
+ }
+]

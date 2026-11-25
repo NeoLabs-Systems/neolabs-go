@@ -1,0 +1,14 @@
+{
+ "origin": "https://accounts.google.com/o/oauth2/v2/auth",
+ "params": {
+  "access_type": "offline",
+  "scope": "openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+  "state": "auth_abc",
+  "prompt": "select_account",
+  "code_challenge_method": "S256",
+  "code_challenge": "CHALLENGE123",
+  "response_type": "code",
+  "client_id": "cid.apps.example",
+  "redirect_uri": "https://agent.example.com/api/integrations/oauth/callback"
+ }
+}

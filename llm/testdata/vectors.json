@@ -1,0 +1,1054 @@
+{
+ "sanitize": [
+  {
+   "input": "plain text",
+   "output": "plain text"
+  },
+  {
+   "input": "",
+   "output": "Unknown provider error"
+  },
+  {
+   "input": null,
+   "output": "Unknown provider error"
+  },
+  {
+   "input": "Authorization: Bearer abc.def-ghi_jkl",
+   "output": "Authorization=[redacted] [redacted]"
+  },
+  {
+   "input": "token ghp_abcdef123",
+   "output": "token [redacted]"
+  },
+  {
+   "input": "Basic dXNlcjpwYXNz",
+   "output": "Basic [redacted]"
+  },
+  {
+   "input": "GET https://x/y?key=AIzaSyD-9tSrke72PouQMnMX&alt=sse failed",
+   "output": "GET https://x/y?key=[redacted]&alt=sse failed"
+  },
+  {
+   "input": "url ?foo=1&api_key=sk-1234&x=2",
+   "output": "url ?foo=1&api_key=[redacted]]&x=2"
+  },
+  {
+   "input": "access_token=abc123 refresh_token: \"zzz\"",
+   "output": "access_token=[redacted] refresh_token=[redacted]\""
+  },
+  {
+   "input": "{\"api-key\": \"sk-live\", \"other\": 1}",
+   "output": "{\"api-key\": \"sk-live\", \"other\": 1}"
+  },
+  {
+   "input": "apikey = abc, next",
+   "output": "apikey=[redacted], next"
+  },
+  {
+   "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "output": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "input": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+   "output": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+  },
+  {
+   "input": "authorization: Bearer secret\nBasic abc",
+   "output": "authorization=[redacted] [redacted]\nBasic [redacted]"
+  },
+  {
+   "input": "no secrets: key words here",
+   "output": "no secrets: key words here"
+  }
+ ],
+ "guard": [
+  {
+   "parts": [
+    {
+     "text": " ",
+     "repeat": 2000
+    }
+   ],
+   "verdicts": [
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 2000,
+     "period": 1
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": " ",
+     "repeat": 1023
+    },
+    " ",
+    {
+     "text": " ",
+     "repeat": 300
+    }
+   ],
+   "verdicts": [
+    null,
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1024,
+     "period": 1
+    },
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1324,
+     "period": 1
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "ab",
+     "repeat": 600
+    }
+   ],
+   "verdicts": [
+    null
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "\n\t",
+     "repeat": 700
+    }
+   ],
+   "verdicts": [
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1400,
+     "period": 2
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "{\"a\": 1}, ",
+     "repeat": 300
+    }
+   ],
+   "verdicts": [
+    null
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "-",
+     "repeat": 1500
+    }
+   ],
+   "verdicts": [
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1500,
+     "period": 1
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "0",
+     "repeat": 1500
+    }
+   ],
+   "verdicts": [
+    null
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "x",
+     "repeat": 500
+    },
+    {
+     "text": " ",
+     "repeat": 1100
+    }
+   ],
+   "verdicts": [
+    null,
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1600,
+     "period": 1
+    }
+   ]
+  },
+  {
+   "parts": [
+    "short"
+   ],
+   "verdicts": [
+    null
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    },
+    {
+     "text": ".",
+     "repeat": 100
+    }
+   ],
+   "verdicts": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1100,
+     "period": 1
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "é",
+     "repeat": 700
+    }
+   ],
+   "verdicts": [
+    null
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "😀",
+     "repeat": 800
+    }
+   ],
+   "verdicts": [
+    {
+     "reason": "degenerate_repetition",
+     "bytes": 1600,
+     "period": 2
+    }
+   ]
+  },
+  {
+   "parts": [
+    {
+     "text": "x",
+     "repeat": 2097157
+    }
+   ],
+   "verdicts": [
+    {
+     "reason": "output_limit",
+     "bytes": 2097157
+    }
+   ]
+  }
+ ],
+ "tracker": [
+  {
+   "chunks": [
+    "{\"city\":\"Paris\"}"
+   ],
+   "keys": [
+    "city"
+   ],
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"content=",
+    "x"
+   ],
+   "keys": [
+    "content"
+   ],
+   "results": [
+    true,
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"conte",
+    "nt\":\"x\"}"
+   ],
+   "keys": [
+    "city"
+   ],
+   "results": [
+    true,
+    false
+   ],
+   "reason": "unknown_argument_key",
+   "key": "content"
+  },
+  {
+   "chunks": [
+    "{\"a\":1,}"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":[1,2,{\"b\":null}],\"c\":true}"
+   ],
+   "keys": null,
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":1e5,\"b\":-0.5,\"c\":01}"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":\"\\u00e9\\n\",\"b\":\"\\x\"}"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{}",
+    " "
+   ],
+   "keys": null,
+   "results": [
+    true,
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{} x"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "[1,2",
+    ",3]"
+   ],
+   "keys": null,
+   "results": [
+    true,
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":tru",
+    "e}"
+   ],
+   "keys": null,
+   "results": [
+    true,
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":nul}"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":-"
+   ],
+   "keys": null,
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\":1.}"
+   ],
+   "keys": null,
+   "results": [
+    false
+   ],
+   "reason": "invalid_json_arguments",
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"nested\":{\"zzz\":1},\"city\":\"x\"}"
+   ],
+   "keys": [
+    "nested",
+    "city"
+   ],
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "  {\"a\"  :  \"b\"  }  "
+   ],
+   "keys": null,
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  },
+  {
+   "chunks": [
+    "{\"a\\\"b\":1}"
+   ],
+   "keys": [
+    "a\"b"
+   ],
+   "results": [
+    false
+   ],
+   "reason": "unknown_argument_key",
+   "key": "a\\b"
+  },
+  {
+   "chunks": [
+    "{\"é\":1}"
+   ],
+   "keys": [
+    "é"
+   ],
+   "results": [
+    true
+   ],
+   "reason": null,
+   "key": ""
+  }
+ ],
+ "transient": [
+  {
+   "status": 429,
+   "message": "rate limited",
+   "transient": true
+  },
+  {
+   "status": 400,
+   "message": "bad request",
+   "transient": false
+  },
+  {
+   "status": 503,
+   "message": "x",
+   "transient": true
+  },
+  {
+   "status": 529,
+   "message": "overloaded",
+   "transient": true
+  },
+  {
+   "status": 401,
+   "message": "nope",
+   "transient": false
+  },
+  {
+   "status": 408,
+   "message": "x",
+   "transient": true
+  },
+  {
+   "status": 404,
+   "message": "x",
+   "transient": false
+  },
+  {
+   "message": "Request timed out",
+   "transient": true
+  },
+  {
+   "message": "Anthropic is Overloaded right now",
+   "transient": true
+  },
+  {
+   "message": "connection reset by peer",
+   "transient": true
+  },
+  {
+   "message": "socket hang up",
+   "transient": true
+  },
+  {
+   "message": "something unrelated",
+   "transient": false
+  },
+  {
+   "message": "Prefix: {\"error\":{\"code\":429,\"message\":\"slow down\"}}",
+   "transient": true
+  },
+  {
+   "message": "Prefix: {\"error\":{\"code\":400}}",
+   "transient": false
+  },
+  {
+   "message": "Failed: {\"status\":503}",
+   "transient": true
+  },
+  {
+   "message": "Failed: {\"error\":{\"status\":\"429\"}}",
+   "transient": true
+  },
+  {
+   "message": "service unavailable",
+   "transient": true
+  },
+  {
+   "message": "Network error while reading",
+   "transient": true
+  },
+  {
+   "message": "invalid {json",
+   "transient": false
+  },
+  {
+   "message": "",
+   "transient": false
+  },
+  {
+   "status": 200,
+   "message": "timeout but status 200 wins",
+   "transient": false
+  }
+ ],
+ "retryAfter": [
+  {
+   "headers": {
+    "retry-after-ms": "1500"
+   },
+   "ms": 1500
+  },
+  {
+   "headers": {
+    "retry-after": "3"
+   },
+   "ms": 3000
+  },
+  {
+   "headers": {
+    "retry-after": "0"
+   },
+   "ms": 0
+  },
+  {
+   "headers": {
+    "retry-after": "Tue, 24 Nov 2026 10:00:30 GMT"
+   },
+   "ms": 30000
+  },
+  {
+   "headers": {
+    "retry-after": "Tue, 24 Nov 2026 09:00:00 GMT"
+   },
+   "ms": 0
+  },
+  {
+   "headers": {
+    "retry-after": "soon"
+   },
+   "ms": null
+  },
+  {
+   "headers": {},
+   "ms": null
+  },
+  {
+   "headers": {
+    "retry-after-ms": "x",
+    "retry-after": "2"
+   },
+   "ms": 2000
+  },
+  {
+   "headers": {
+    "retry-after": "1.5"
+   },
+   "ms": 1500
+  }
+ ],
+ "identity": {
+  "models": [
+   {
+    "id": "openai::gpt-5",
+    "modelId": "gpt-5",
+    "provider": "openai"
+   },
+   {
+    "id": "openrouter::gpt-5",
+    "modelId": "gpt-5",
+    "provider": "openrouter"
+   },
+   {
+    "id": "anthropic::claude-x",
+    "modelId": "claude-x",
+    "provider": "anthropic"
+   },
+   {
+    "id": "plain-id",
+    "provider": "ollama"
+   }
+  ],
+  "selectionIds": [
+   "openai::gpt-5",
+   "x::y"
+  ],
+  "parse": [
+   {
+    "v": "openai::gpt-5",
+    "r": {
+     "provider": "openai",
+     "modelId": "gpt-5"
+    }
+   },
+   {
+    "v": "nope",
+    "r": null
+   },
+   {
+    "v": "::x",
+    "r": null
+   },
+   {
+    "v": "a::",
+    "r": null
+   },
+   {
+    "v": "a::auto",
+    "r": null
+   },
+   {
+    "v": " A :: b ",
+    "r": {
+     "provider": "a",
+     "modelId": "b"
+    }
+   },
+   {
+    "v": "a::b::c",
+    "r": {
+     "provider": "a",
+     "modelId": "b::c"
+    }
+   }
+  ],
+  "resolve": [
+   {
+    "v": "openai::gpt-5",
+    "p": "",
+    "r": {
+     "id": "openai::gpt-5",
+     "modelId": "gpt-5",
+     "provider": "openai"
+    }
+   },
+   {
+    "v": "gpt-5",
+    "p": "",
+    "r": {
+     "id": "openai::gpt-5",
+     "modelId": "gpt-5",
+     "provider": "openai"
+    }
+   },
+   {
+    "v": "gpt-5",
+    "p": "openrouter",
+    "r": {
+     "id": "openrouter::gpt-5",
+     "modelId": "gpt-5",
+     "provider": "openrouter"
+    }
+   },
+   {
+    "v": "gpt-5",
+    "p": "nobody",
+    "r": {
+     "id": "openai::gpt-5",
+     "modelId": "gpt-5",
+     "provider": "openai"
+    }
+   },
+   {
+    "v": "plain-id",
+    "p": "",
+    "r": {
+     "id": "plain-id",
+     "provider": "ollama"
+    }
+   },
+   {
+    "v": "missing",
+    "p": "",
+    "r": null
+   },
+   {
+    "v": "",
+    "p": "",
+    "r": null
+   },
+   {
+    "v": "  claude-x  ",
+    "p": "",
+    "r": {
+     "id": "anthropic::claude-x",
+     "modelId": "claude-x",
+     "provider": "anthropic"
+    }
+   }
+  ],
+  "normalize": [
+   "openai::gpt-5",
+   "anthropic::claude-x",
+   "plain-id"
+  ],
+  "matches": [
+   [
+    true,
+    true,
+    false,
+    false
+   ],
+   [
+    true,
+    false,
+    false,
+    false
+   ],
+   [
+    false,
+    false,
+    false,
+    false
+   ],
+   [
+    false,
+    false,
+    false,
+    false
+   ]
+  ],
+  "selectable": {
+   "provider": "openai",
+   "id": "openai::gpt-5",
+   "modelId": "gpt-5"
+  }
+ },
+ "reference": {
+  "catalog": [
+   {
+    "id": "openai/gpt-5.5",
+    "created": 1700000000,
+    "pricing": {
+     "prompt": "0.00000125"
+    },
+    "supported_parameters": [
+     "tools",
+     "temperature"
+    ]
+   },
+   {
+    "id": "anthropic/claude-sonnet-4.5",
+    "created_at": "2025-09-29T00:00:00Z",
+    "pricing": {
+     "prompt": "0.000003"
+    }
+   },
+   {
+    "id": "x/free-model:free",
+    "pricing": {
+     "prompt": "0"
+    },
+    "supported_parameters": [
+     "temperature"
+    ]
+   },
+   {
+    "id": "y/pricey",
+    "pricing": {
+     "prompt": "0.00002"
+    }
+   },
+   {
+    "id": "z/nopricing"
+   },
+   {
+    "id": "w/cheap",
+    "pricing": {
+     "prompt": "0.0000001"
+    }
+   }
+  ],
+  "facts": [
+   {
+    "createdAt": 1700000000000,
+    "inputCostPerM": 1.25,
+    "supportsTools": true
+   },
+   {
+    "createdAt": 1759104000000,
+    "inputCostPerM": 3,
+    "supportsTools": null
+   },
+   {
+    "createdAt": null,
+    "inputCostPerM": 0,
+    "supportsTools": false
+   },
+   {
+    "createdAt": null,
+    "inputCostPerM": 20,
+    "supportsTools": null
+   },
+   {
+    "createdAt": null,
+    "inputCostPerM": null,
+    "supportsTools": null
+   },
+   {
+    "createdAt": null,
+    "inputCostPerM": 0.09999999999999999,
+    "supportsTools": null
+   }
+  ],
+  "lookups": [
+   {
+    "id": "openai/gpt-5.5",
+    "facts": {
+     "createdAt": 1700000000000,
+     "inputCostPerM": 1.25,
+     "supportsTools": true
+    },
+    "tier": "medium",
+    "cost": 1.25
+   },
+   {
+    "id": "gpt-5.5",
+    "facts": {
+     "createdAt": 1700000000000,
+     "inputCostPerM": 1.25,
+     "supportsTools": true
+    },
+    "tier": "medium",
+    "cost": 1.25
+   },
+   {
+    "id": "gpt-5-5-2026-04-23",
+    "facts": {
+     "createdAt": 1700000000000,
+     "inputCostPerM": 1.25,
+     "supportsTools": true
+    },
+    "tier": "medium",
+    "cost": 1.25
+   },
+   {
+    "id": "claude-sonnet-4-5-20250929",
+    "facts": {
+     "createdAt": 1759104000000,
+     "inputCostPerM": 3,
+     "supportsTools": null
+    },
+    "tier": "medium",
+    "cost": 3
+   },
+   {
+    "id": "claude-sonnet-4.5",
+    "facts": {
+     "createdAt": 1759104000000,
+     "inputCostPerM": 3,
+     "supportsTools": null
+    },
+    "tier": "medium",
+    "cost": 3
+   },
+   {
+    "id": "x/free-model:free",
+    "facts": {
+     "createdAt": null,
+     "inputCostPerM": 0,
+     "supportsTools": false
+    },
+    "tier": "free",
+    "cost": 0
+   },
+   {
+    "id": "free-model",
+    "facts": null,
+    "tier": null,
+    "cost": null
+   },
+   {
+    "id": "unknown",
+    "facts": null,
+    "tier": null,
+    "cost": null
+   },
+   {
+    "id": "y/pricey",
+    "facts": {
+     "createdAt": null,
+     "inputCostPerM": 20,
+     "supportsTools": null
+    },
+    "tier": "expensive",
+    "cost": 20
+   },
+   {
+    "id": "w/cheap",
+    "facts": {
+     "createdAt": null,
+     "inputCostPerM": 0.09999999999999999,
+     "supportsTools": null
+    },
+    "tier": "cheap",
+    "cost": 0.09999999999999999
+   },
+   {
+    "id": "z/nopricing",
+    "facts": {
+     "createdAt": null,
+     "inputCostPerM": null,
+     "supportsTools": null
+    },
+    "tier": null,
+    "cost": null
+   }
+  ],
+  "tiers": [
+   {
+    "c": null,
+    "tier": null
+   },
+   {
+    "c": 0,
+    "tier": "free"
+   },
+   {
+    "c": 0.1,
+    "tier": "cheap"
+   },
+   {
+    "c": 0.5,
+    "tier": "medium"
+   },
+   {
+    "c": 4.99,
+    "tier": "medium"
+   },
+   {
+    "c": 5,
+    "tier": "expensive"
+   },
+   {
+    "c": 100,
+    "tier": "expensive"
+   }
+  ]
+ }
+}

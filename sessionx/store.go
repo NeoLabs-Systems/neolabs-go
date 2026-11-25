@@ -75,8 +75,27 @@ func (s *Store) ClearExpired(ctx context.Context) error {
 	return err
 }
 
-// DestroyWhere removes every session whose JSON matches a user id, used to log
-// an account out everywhere (password change, admin revoke).
+// IDsForUser lists the live session ids of an account.
+func (s *Store) IDsForUser(ctx context.Context, userID string) ([]string, error) {
+	rows, err := s.db.QueryContext(ctx,
+		`SELECT sid FROM sessions WHERE CAST(json_extract(sess, '$.userId') AS TEXT) = ? AND datetime('now') < datetime(expire)`, userID)
+	if err != nil {
+		return nil, fmt.Errorf("sessionx: list user sessions: %w", err)
+	}
+	defer rows.Close()
+	var ids []string
+	for rows.Next() {
+		var sid string
+		if err := rows.Scan(&sid); err != nil {
+			return nil, err
+		}
+		ids = append(ids, sid)
+	}
+	return ids, rows.Err()
+}
+
+// DestroyForUser removes every session of an account, used to log it out
+// everywhere (password change, admin revoke).
 func (s *Store) DestroyForUser(ctx context.Context, userID string) error {
 	_, err := s.db.ExecContext(ctx,
 		`DELETE FROM sessions WHERE CAST(json_extract(sess, '$.userId') AS TEXT) = ?`, userID)

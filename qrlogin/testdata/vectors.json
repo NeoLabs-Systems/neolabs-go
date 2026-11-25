@@ -1,0 +1,967 @@
+{
+ "describe": [
+  {
+   "ua": "",
+   "md": {},
+   "result": {
+    "label": "Unknown device",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Unknown device",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+   "md": {},
+   "result": {
+    "label": "iPhone · Safari",
+    "platformLabel": "iPhone",
+    "browserLabel": "Safari",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "iPhone",
+    "browserLabel": "Safari",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "iPhone · Safari",
+    "platformLabel": "iPhone",
+    "browserLabel": "Safari",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
+   "md": {},
+   "result": {
+    "label": "iPad · Safari",
+    "platformLabel": "iPad",
+    "browserLabel": "Safari",
+    "deviceClass": "tablet"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "iPad",
+    "browserLabel": "Safari",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "iPad · Safari",
+    "platformLabel": "iPad",
+    "browserLabel": "Safari",
+    "deviceClass": "tablet"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
+   "md": {},
+   "result": {
+    "label": "Android · Chrome",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Android · Chrome",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 13; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36",
+   "md": {},
+   "result": {
+    "label": "Android · Chrome",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 13; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 13; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Linux; Android 13; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Android · Chrome",
+    "platformLabel": "Android",
+    "browserLabel": "Chrome",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+   "md": {},
+   "result": {
+    "label": "macOS · Edge",
+    "platformLabel": "macOS",
+    "browserLabel": "Edge",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "macOS",
+    "browserLabel": "Edge",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "macOS · Edge",
+    "platformLabel": "macOS",
+    "browserLabel": "Edge",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+   "md": {},
+   "result": {
+    "label": "Windows · Firefox",
+    "platformLabel": "Windows",
+    "browserLabel": "Firefox",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Windows",
+    "browserLabel": "Firefox",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Windows · Firefox",
+    "platformLabel": "Windows",
+    "browserLabel": "Firefox",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 OPR/105.0",
+   "md": {},
+   "result": {
+    "label": "Linux · Opera",
+    "platformLabel": "Linux",
+    "browserLabel": "Opera",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 OPR/105.0",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Linux",
+    "browserLabel": "Opera",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 OPR/105.0",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 OPR/105.0",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Linux · Opera",
+    "platformLabel": "Linux",
+    "browserLabel": "Opera",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+   "md": {},
+   "result": {
+    "label": "macOS · Safari",
+    "platformLabel": "macOS",
+    "browserLabel": "Safari",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "macOS",
+    "browserLabel": "Safari",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "macOS · Safari",
+    "platformLabel": "macOS",
+    "browserLabel": "Safari",
+    "deviceClass": "desktop"
+   }
+  },
+  {
+   "ua": "Dart/3.2 (dart:io)",
+   "md": {},
+   "result": {
+    "label": "Unknown device · App",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Flutter app",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "Dart/3.2 (dart:io)",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Flutter app",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Dart/3.2 (dart:io)",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Dart/3.2 (dart:io)",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Unknown device · App",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Flutter app",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "curl/8.4.0",
+   "md": {},
+   "result": {
+    "label": "CLI session · curl",
+    "platformLabel": "CLI session",
+    "browserLabel": "curl",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "curl/8.4.0",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "CLI session",
+    "browserLabel": "curl",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "curl/8.4.0",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "curl/8.4.0",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "CLI session · curl",
+    "platformLabel": "CLI session",
+    "browserLabel": "curl",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Wget/1.21",
+   "md": {},
+   "result": {
+    "label": "CLI session · wget",
+    "platformLabel": "CLI session",
+    "browserLabel": "wget",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Wget/1.21",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "CLI session",
+    "browserLabel": "wget",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "Wget/1.21",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "Wget/1.21",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "CLI session · wget",
+    "platformLabel": "CLI session",
+    "browserLabel": "wget",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "HTTPie/3.2",
+   "md": {},
+   "result": {
+    "label": "CLI session · HTTPie",
+    "platformLabel": "CLI session",
+    "browserLabel": "HTTPie",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "HTTPie/3.2",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "CLI session",
+    "browserLabel": "HTTPie",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "HTTPie/3.2",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "HTTPie/3.2",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "CLI session · HTTPie",
+    "platformLabel": "CLI session",
+    "browserLabel": "HTTPie",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "SomeBot/1.0",
+   "md": {},
+   "result": {
+    "label": "Unknown device",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "unknown"
+   }
+  },
+  {
+   "ua": "SomeBot/1.0",
+   "md": {
+    "deviceLabel": "My Watch",
+    "platform": "esp32-s3-amoled",
+    "deviceClass": "SERVER"
+   },
+   "result": {
+    "label": "My Watch",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "server"
+   }
+  },
+  {
+   "ua": "SomeBot/1.0",
+   "md": {
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   },
+   "result": {
+    "label": "Pixel · App",
+    "platformLabel": "Pixel",
+    "browserLabel": "App",
+    "deviceClass": "mobile"
+   }
+  },
+  {
+   "ua": "SomeBot/1.0",
+   "md": {
+    "deviceClass": "weird"
+   },
+   "result": {
+    "label": "Unknown device",
+    "platformLabel": "Unknown device",
+    "browserLabel": "Unknown browser",
+    "deviceClass": "unknown"
+   }
+  }
+ ],
+ "norm": [
+  {
+   "in": {},
+   "out": {
+    "deviceLabel": "",
+    "platformLabel": "",
+    "browserLabel": "",
+    "deviceClass": "",
+    "appMode": "",
+    "platform": ""
+   }
+  },
+  {
+   "in": null,
+   "out": {
+    "deviceLabel": "",
+    "platformLabel": "",
+    "browserLabel": "",
+    "deviceClass": "",
+    "appMode": "",
+    "platform": ""
+   }
+  },
+  {
+   "in": [],
+   "out": {
+    "deviceLabel": "",
+    "platformLabel": "",
+    "browserLabel": "",
+    "deviceClass": "",
+    "appMode": "",
+    "platform": ""
+   }
+  },
+  {
+   "in": "x",
+   "out": {
+    "deviceLabel": "",
+    "platformLabel": "",
+    "browserLabel": "",
+    "deviceClass": "",
+    "appMode": "",
+    "platform": ""
+   }
+  },
+  {
+   "in": {
+    "deviceLabel": "  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ",
+    "platformLabel": " P ",
+    "browserLabel": "B",
+    "deviceClass": "Tablet",
+    "appMode": "WEB",
+    "platform": "ANDROID",
+    "extra": "drop"
+   },
+   "out": {
+    "deviceLabel": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "platformLabel": "P",
+    "browserLabel": "B",
+    "deviceClass": "tablet",
+    "appMode": "web",
+    "platform": "android"
+   }
+  },
+  {
+   "in": {
+    "deviceClass": "desktop",
+    "deviceLabel": 5
+   },
+   "out": {
+    "deviceLabel": "5",
+    "platformLabel": "",
+    "browserLabel": "",
+    "deviceClass": "desktop",
+    "appMode": "",
+    "platform": ""
+   }
+  }
+ ],
+ "rows": [
+  {
+   "row": {
+    "id": "c1",
+    "status": "pending",
+    "created_at": "2026-01-01 10:00:00",
+    "expires_at": "2026-01-01 10:02:00",
+    "request_user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+    "request_ip_address": "203.0.113.5",
+    "request_location_label": "Berlin, Berlin, DE",
+    "request_location_json": "{\"city\":\"Berlin\",\"region\":\"BE\",\"country\":\"DE\",\"timezone\":\"Europe/Berlin\"}",
+    "request_metadata_json": "{}"
+   },
+   "out": {
+    "challengeId": "c1",
+    "status": "pending",
+    "requestedAt": "2026-01-01 10:00:00",
+    "expiresAt": "2026-01-01 10:02:00",
+    "scannedAt": null,
+    "approvedAt": null,
+    "claimedAt": null,
+    "scannedBy": null,
+    "requestedDevice": {
+     "label": "iPhone · Safari",
+     "platformLabel": "iPhone",
+     "browserLabel": "Safari",
+     "deviceClass": "mobile",
+     "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+     "metadata": {}
+    },
+    "requestLocation": {
+     "label": "Berlin, Berlin, DE",
+     "ipAddress": "203.0.113.5",
+     "city": "Berlin",
+     "region": "BE",
+     "country": "DE",
+     "timezone": "Europe/Berlin"
+    },
+    "approval": null
+   }
+  },
+  {
+   "row": {
+    "id": "c2",
+    "status": "scanned",
+    "created_at": "2026-01-01 10:00:00",
+    "expires_at": "2026-01-01 10:02:00",
+    "scanned_at": "2026-01-01 10:00:30",
+    "scanned_metadata_json": "{\"deviceLabel\":\"Neo iPhone\",\"platformLabel\":\"iPhone\",\"deviceClass\":\"mobile\"}",
+    "request_user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+    "request_location_label": null,
+    "request_location_json": "bad",
+    "request_metadata_json": "{\"deviceLabel\":\"Desk\"}"
+   },
+   "out": {
+    "challengeId": "c2",
+    "status": "scanned",
+    "requestedAt": "2026-01-01 10:00:00",
+    "expiresAt": "2026-01-01 10:02:00",
+    "scannedAt": "2026-01-01 10:00:30",
+    "approvedAt": null,
+    "claimedAt": null,
+    "scannedBy": {
+     "label": "Neo iPhone",
+     "platformLabel": "iPhone",
+     "deviceClass": "mobile"
+    },
+    "requestedDevice": {
+     "label": "Desk",
+     "platformLabel": "macOS",
+     "browserLabel": "Edge",
+     "deviceClass": "desktop",
+     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 Edg/120.0",
+     "metadata": {
+      "deviceLabel": "Desk"
+     }
+    },
+    "requestLocation": {
+     "label": "Unknown",
+     "ipAddress": null,
+     "city": null,
+     "region": null,
+     "country": null,
+     "timezone": null
+    },
+    "approval": null
+   }
+  },
+  {
+   "row": {
+    "id": "c3",
+    "status": "approved",
+    "created_at": "2026-01-01 10:00:00",
+    "expires_at": "2026-01-01 10:02:00",
+    "approved_at": "2026-01-01 10:01:00",
+    "approved_by_user_id": 7,
+    "approved_metadata_json": "{\"platform\":\"ios\"}",
+    "request_user_agent": "",
+    "request_metadata_json": "{}",
+    "request_location_json": "{}"
+   },
+   "out": {
+    "challengeId": "c3",
+    "status": "approved",
+    "requestedAt": "2026-01-01 10:00:00",
+    "expiresAt": "2026-01-01 10:02:00",
+    "scannedAt": null,
+    "approvedAt": "2026-01-01 10:01:00",
+    "claimedAt": null,
+    "scannedBy": null,
+    "requestedDevice": {
+     "label": "Unknown device",
+     "platformLabel": "Unknown device",
+     "browserLabel": "Unknown browser",
+     "deviceClass": "unknown",
+     "userAgent": "",
+     "metadata": {}
+    },
+    "requestLocation": {
+     "label": "Unknown",
+     "ipAddress": null,
+     "city": null,
+     "region": null,
+     "country": null,
+     "timezone": null
+    },
+    "approval": {
+     "userId": 7,
+     "metadata": {
+      "platform": "ios"
+     }
+    }
+   }
+  },
+  {
+   "row": {
+    "id": "c4",
+    "status": "claimed",
+    "created_at": "2026-01-01 10:00:00",
+    "expires_at": "2026-01-01 10:02:00",
+    "claimed_at": "2026-01-01 10:01:30",
+    "approved_by_user_id": 7,
+    "request_user_agent": "Dart/3.2 (dart:io)",
+    "request_metadata_json": null,
+    "request_location_json": null,
+    "scanned_at": "2026-01-01 10:00:40",
+    "scanned_metadata_json": "{\"platformLabel\":\"Android\"}"
+   },
+   "out": {
+    "challengeId": "c4",
+    "status": "claimed",
+    "requestedAt": "2026-01-01 10:00:00",
+    "expiresAt": "2026-01-01 10:02:00",
+    "scannedAt": "2026-01-01 10:00:40",
+    "approvedAt": null,
+    "claimedAt": "2026-01-01 10:01:30",
+    "scannedBy": {
+     "label": "Android",
+     "platformLabel": "Android",
+     "deviceClass": null
+    },
+    "requestedDevice": {
+     "label": "Unknown device · App",
+     "platformLabel": "Unknown device",
+     "browserLabel": "Flutter app",
+     "deviceClass": "unknown",
+     "userAgent": "Dart/3.2 (dart:io)",
+     "metadata": {}
+    },
+    "requestLocation": {
+     "label": "Unknown",
+     "ipAddress": null,
+     "city": null,
+     "region": null,
+     "country": null,
+     "timezone": null
+    },
+    "approval": {
+     "userId": 7,
+     "metadata": {}
+    }
+   }
+  }
+ ]
+}

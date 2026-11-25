@@ -1,0 +1,69 @@
+{
+ "article.html": {
+  "markdown": "> URL: https://example.com/base/page\n> Title: Understanding Tide Pools & Their Creatures\n> Description: A field guide to the small worlds left behind by the sea.\n> Author: Ada Marsh\n> Word count: 216\n\nlogo, icon\n\n# Understanding Tide Pools\n\n## What is a tide pool?\n\nA tide pool is a rocky pool on the seashore which is separated from the sea at low tide, filled with seawater. Many tide pools are habitats of especially adaptable animals that have engaged the attention of naturalists and marine biologists, as well as philosophical essayists. Anemones, sea stars and urchins are common.\n\nVisit the anemone guide or read the reference for more. Also jump and nothing.\n\n> The sea, once it casts its spell, holds one in its net of wonder forever.\n>\n>\n>\n> Jacques Cousteau\n\n```python\ndef tide(x):\n    return x * 2\n```\n\nUse `tide()` wisely.\n\n- Low tide zone\n- Middle tide zone with more\n\n1. Arrive early\n2. Step carefully\n3. Leave everything\n\nZoneDepthLow1 m\n\nA purple sea star clinging to a rock\nSea star at dusk\n\n12,000+\n\nspecies recorded\n\nMore facts\n\nTide pools experience extreme changes in temperature, salinity and oxygen content throughout a day, making their residents some of the hardiest animals in the world. Some animals survive being out of water for hours.\n\n---\n\n\nLine one\nLine two  with tab\n\n## Links\n- anemone guide: https://example.com/guides/anemones\n- the reference: https://example.org/ref?x=1&y=2\n- more: https://example.com/base/zones/middle",
+  "metadata": {
+   "title": "Understanding Tide Pools & Their Creatures",
+   "description": "A field guide to the small worlds left behind by the sea.",
+   "author": "Ada Marsh",
+   "url": "https://example.com/base/page"
+  },
+  "wordCount": 216,
+  "strategies": [
+   "readability_score"
+  ]
+ },
+ "empty.html": {
+  "markdown": "> URL: https://example.com/base/page\n> Word count: 0\n\n",
+  "metadata": {
+   "title": "",
+   "description": "",
+   "author": "",
+   "url": "https://example.com/base/page"
+  },
+  "wordCount": 0,
+  "strategies": [
+   "sparse_recovery"
+  ]
+ },
+ "entities.html": {
+  "markdown": "> URL: https://example.com/base/page\n> Word count: 38\n\n# Café — Menü\n\nPrices: 5 € & up. “Quotes” and ‘single’. 😀 emoji. Ünïcødé text that goes on for a while.\n\nnot bold markers and stars\n\n- nested para in li\n\n1. inner one\n2. inner two",
+  "metadata": {
+   "title": "",
+   "description": "",
+   "author": "",
+   "url": "https://example.com/base/page"
+  },
+  "wordCount": 38,
+  "strategies": [
+   "sparse_recovery"
+  ]
+ },
+ "scored.html": {
+  "markdown": "> URL: https://example.com/base/page\n> Title: Scored page\n> Description: desc\n> Word count: 106\n\nThe quick brown fox jumps over the lazy dog near the riverbank on a quiet autumn morning while the town sleeps.\n\nEvery word in this paragraph exists to make the section the best scoring candidate for the readability algorithm, beating the link list above by a wide margin of plain text content without anchors.\n\nMore sentences follow so that the extracted markdown has enough words to pass the sparse threshold of one hundred words, which triggers a body recovery otherwise. Tide, wind, sun, rain, snow, leaves, roots, branches, birds and bees all appear here to pad the count further and further until we comfortably exceed it.",
+  "metadata": {
+   "title": "Scored page",
+   "description": "desc",
+   "author": "",
+   "url": "https://example.com/base/page"
+  },
+  "wordCount": 106,
+  "strategies": [
+   "readability_score"
+  ]
+ },
+ "sparse.html": {
+  "markdown": "> URL: https://example.com/base/page\n> Title: Tiny\n> Word count: 20\n\n# Widget\n\nBuy the best widget & save <today>.\nBuy now\n\n{\n  \"item\": {\n    \"name\": \"Widget\",\n    \"price\": 9.99\n  }\n}\n\n## Links\n- Buy now: https://example.com/buy\n\n## Structured Data\n```json\n[\n  {\n    \"@context\": \"https://schema.org\",\n    \"@type\": \"Product\",\n    \"name\": \"Widget\",\n    \"description\": \"short\",\n    \"offers\": {\n      \"price\": \"9.99\"\n    }\n  },\n  {\n    \"@type\": \"Recipe\",\n    \"name\": \"Soup\",\n    \"articleBody\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"\n  }\n]\n```",
+  "metadata": {
+   "title": "Tiny",
+   "description": "",
+   "author": "",
+   "url": "https://example.com/base/page"
+  },
+  "wordCount": 11,
+  "strategies": [
+   "sparse_recovery",
+   "data_island_schema",
+   "data_island_next"
+  ]
+ }
+}

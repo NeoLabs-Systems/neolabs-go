@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -166,11 +167,33 @@ func TestSessionLifecycle(t *testing.T) {
 	}
 }
 
+func TestRegenerateClearsDataAndRotateKeepsIt(t *testing.T) {
+	m, _ := newTestManager(t, Options{})
+	first := serve(m, func(w http.ResponseWriter, r *http.Request) { FromContext(r.Context()).Set("pending", "x") }, nil, false, "").Result().Cookies()[0]
+	var after string
+	rec := serve(m, func(w http.ResponseWriter, r *http.Request) {
+		s := FromContext(r.Context())
+		s.Regenerate()
+		s.Set("userId", int64(1))
+		after = s.String("pending")
+	}, first, false, "")
+	if after != "" {
+		t.Fatal("Regenerate must drop pre-login state")
+	}
+	next := rec.Result().Cookies()[0]
+	serve(m, func(w http.ResponseWriter, r *http.Request) { FromContext(r.Context()).Rotate() }, next, false, "")
+	var uid int64
+	serve(m, func(w http.ResponseWriter, r *http.Request) { uid, _ = FromContext(r.Context()).Int64("userId") }, next, false, "")
+	if uid != 0 {
+		t.Fatal("rotating must retire the old id")
+	}
+}
+
 func TestRegenerateReplacesId(t *testing.T) {
 	m, store := newTestManager(t, Options{})
 	rec := serve(m, func(w http.ResponseWriter, r *http.Request) { FromContext(r.Context()).Set("a", "1") }, nil, false, "")
 	first := rec.Result().Cookies()[0]
-	rec = serve(m, func(w http.ResponseWriter, r *http.Request) { FromContext(r.Context()).Regenerate() }, first, false, "")
+	rec = serve(m, func(w http.ResponseWriter, r *http.Request) { FromContext(r.Context()).Rotate() }, first, false, "")
 	second := rec.Result().Cookies()[0]
 	if first.Value == second.Value {
 		t.Fatal("id not regenerated")
@@ -224,5 +247,44 @@ func TestDestroyForUser(t *testing.T) {
 	sid, _ := DecodeCookieValue(b.Value, "secret")
 	if d, _ := store.Get(context.Background(), sid); d == nil {
 		t.Fatal("user 2 session was removed")
+	}
+}
+
+func TestHashIDMatchesNodeHmac(t *testing.T) {
+	// crypto.createHmac('sha256', 'secret').update('sid-1').digest('hex')
+	const want = "128214795fd96fda007331ea9fc6cd7bab6134bf147d0d00f6bbf06af2670fcd"
+	if got := HashID("secret", "sid-1"); got != want {
+		t.Fatalf("got %s", got)
+	}
+}
+
+func TestSessionIDsPerUserMaxAgeAndHelpers(t *testing.T) {
+	m, store := newTestManager(t, Options{})
+	var cookies []*http.Cookie
+	for _, id := range []string{"5", "5", "6"} {
+		rec := serve(m, func(w http.ResponseWriter, r *http.Request) {
+			s := FromContext(r.Context())
+			n, _ := strconv.Atoi(id)
+			s.Set("userId", int64(n))
+			if id == "6" {
+				s.SetMaxAge(90 * 24 * time.Hour)
+			}
+		}, nil, false, "")
+		cookies = append(cookies, rec.Result().Cookies()[0])
+	}
+	ids, err := store.IDsForUser(context.Background(), "5")
+	if err != nil || len(ids) != 2 {
+		t.Fatalf("ids %v %v", ids, err)
+	}
+	if long := cookies[2].Expires; time.Until(long) < 80*24*time.Hour {
+		t.Fatalf("per-session lifetime ignored: %v", long)
+	}
+	var sid, uid string
+	serve(m, func(w http.ResponseWriter, r *http.Request) {
+		s := FromContext(r.Context())
+		sid, uid = s.ID(), s.String("userId")
+	}, cookies[0], false, "")
+	if sid == "" || uid != "5" {
+		t.Fatalf("ID()=%q userId=%q (numbers must stringify)", sid, uid)
 	}
 }
