@@ -306,9 +306,10 @@ func (s *Supervisor) Track(pid int, stop func(reason string), done <-chan struct
 // Managed reports whether pid is a tracked process.
 func (s *Supervisor) Managed(pid int) bool {
 	s.mu.Lock()
-	defer s.mu.Unlock()
-	_, ok := s.procs[pid]
-	return ok
+	p, ok := s.procs[pid]
+	s.mu.Unlock()
+	// A process that has exited may still be listed until its cleanup runs.
+	return ok && p.Alive()
 }
 
 // Kill terminates a tracked process (SIGTERM, then SIGKILL after the grace
