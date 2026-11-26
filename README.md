@@ -15,6 +15,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 | `ssrf` | outbound HTTP client that only reaches public addresses |
 | `runtimecfg` | data directories (0700), private files (0600), `.env` loading |
 | `dbx` | SQLite (pure Go, FTS5), writer/reader pools, `user_version` migrations |
+| `dbx/cryptdb` | the same database encrypted at rest (pure Go, Adiantum), encrypting a plaintext one on first open |
 | `filebox` | Versioned AES-256-GCM authenticated whole-file/stream sealing with magic headers |
 | `testkit` | test helpers that never touch a real data directory |
 | `cli` | app CLI building blocks: `--json` setup event stream, terminal output and prompts, port probes, command list |
