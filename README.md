@@ -7,7 +7,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 | `authpages` | the browser pages account emails link to |
 | `userid` | account ids that are numbers in one app and UUIDs in another |
 | `secretbox` | AES-256-GCM sealed secrets at rest (`enc:v1:` layout) |
-| `sessionx` | HMAC-signed cookie sessions on a SQLite store, express-session compatible |
+| `sessionx` | sessions on a SQLite store: express-session compatible signed cookies, or bearer tokens |
 | `passhash` | bcrypt hashes, random tokens, SHA-256 token digests, constant-time compare |
 | `secheaders` | baseline security headers and an ordered CSP builder |
 | `httpx` | JSON helpers, middleware chain, CORS, origin guard, API case guard, panic recovery |
