@@ -21,6 +21,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 | `cli/envfile` | `.env` read/edit with atomic private (0600) writes |
 | `cli/service` | per-user service: launchd agent, systemd user unit, Windows logon task, detached fallback |
 | `cli/release` | release channels, version order, Ed25519-signed manifests, verified HTTPS downloads, safe zip extraction, tag-based release lookup, and invocation-aware launcher refresh |
+| `cli/update` | find, verify and unpack the signed runtime, switch to it and roll back |
 | `cli/oauthcli` | command-line OAuth sign-in: PKCE browser flow with a loopback redirect, device-code polling |
 | `googleauth` | access tokens from Google Application Default Credentials files (service account JWT or authorized user), no SDK |
 | `llm/openaiimages` | OpenAI-compatible `/images/generations` client (OpenAI, xAI) returning base64 images |
