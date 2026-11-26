@@ -460,3 +460,23 @@ func TestPayloadJSON(t *testing.T) {
 		t.Fatalf("\n got %s\nwant %s", raw, want)
 	}
 }
+
+func TestLoginByUsernameWithSeveralKeysAndWithoutAUserHandle(t *testing.T) {
+	ctx := context.Background()
+	s, _ := newService()
+	first, second := newAuthenticator(t), newAuthenticator(t)
+	register(t, s, first, "laptop")
+	register(t, s, second, "phone")
+	for _, handle := range []string{"7", ""} {
+		for _, key := range []*authenticator{first, second} {
+			options, pending, err := s.BeginLogin(ctx, req(), "neo")
+			if err != nil {
+				t.Fatal(err)
+			}
+			res, err := s.CompleteLogin(ctx, req(), key.assert(t, rpID, origin, challengeOf(t, options), handle), pending)
+			if err != nil || res.UserID != "7" {
+				t.Fatalf("handle %q: %+v %v", handle, res, err)
+			}
+		}
+	}
+}

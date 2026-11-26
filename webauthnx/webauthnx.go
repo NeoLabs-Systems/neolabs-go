@@ -8,6 +8,7 @@
 package webauthnx
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -457,8 +458,26 @@ func (s *Service) CompleteLogin(ctx context.Context, r *http.Request, response j
 	if err != nil {
 		return LoginResult{}, err
 	}
+	// With a username the browser was offered all of that account's keys, and
+	// the library requires the account to own every one of them, not only the
+	// one that answered.
+	owned := []webauthn.Credential{wcred}
+	others, err := s.Store.ForUserAndRP(ctx, stored.UserID, rpID)
+	if err != nil {
+		return LoginResult{}, err
+	}
+	for _, d := range descriptors(others) {
+		if !bytes.Equal(d.CredentialID, credID) {
+			owned = append(owned, webauthn.Credential{ID: d.CredentialID})
+		}
+	}
+	// Keys that are not discoverable return no user handle. It is not part of
+	// the signature; the account is the one the credential is stored for.
+	if len(parsed.Response.UserHandle) == 0 {
+		parsed.Response.UserHandle = []byte(stored.UserID)
+	}
 	handler := func(rawID, userHandle []byte) (webauthn.User, error) {
-		return user{id: stored.UserID, credentials: []webauthn.Credential{wcred}}, nil
+		return user{id: stored.UserID, credentials: owned}, nil
 	}
 	verified, verr := wa.ValidateDiscoverableLogin(handler, p.Session, parsed)
 	if verr != nil || verified == nil || verified.Authenticator.CloneWarning {
