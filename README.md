@@ -4,6 +4,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 
 | Package | What it gives you |
 |---|---|
+| `authpages` | the browser pages account emails link to |
 | `userid` | account ids that are numbers in one app and UUIDs in another |
 | `secretbox` | AES-256-GCM sealed secrets at rest (`enc:v1:` layout) |
 | `sessionx` | HMAC-signed cookie sessions on a SQLite store, express-session compatible |
