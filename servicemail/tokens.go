@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/NeoLabs-Systems/neolabs-go/passhash"
+	"github.com/NeoLabs-Systems/neolabs-go/userid"
 )
 
 const tokenBytes = 32
@@ -37,7 +38,7 @@ func SQLiteTime(tm time.Time) string { return tm.UTC().Format("2006-01-02 15:04:
 
 // Create issues a token and retires earlier unused tokens of the same type for
 // the account, so only the latest link works.
-func (t Tokens) Create(ctx context.Context, userID int64, typ, email string, ttl time.Duration) (token, expiresAt string, err error) {
+func (t Tokens) Create(ctx context.Context, userID userid.ID, typ, email string, ttl time.Duration) (token, expiresAt string, err error) {
 	buf := make([]byte, tokenBytes)
 	if _, err := rand.Read(buf); err != nil {
 		return "", "", fmt.Errorf("servicemail: random token: %w", err)
@@ -50,11 +51,11 @@ func (t Tokens) Create(ctx context.Context, userID int64, typ, email string, ttl
 	}
 	defer tx.Rollback()
 	if _, err := tx.ExecContext(ctx, `UPDATE user_email_tokens SET consumed_at = COALESCE(consumed_at, datetime('now'))
-		WHERE user_id = ? AND type = ? AND consumed_at IS NULL`, userID, typ); err != nil {
+		WHERE user_id = ? AND type = ? AND consumed_at IS NULL`, string(userID), typ); err != nil {
 		return "", "", err
 	}
 	if _, err := tx.ExecContext(ctx, `INSERT INTO user_email_tokens (user_id, type, email, token_hash, expires_at) VALUES (?, ?, ?, ?, ?)`,
-		userID, typ, email, passhash.DigestToken(token), expiresAt); err != nil {
+		string(userID), typ, email, passhash.DigestToken(token), expiresAt); err != nil {
 		return "", "", err
 	}
 	return token, expiresAt, tx.Commit()
@@ -63,7 +64,7 @@ func (t Tokens) Create(ctx context.Context, userID int64, typ, email string, ttl
 // Row is a live token with the account it belongs to.
 type Row struct {
 	ID           int64
-	UserID       int64
+	UserID       userid.ID
 	Type         string
 	Email        string
 	Username     string

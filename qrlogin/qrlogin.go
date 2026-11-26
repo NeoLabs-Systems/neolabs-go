@@ -22,6 +22,7 @@ import (
 	"github.com/NeoLabs-Systems/neolabs-go/apperr"
 	"github.com/NeoLabs-Systems/neolabs-go/dbx"
 	"github.com/NeoLabs-Systems/neolabs-go/passhash"
+	"github.com/NeoLabs-Systems/neolabs-go/userid"
 )
 
 const (
@@ -278,7 +279,7 @@ func newUUID() string {
 type row struct {
 	id, status, expiresAt, createdAt          string
 	userAgent, ip, locLabel, locJSON, reqMeta sql.NullString
-	approvedBy                                sql.NullInt64
+	approvedBy                                userid.ID
 	approvedMeta, scannedMeta                 sql.NullString
 	scannedAt, approvedAt, claimedAt          sql.NullString
 }
@@ -436,7 +437,7 @@ type RequestLocation struct {
 
 // Approval records who approved.
 type Approval struct {
-	UserID   int64          `json:"userId"`
+	UserID   userid.ID      `json:"userId"`
 	Metadata map[string]any `json:"metadata"`
 }
 
@@ -490,8 +491,8 @@ func serialize(r *row) Challenge {
 		}
 		c.ScannedBy = &ScannedBy{Label: lbl, PlatformLabel: nonEmpty(sm["platformLabel"], 60), DeviceClass: nonEmpty(sm["deviceClass"], 24)}
 	}
-	if r.approvedBy.Valid && r.approvedBy.Int64 != 0 {
-		c.Approval = &Approval{UserID: r.approvedBy.Int64, Metadata: jsonObject(r.approvedMeta)}
+	if r.approvedBy != "" {
+		c.Approval = &Approval{UserID: r.approvedBy, Metadata: jsonObject(r.approvedMeta)}
 	}
 	return c
 }
@@ -583,7 +584,7 @@ func (s *Store) Cancel(ctx context.Context, id, pollToken string) error {
 
 // Approve is the phone approving as userID. approverSessionHash is the keyed
 // hash of the approving session (may be empty).
-func (s *Store) Approve(ctx context.Context, id, secret string, userID int64, approverSessionHash string, approval any) (*Challenge, error) {
+func (s *Store) Approve(ctx context.Context, id, secret string, userID userid.ID, approverSessionHash string, approval any) (*Challenge, error) {
 	r, err := s.bySecret(ctx, id, secret)
 	if err != nil {
 		return nil, err
@@ -596,7 +597,7 @@ func (s *Store) Approve(ctx context.Context, id, secret string, userID int64, ap
 		return nil, conflict("This QR login request was already used.")
 	case r.status == "declined":
 		return nil, conflict("This QR login request was cancelled.")
-	case r.status == "approved" && r.approvedBy.Valid && r.approvedBy.Int64 != 0 && r.approvedBy.Int64 != userID:
+	case r.status == "approved" && r.approvedBy != "" && r.approvedBy != userID:
 		return nil, conflict("This QR login request was already approved.")
 	}
 	meta, _ := json.Marshal(NormalizeMetadata(approval))
@@ -607,7 +608,7 @@ func (s *Store) Approve(ctx context.Context, id, secret string, userID int64, ap
 	if _, err := s.DB.W.ExecContext(ctx, `UPDATE user_qr_login_challenges
 		SET status = 'approved', approved_by_user_id = ?, approved_session_hash = ?, approved_metadata_json = ?, approved_at = ?
 		WHERE id = ? AND status IN ('pending','scanned','approved')`,
-		userID, hash, string(meta), sqliteTime(s.now()), r.id); err != nil {
+		string(userID), hash, string(meta), sqliteTime(s.now()), r.id); err != nil {
 		return nil, err
 	}
 	s.notify(r.id)
@@ -728,7 +729,7 @@ func derefStr(p *string) string {
 
 // Claimed is the result of a successful claim: whose session to mint.
 type Claimed struct {
-	UserID    int64
+	UserID    userid.ID
 	Challenge Challenge
 }
 
@@ -744,7 +745,7 @@ func (s *Store) Claim(ctx context.Context, id, pollToken string) (*Claimed, erro
 	if r.status == "claimed" {
 		return nil, conflict("This QR login request was already used.")
 	}
-	if r.status != "approved" || !r.approvedBy.Valid || r.approvedBy.Int64 == 0 {
+	if r.status != "approved" || r.approvedBy == "" {
 		return nil, conflict("This QR login request is not approved yet.")
 	}
 	now := sqliteTime(s.now())
@@ -758,5 +759,5 @@ func (s *Store) Claim(ctx context.Context, id, pollToken string) (*Claimed, erro
 	}
 	s.notify(r.id)
 	r.status, r.claimedAt = "claimed", sql.NullString{String: now, Valid: true}
-	return &Claimed{UserID: r.approvedBy.Int64, Challenge: serialize(r)}, nil
+	return &Claimed{UserID: r.approvedBy, Challenge: serialize(r)}, nil
 }

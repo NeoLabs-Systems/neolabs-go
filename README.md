@@ -4,6 +4,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 
 | Package | What it gives you |
 |---|---|
+| `userid` | account ids that are numbers in one app and UUIDs in another |
 | `secretbox` | AES-256-GCM sealed secrets at rest (`enc:v1:` layout) |
 | `sessionx` | HMAC-signed cookie sessions on a SQLite store, express-session compatible |
 | `passhash` | bcrypt hashes, random tokens, SHA-256 token digests, constant-time compare |
@@ -27,7 +28,7 @@ Compatibility with the existing Node servers is tested with vectors generated fr
 
 ## Shared installers and GitHub Actions
 
-Apps keep their identity, setup configuration, data migrations and release asset build steps in their own repositories. They use `cli/release` for signed runtime updates and launcher replacement, and `scripts/select-release-asset.sh OWNER/REPO stable|beta ASSET_PREFIX` for bootstrap CLI downloads. The selector checks version tags directly so a stale GitHub release-list response does not pin an installer to an older build.
+Apps keep their identity, setup configuration, data migrations and release asset build steps in their own repositories. They use `cli/release` for signed runtime updates and launcher replacement, `scripts/install-cli.sh` for the whole bootstrap installer (each app's `install.sh` only names itself), and `scripts/select-release-asset.sh OWNER/REPO stable|beta ASSET_PREFIX` for bootstrap CLI downloads. The selector checks version tags directly so a stale GitHub release-list response does not pin an installer to an older build.
 
 The reusable Go and Flutter setup actions live in `.github/actions/setup-go` and `.github/actions/setup-flutter`. App workflows should reference these actions by an immutable commit SHA.
 

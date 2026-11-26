@@ -145,7 +145,7 @@ func TestTokensCreateFindAndSupersede(t *testing.T) {
 	tk := Tokens{DB: db}
 	ctx := context.Background()
 
-	first, _, err := tk.Create(ctx, 1, "password_reset", "neo@example.com", time.Hour)
+	first, _, err := tk.Create(ctx, "1", "password_reset", "neo@example.com", time.Hour)
 	if err != nil || len(first) != 43 {
 		t.Fatalf("%q %v", first, err)
 	}
@@ -168,20 +168,20 @@ func TestTokensCreateFindAndSupersede(t *testing.T) {
 		t.Fatal("unknown token")
 	}
 
-	second, _, _ := tk.Create(ctx, 1, "password_reset", "neo@example.com", time.Hour)
+	second, _, _ := tk.Create(ctx, "1", "password_reset", "neo@example.com", time.Hour)
 	if r, _ := tk.Find(ctx, db, first, ""); r != nil {
 		t.Fatal("a newer token retires the older one")
 	}
 	if r, _ := tk.Find(ctx, db, second, ""); r == nil {
 		t.Fatal("newest token is live")
 	}
-	other, _, _ := tk.Create(ctx, 1, "signup_confirmation", "neo@example.com", time.Hour)
+	other, _, _ := tk.Create(ctx, "1", "signup_confirmation", "neo@example.com", time.Hour)
 	if r, _ := tk.Find(ctx, db, second, ""); r == nil {
 		t.Fatal("tokens of another type are independent")
 	}
 	_ = other
 
-	expired, _, _ := tk.Create(ctx, 1, "email_change_confirmation", "x@example.com", -time.Minute)
+	expired, _, _ := tk.Create(ctx, "1", "email_change_confirmation", "x@example.com", -time.Minute)
 	if r, _ := tk.Find(ctx, db, expired, ""); r != nil {
 		t.Fatal("expired token must not be found")
 	}

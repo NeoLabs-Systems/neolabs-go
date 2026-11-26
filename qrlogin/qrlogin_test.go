@@ -12,6 +12,7 @@ import (
 
 	"github.com/NeoLabs-Systems/neolabs-go/apperr"
 	"github.com/NeoLabs-Systems/neolabs-go/dbx"
+	"github.com/NeoLabs-Systems/neolabs-go/userid"
 )
 
 type vectors struct {
@@ -75,7 +76,7 @@ func TestSerializeMatchesNode(t *testing.T) {
 			scannedAt: ns(m["scanned_at"]), approvedAt: ns(m["approved_at"]), claimedAt: ns(m["claimed_at"]),
 		}
 		if id, ok := m["approved_by_user_id"].(float64); ok {
-			r.approvedBy = sql.NullInt64{Int64: int64(id), Valid: true}
+			r.approvedBy = userid.FromInt(int64(id))
 		}
 		got, _ := json.Marshal(serialize(r))
 		var g, w any
@@ -159,16 +160,16 @@ func TestFullFlowAndSingleClaim(t *testing.T) {
 		t.Fatal("the screen must not learn more than its own label")
 	}
 
-	ch, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, 7, "sess-hash", map[string]any{"platform": "ios"})
-	if err != nil || ch.Status != "approved" || ch.Approval == nil || ch.Approval.UserID != 7 {
+	ch, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, "7", "sess-hash", map[string]any{"platform": "ios"})
+	if err != nil || ch.Status != "approved" || ch.Approval == nil || ch.Approval.UserID != "7" {
 		t.Fatalf("approve: %+v %v", ch, err)
 	}
 	// Another account cannot take over an approved request.
-	if _, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, 8, "", nil); status(err) != 409 {
+	if _, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, "8", "", nil); status(err) != 409 {
 		t.Fatalf("second approver: %v", err)
 	}
 	got, err := s.Claim(ctx, c.ChallengeID, c.PollToken)
-	if err != nil || got.UserID != 7 || got.Challenge.Status != "claimed" {
+	if err != nil || got.UserID != "7" || got.Challenge.Status != "claimed" {
 		t.Fatalf("claim: %+v %v", got, err)
 	}
 	if _, err := s.Claim(ctx, c.ChallengeID, c.PollToken); status(err) != 409 {
@@ -192,7 +193,7 @@ func TestWrongSecretsAndExpiry(t *testing.T) {
 	if _, err := s.Resolve(ctx, c.ChallengeID, "wrong"); status(err) != 404 {
 		t.Fatalf("wrong secret: %v", err)
 	}
-	if _, err := s.Approve(ctx, c.ChallengeID, c.PollToken, 1, "", nil); status(err) != 404 {
+	if _, err := s.Approve(ctx, c.ChallengeID, c.PollToken, "1", "", nil); status(err) != 404 {
 		t.Fatal("the poll token must not approve")
 	}
 	if _, err := s.Claim(ctx, c.ChallengeID, c.ApproveSecret); status(err) != 404 {
@@ -226,7 +227,7 @@ func TestDeclineAndCancel(t *testing.T) {
 	if err := s.Decline(ctx, c.ChallengeID, c.ApproveSecret); err != nil {
 		t.Fatalf("declining twice is fine: %v", err)
 	}
-	if _, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, 1, "", nil); status(err) != 409 {
+	if _, err := s.Approve(ctx, c.ChallengeID, c.ApproveSecret, "1", "", nil); status(err) != 409 {
 		t.Fatalf("approve after decline: %v", err)
 	}
 	if _, err := s.MarkScanned(ctx, c.ChallengeID, c.ApproveSecret, nil); status(err) != 409 {
@@ -237,12 +238,12 @@ func TestDeclineAndCancel(t *testing.T) {
 	if err := s.Cancel(ctx, c2.ChallengeID, c2.PollToken); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.Approve(ctx, c2.ChallengeID, c2.ApproveSecret, 1, "", nil); status(err) != 409 {
+	if _, err := s.Approve(ctx, c2.ChallengeID, c2.ApproveSecret, "1", "", nil); status(err) != 409 {
 		t.Fatalf("a late approval after the screen gave up must fail: %v", err)
 	}
 
 	c3 := create(t, s)
-	s.Approve(ctx, c3.ChallengeID, c3.ApproveSecret, 1, "", nil)
+	s.Approve(ctx, c3.ChallengeID, c3.ApproveSecret, "1", "", nil)
 	if err := s.Decline(ctx, c3.ChallengeID, c3.ApproveSecret); status(err) != 409 {
 		t.Fatalf("decline after approval: %v", err)
 	}
