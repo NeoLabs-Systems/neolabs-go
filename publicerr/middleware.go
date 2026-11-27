@@ -13,8 +13,9 @@ import (
 )
 
 // Middleware redacts JSON responses of `/api/` routes for requests that are not
-// from an administrator. Responses that are not JSON (streams, files) pass
-// through untouched, and a JSON body that needs no change is sent byte for byte.
+// from an administrator. Responses that are not JSON, and downloads (anything
+// with a Content-Disposition, JSON files included), pass through untouched, and
+// a JSON body that needs no change is sent byte for byte.
 func Middleware(isAdmin func(*http.Request) bool) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func (w *redactWriter) decide() {
 	}
 	w.decided = true
 	ct := w.Header().Get("Content-Type")
-	w.buffering = strings.HasPrefix(strings.ToLower(ct), "application/json")
+	w.buffering = strings.HasPrefix(strings.ToLower(ct), "application/json") && w.Header().Get("Content-Disposition") == ""
 }
 
 func (w *redactWriter) WriteHeader(code int) {

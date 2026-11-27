@@ -163,3 +163,15 @@ func TestMiddleware(t *testing.T) {
 		t.Fatal("streams must pass through")
 	}
 }
+
+func TestMiddlewareLeavesDownloadsAlone(t *testing.T) {
+	file := `{"error":"TypeError: boom at /var/log/app"}`
+	rec := serve(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Disposition", `inline; filename="trace.json"`)
+		w.Write([]byte(file))
+	}), "/api/files/x/content", false)
+	if rec.Body.String() != file {
+		t.Fatalf("download changed: %s", rec.Body.String())
+	}
+}
