@@ -232,6 +232,9 @@ type Created struct {
 type Store struct {
 	DB  *dbx.DB
 	Now func() time.Time
+	// WithoutLocation is for a table that records only the address of a
+	// request, without the request_location_* columns.
+	WithoutLocation bool
 
 	mu      sync.Mutex
 	waiters map[string][]chan struct{}
@@ -293,9 +296,15 @@ type row struct {
 	scannedAt, approvedAt, claimedAt          sql.NullString
 }
 
-const rowColumns = `id, COALESCE(status,'pending'), expires_at, COALESCE(created_at,''),
-	request_user_agent, request_ip_address, request_location_label, request_location_json, request_metadata_json,
+func (s *Store) columns() string {
+	location := "request_location_label, request_location_json"
+	if s.WithoutLocation {
+		location = "request_ip_address, NULL"
+	}
+	return `id, COALESCE(status,'pending'), expires_at, COALESCE(created_at,''),
+	request_user_agent, request_ip_address, ` + location + `, request_metadata_json,
 	approved_by_user_id, approved_metadata_json, scanned_metadata_json, scanned_at, approved_at, claimed_at`
+}
 
 func scanRow(r interface{ Scan(...any) error }) (*row, error) {
 	var x row
@@ -318,13 +327,13 @@ func (s *Store) prune(ctx context.Context) {
 
 func (s *Store) bySecret(ctx context.Context, id, secret string) (*row, error) {
 	s.prune(ctx)
-	return scanRow(s.DB.W.QueryRowContext(ctx, `SELECT `+rowColumns+` FROM user_qr_login_challenges
+	return scanRow(s.DB.W.QueryRowContext(ctx, `SELECT `+s.columns()+` FROM user_qr_login_challenges
 		WHERE id = ? AND approve_secret_hash = ? LIMIT 1`, strings.TrimSpace(id), passhash.DigestToken(secret)))
 }
 
 func (s *Store) byPollToken(ctx context.Context, id, token string) (*row, error) {
 	s.prune(ctx)
-	return scanRow(s.DB.W.QueryRowContext(ctx, `SELECT `+rowColumns+` FROM user_qr_login_challenges
+	return scanRow(s.DB.W.QueryRowContext(ctx, `SELECT `+s.columns()+` FROM user_qr_login_challenges
 		WHERE id = ? AND poll_token_hash = ? LIMIT 1`, strings.TrimSpace(id), passhash.DigestToken(token)))
 }
 
@@ -374,16 +383,19 @@ func (s *Store) Create(ctx context.Context, req Request) (*Created, error) {
 	if req.IPAddress != "" {
 		ip = req.IPAddress
 	}
-	loc := req.LocationJSON
-	if loc == "" {
-		loc = "{}"
+	columns := "id, poll_token_hash, approve_secret_hash, status, request_user_agent, request_ip_address, request_metadata_json, expires_at"
+	args := []any{id, passhash.DigestToken(poll), passhash.DigestToken(secret), req.UserAgent, ip, string(meta), expires}
+	marks := "?, ?, ?, 'pending', ?, ?, ?, ?"
+	if !s.WithoutLocation {
+		loc := req.LocationJSON
+		if loc == "" {
+			loc = "{}"
+		}
+		columns += ", request_location_label, request_location_json"
+		marks += ", ?, ?"
+		args = append(args, req.LocationLabel, loc)
 	}
-	_, err := s.DB.W.ExecContext(ctx, `INSERT INTO user_qr_login_challenges
-		(id, poll_token_hash, approve_secret_hash, status, request_user_agent, request_ip_address,
-		 request_location_label, request_location_json, request_metadata_json, expires_at)
-		VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)`,
-		id, passhash.DigestToken(poll), passhash.DigestToken(secret), req.UserAgent, ip, req.LocationLabel, loc, string(meta), expires)
-	if err != nil {
+	if _, err := s.DB.W.ExecContext(ctx, `INSERT INTO user_qr_login_challenges (`+columns+`) VALUES (`+marks+`)`, args...); err != nil {
 		return nil, err
 	}
 	return &Created{ChallengeID: id, PollToken: poll, ApproveSecret: secret, ExpiresAt: expires, Status: "pending"}, nil

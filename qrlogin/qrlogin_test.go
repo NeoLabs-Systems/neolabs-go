@@ -318,3 +318,22 @@ func TestPollJSONShapes(t *testing.T) {
 		t.Fatalf("expired shape: %s", raw)
 	}
 }
+
+func TestTableWithoutLocationColumns(t *testing.T) {
+	s, _ := newStore(t)
+	ctx := context.Background()
+	for _, column := range []string{"request_location_label", "request_location_json"} {
+		if _, err := s.DB.W.Exec(`ALTER TABLE user_qr_login_challenges DROP COLUMN ` + column); err != nil {
+			t.Fatal(err)
+		}
+	}
+	s.WithoutLocation = true
+	c := create(t, s)
+	preview, err := s.Resolve(ctx, c.ChallengeID, c.ApproveSecret)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if preview.RequestLocation.Label != "203.0.113.5" {
+		t.Fatalf("location label = %q, want the address", preview.RequestLocation.Label)
+	}
+}
