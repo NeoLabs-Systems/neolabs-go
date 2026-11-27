@@ -146,6 +146,80 @@ func (p *Provider) Models(ctx context.Context) ([]llm.Model, error) {
 	return out, nil
 }
 
+// EmbeddingModels returns Ollama models whose /api/tags capabilities explicitly
+// include embedding. Model names are not examined.
+func (p *Provider) EmbeddingModels(ctx context.Context) ([]llm.CatalogModel, error) {
+	tags, err := p.listTags(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var out []llm.CatalogModel
+	for _, item := range tags {
+		if hasCapability(item, string(llm.KindEmbedding)) {
+			out = append(out, llm.CatalogModel{Model: llm.Model{ID: item.Name, Name: item.Name}, Kind: llm.KindEmbedding})
+		}
+	}
+	return out, nil
+}
+
+// Embed calls Ollama's native /api/embed endpoint.
+func (p *Provider) Embed(ctx context.Context, texts []string, opt llm.Options) (*llm.EmbeddingResult, error) {
+	model, err := openaichat.RequireModel(p.Name(), opt)
+	if err != nil {
+		return nil, err
+	}
+	if len(texts) == 0 {
+		return nil, fmt.Errorf("ollama embedding input is empty")
+	}
+	body, err := transport.Marshal(transport.NewObj().Set("model", model).Set("input", texts))
+	if err != nil {
+		return nil, err
+	}
+	response, err := transport.FetchText(ctx, p.hc, transport.FetchOptions{
+		Method: http.MethodPost, URL: p.baseURL + "/api/embed", Header: map[string]string{"Content-Type": "application/json"}, Body: body,
+		MaxBytes: 8 << 20, Service: "Ollama embedding", Provider: p.Name(), Timeout: 30 * time.Second,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !response.OK() {
+		var payload struct {
+			Error string `json:"error"`
+		}
+		_ = json.Unmarshal([]byte(response.Text), &payload)
+		return nil, ollamaError(payload.Error, response.Status)
+	}
+	var payload struct {
+		Model           string      `json:"model"`
+		Embeddings      [][]float32 `json:"embeddings"`
+		PromptEvalCount int         `json:"prompt_eval_count"`
+		Error           string      `json:"error"`
+	}
+	if err := json.Unmarshal([]byte(response.Text), &payload); err != nil || payload.Error != "" {
+		message := payload.Error
+		if message == "" {
+			message = "Ollama returned invalid embedding data."
+		}
+		return nil, ollamaError(message, response.Status)
+	}
+	if len(payload.Embeddings) != len(texts) || len(payload.Embeddings) == 0 {
+		return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Ollama returned the wrong number of embeddings."}
+	}
+	dimensions := len(payload.Embeddings[0])
+	if dimensions == 0 {
+		return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Ollama returned an empty embedding."}
+	}
+	for _, vector := range payload.Embeddings {
+		if len(vector) != dimensions {
+			return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Ollama returned vectors with inconsistent dimensions."}
+		}
+	}
+	if payload.Model == "" {
+		payload.Model = model
+	}
+	return &llm.EmbeddingResult{Vectors: payload.Embeddings, Model: payload.Model, Usage: &llm.Usage{InputTokens: payload.PromptEvalCount}}, nil
+}
+
 // DecisionModels lists the SystemOne models the server serves.
 func (p *Provider) DecisionModels(ctx context.Context) ([]llm.Model, error) {
 	tags, err := p.listTags(ctx)

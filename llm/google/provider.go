@@ -426,6 +426,74 @@ func (p *Provider) Catalog(ctx context.Context) ([]llm.CatalogModel, error) {
 	return out, nil
 }
 
+// EmbeddingModels lists only Google models whose catalog explicitly advertises
+// embedContent. Chat discovery remains a separate Catalog operation.
+func (p *Provider) EmbeddingModels(ctx context.Context) ([]llm.CatalogModel, error) {
+	raw, err := p.fetchCatalog(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var out []llm.CatalogModel
+	for _, model := range raw {
+		id := shortName(model)
+		if id == "" || !supports(model, "embedContent") {
+			continue
+		}
+		out = append(out, llm.CatalogModel{Model: llm.Model{ID: id, Name: displayName(model, id)}, Kind: llm.KindEmbedding, Raw: model})
+	}
+	return out, nil
+}
+
+// Embed calls Google's batchEmbedContents endpoint.
+func (p *Provider) Embed(ctx context.Context, texts []string, opt llm.Options) (*llm.EmbeddingResult, error) {
+	model := strings.TrimSpace(opt.Model)
+	if model == "" {
+		return nil, &llm.Error{Provider: p.Name(), Code: llm.CodeModelSelectionRequired, Message: "An embedding model must be selected."}
+	}
+	if len(texts) == 0 || len(texts) > 100 {
+		return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_INPUT", Message: "Google embedding input must contain between 1 and 100 texts."}
+	}
+	requests := make([]any, 0, len(texts))
+	for _, text := range texts {
+		requests = append(requests, map[string]any{"model": modelPath(model), "content": map[string]any{"parts": []any{map[string]string{"text": text}}}})
+	}
+	body, err := transport.Marshal(transport.NewObj().Set("requests", requests))
+	if err != nil {
+		return nil, err
+	}
+	endpoint := p.baseURL + "/v1beta/models/" + url.PathEscape(model) + ":batchEmbedContents"
+	response, err := transport.FetchText(ctx, p.hc, transport.FetchOptions{
+		Method: http.MethodPost, URL: endpoint, Header: map[string]string{"x-goog-api-key": p.apiKey, "Content-Type": "application/json"}, Body: body,
+		MaxBytes: 8 << 20, Service: "Google embedding", Provider: p.Name(), Timeout: 30 * time.Second,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !response.OK() {
+		return nil, &llm.Error{Provider: p.Name(), Status: response.Status, Retryable: llm.RetryableStatus(response.Status), RetryAfter: llm.RetryAfterFrom(response.Header, time.Now()), Message: fmt.Sprintf("Google embedding request failed (HTTP %d).", response.Status)}
+	}
+	var payload struct {
+		Embeddings []struct {
+			Values []float32 `json:"values"`
+		} `json:"embeddings"`
+	}
+	if err = json.Unmarshal([]byte(response.Text), &payload); err != nil || len(payload.Embeddings) != len(texts) {
+		return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Google returned invalid embedding data."}
+	}
+	vectors := make([][]float32, len(payload.Embeddings))
+	dimensions := len(payload.Embeddings[0].Values)
+	if dimensions == 0 {
+		return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Google returned an empty embedding."}
+	}
+	for i, entry := range payload.Embeddings {
+		if len(entry.Values) != dimensions {
+			return nil, &llm.Error{Provider: p.Name(), Code: "INVALID_EMBEDDING_RESPONSE", Message: "Google returned vectors with inconsistent dimensions."}
+		}
+		vectors[i] = entry.Values
+	}
+	return &llm.EmbeddingResult{Vectors: vectors, Model: model}, nil
+}
+
 var liveDrop = regexp.MustCompile(`(?i)transcribe|translate|robotics`)
 
 // LiveVoiceModels lists models that hold a spoken conversation over the Live

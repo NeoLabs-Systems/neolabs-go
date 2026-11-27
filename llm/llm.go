@@ -8,6 +8,7 @@ package llm
 import (
 	"context"
 	"iter"
+	"strings"
 	"time"
 )
 
@@ -109,6 +110,66 @@ type Model struct {
 	Name          string
 	ContextWindow int
 	Vision        bool
+}
+
+// ModelKind is an explicitly reported model capability. Empty means unknown;
+// callers must not infer capabilities from model names.
+type ModelKind string
+
+const (
+	KindChat       ModelKind = "chat"
+	KindEmbedding  ModelKind = "embedding"
+	KindTranscribe ModelKind = "transcription"
+	KindImage      ModelKind = "image"
+)
+
+// ExplicitModelKind returns only a capability the provider explicitly put in
+// its model metadata. Model names are deliberately not inspected.
+func ExplicitModelKind(raw map[string]any) ModelKind {
+	for _, key := range []string{"kind", "model_type", "task"} {
+		if value, ok := raw[key].(string); ok {
+			switch ModelKind(value) {
+			case KindChat, KindEmbedding, KindTranscribe, KindImage:
+				return ModelKind(value)
+			}
+		}
+	}
+	if values, ok := raw["capabilities"].([]any); ok {
+		for _, value := range values {
+			if text, ok := value.(string); ok && ModelKind(text) == KindEmbedding {
+				return KindEmbedding
+			}
+		}
+	}
+	// OpenRouter reports embedding models through their structured modality
+	// field rather than a kind or task field (for example, "text->embedding").
+	if architecture, ok := raw["architecture"].(map[string]any); ok {
+		if modality, ok := architecture["modality"].(string); ok {
+			parts := strings.Split(modality, "->")
+			if len(parts) == 2 && strings.TrimSpace(parts[1]) == string(KindEmbedding) {
+				return KindEmbedding
+			}
+		}
+	}
+	return ""
+}
+
+// EmbeddingResult contains vectors in input order. Model may differ from the
+// requested model when a router selects a fallback.
+type EmbeddingResult struct {
+	Vectors [][]float32
+	Model   string
+	Usage   *Usage
+}
+
+// EmbeddingProvider is an optional capability on providers that serve vectors.
+type EmbeddingProvider interface {
+	Embed(context.Context, []string, Options) (*EmbeddingResult, error)
+}
+
+// EmbeddingCataloger lists models explicitly advertised for vector embedding.
+type EmbeddingCataloger interface {
+	EmbeddingModels(context.Context) ([]CatalogModel, error)
 }
 
 // Provider is a language-model backend.

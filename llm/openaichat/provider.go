@@ -282,8 +282,8 @@ func (p *Provider) listIDs(ctx context.Context, keep func(id string) bool, errPr
 		}
 		created, _ := m["created"].(float64)
 		out = append(out, llm.CatalogModel{
-			Model:   llm.Model{ID: id, Name: id, ContextWindow: p.window(id), Vision: p.vision},
-			Created: int64(created), Raw: m,
+			Model: llm.Model{ID: id, Name: id, ContextWindow: p.window(id), Vision: p.vision},
+			Kind:  llm.ExplicitModelKind(m), Created: int64(created), Raw: m,
 		})
 	}
 	return out, nil

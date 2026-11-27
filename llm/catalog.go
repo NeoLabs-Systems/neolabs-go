@@ -18,6 +18,7 @@ import (
 // map (architecture, pricing, supported parameters).
 type CatalogModel struct {
 	Model
+	Kind          ModelKind
 	Created       int64 // unix seconds, 0 if unknown
 	CreatedAt     string
 	SupportsTools *bool
