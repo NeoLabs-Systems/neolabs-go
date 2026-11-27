@@ -102,13 +102,17 @@ type Accounts interface {
 
 // Error is a ceremony failure with the HTTP status clients receive.
 type Error struct {
-	Status  int
+	Status int
+	// Code is stable; apps match on it to use their own wording.
+	Code    string
 	Message string
 }
 
 func (e *Error) Error() string { return e.Message }
 
-func fail(status int, msg string) *Error { return &Error{Status: status, Message: msg} }
+func fail(status int, code, msg string) *Error {
+	return &Error{Status: status, Code: code, Message: msg}
+}
 
 // Pending is the state kept in the session between begin and complete.
 type Pending struct {
@@ -159,11 +163,11 @@ func (s *Service) relyingParty(r *http.Request) (origin, rpID string, err error)
 		origin = self
 	}
 	if origin != self && !s.Origins.Allowed(origin, false) {
-		return "", "", fail(403, "Security key sign-in is not allowed from this origin.")
+		return "", "", fail(403, "ORIGIN_NOT_ALLOWED", "Security key sign-in is not allowed from this origin.")
 	}
 	u, perr := url.Parse(origin)
 	if perr != nil || u.Hostname() == "" {
-		return "", "", fail(400, "Security key sign-in requires a valid request origin.")
+		return "", "", fail(400, "INVALID_ORIGIN", "Security key sign-in requires a valid request origin.")
 	}
 	return origin, u.Hostname(), nil
 }
@@ -183,10 +187,10 @@ func (s *Service) client(origin, rpID string) (*webauthn.WebAuthn, error) {
 
 func (s *Service) readPending(p *Pending, rpID string) (*Pending, error) {
 	if p == nil || p.Session.Challenge == "" || s.now().UnixMilli() > p.ExpiresAt {
-		return nil, fail(400, "Security key challenge expired, start again.")
+		return nil, fail(400, "SECURITY_KEY_CHALLENGE_EXPIRED", "Security key challenge expired, start again.")
 	}
 	if p.RPID != rpID {
-		return nil, fail(400, "Security key challenge was started on a different address.")
+		return nil, fail(400, "SECURITY_KEY_CHALLENGE_EXPIRED", "Security key challenge was started on a different address.")
 	}
 	return p, nil
 }
@@ -230,7 +234,7 @@ func normalizeLabel(value, fallback string) (string, error) {
 		return fallback, nil
 	}
 	if len([]rune(label)) > maxLabelLength {
-		return "", fail(400, fmt.Sprintf("Security key name must be %d characters or fewer.", maxLabelLength))
+		return "", fail(400, "SECURITY_KEY_NAME_TOO_LONG", fmt.Sprintf("Security key name must be %d characters or fewer.", maxLabelLength))
 	}
 	return label, nil
 }
@@ -260,14 +264,14 @@ func (s *Service) BeginRegistration(ctx context.Context, r *http.Request, userID
 		return nil, nil, err
 	}
 	if !ok {
-		return nil, nil, fail(404, "User not found")
+		return nil, nil, fail(404, "NOT_FOUND", "User not found")
 	}
 	all, err := s.Store.ListForUser(ctx, userID)
 	if err != nil {
 		return nil, nil, err
 	}
 	if len(all) >= s.maxPerUser() {
-		return nil, nil, fail(400, fmt.Sprintf("You can register at most %d security keys.", s.maxPerUser()))
+		return nil, nil, fail(400, "SECURITY_KEY_LIMIT", fmt.Sprintf("You can register at most %d security keys.", s.maxPerUser()))
 	}
 	existing, err := s.Store.ForUserAndRP(ctx, userID, rpID)
 	if err != nil {
@@ -315,18 +319,18 @@ func (s *Service) CompleteRegistration(ctx context.Context, r *http.Request, use
 	}
 	parsed, perr := protocol.ParseCredentialCreationResponseBytes(response)
 	if perr != nil {
-		return fail(400, "Security key could not be verified.")
+		return fail(400, "SECURITY_KEY_REJECTED", "Security key could not be verified.")
 	}
 	cred, verr := wa.CreateCredential(user{id: userID}, p.Session, parsed)
 	if verr != nil {
-		return fail(400, "Security key could not be verified.")
+		return fail(400, "SECURITY_KEY_REJECTED", "Security key could not be verified.")
 	}
 
 	credID := base64.RawURLEncoding.EncodeToString(cred.ID)
 	if exists, err := s.Store.Exists(ctx, credID); err != nil {
 		return err
 	} else if exists {
-		return fail(409, "That security key is already registered.")
+		return fail(409, "SECURITY_KEY_EXISTS", "That security key is already registered.")
 	}
 	existing, err := s.Store.ListForUser(ctx, userID)
 	if err != nil {
@@ -373,7 +377,7 @@ func (s *Service) BeginLogin(ctx context.Context, r *http.Request, username stri
 		return nil, nil, err
 	}
 	if n == 0 {
-		return nil, nil, fail(409, "No security keys are registered for this server yet. Add one under Account settings first.")
+		return nil, nil, fail(409, "NO_SECURITY_KEYS", "No security keys are registered for this server yet. Add one under Account settings first.")
 	}
 	opts := []webauthn.LoginOption{webauthn.WithUserVerification(protocol.VerificationPreferred)}
 	if account := strings.TrimSpace(username); account != "" {
@@ -422,23 +426,23 @@ func (s *Service) CompleteLogin(ctx context.Context, r *http.Request, response j
 	}
 	parsed, perr := protocol.ParseCredentialRequestResponseBytes(response)
 	if perr != nil || strings.TrimSpace(parsed.ID) == "" {
-		return LoginResult{}, fail(400, "Security key response is incomplete.")
+		return LoginResult{}, fail(400, "MISSING_FIELDS", "Security key response is incomplete.")
 	}
 	stored, err := s.Store.FindByCredentialID(ctx, parsed.ID, rpID)
 	if err != nil {
 		return LoginResult{}, err
 	}
 	if stored == nil {
-		return LoginResult{}, fail(401, "That security key is not registered.")
+		return LoginResult{}, fail(401, "SECURITY_KEY_UNKNOWN", "That security key is not registered.")
 	}
 	if handle := parsed.Response.UserHandle; len(handle) > 0 && string(handle) != stored.UserID {
-		return LoginResult{}, fail(401, "That security key is not registered.")
+		return LoginResult{}, fail(401, "SECURITY_KEY_UNKNOWN", "That security key is not registered.")
 	}
 
 	credID, err1 := base64.RawURLEncoding.DecodeString(stored.CredentialID)
 	pub, err2 := base64.RawURLEncoding.DecodeString(stored.PublicKey)
 	if err1 != nil || err2 != nil {
-		return LoginResult{}, fail(401, "Security key could not be verified.")
+		return LoginResult{}, fail(401, "SECURITY_KEY_REJECTED", "Security key could not be verified.")
 	}
 	wcred := webauthn.Credential{
 		ID:        credID,
@@ -482,7 +486,7 @@ func (s *Service) CompleteLogin(ctx context.Context, r *http.Request, response j
 	verified, verr := wa.ValidateDiscoverableLogin(handler, p.Session, parsed)
 	if verr != nil || verified == nil || verified.Authenticator.CloneWarning {
 		// A sign counter that did not advance means the key may be cloned.
-		return LoginResult{}, fail(401, "Security key could not be verified.")
+		return LoginResult{}, fail(401, "SECURITY_KEY_REJECTED", "Security key could not be verified.")
 	}
 	uv := parsed.Response.AuthenticatorData.Flags.HasUserVerified()
 	if err := s.Store.UpdateAfterLogin(ctx, stored.RowID, verified.Authenticator.SignCount, uv); err != nil {
@@ -498,14 +502,14 @@ func (s *Service) Rename(ctx context.Context, userID string, rowID int64, label 
 		return nil, err
 	}
 	if next == "" {
-		return nil, fail(400, "Security key name is required.")
+		return nil, fail(400, "MISSING_FIELDS", "Security key name is required.")
 	}
 	ok, err := s.Store.Rename(ctx, userID, rowID, next)
 	if err != nil {
 		return nil, err
 	}
 	if !ok {
-		return nil, fail(404, "Security key not found.")
+		return nil, fail(404, "NOT_FOUND", "Security key not found.")
 	}
 	return s.List(ctx, userID)
 }
@@ -517,7 +521,7 @@ func (s *Service) Delete(ctx context.Context, userID string, rowID int64) ([]Pay
 		return nil, err
 	}
 	if !ok {
-		return nil, fail(404, "Security key not found.")
+		return nil, fail(404, "NOT_FOUND", "Security key not found.")
 	}
 	return s.List(ctx, userID)
 }
