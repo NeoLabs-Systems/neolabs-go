@@ -343,3 +343,29 @@ func CreateZip(dir, archive string) error {
 	}
 	return walkErr
 }
+
+// ReleaseByTag returns the release published under tag, which must carry a
+// `<prefix>*.json` manifest and its `.sig`.
+func (c *Client) ReleaseByTag(ctx context.Context, repository, tag, manifestPrefix string) (Release, error) {
+	version, err := NormalizeVersion(tag)
+	if err != nil {
+		return Release{}, err
+	}
+	base := c.APIBase
+	if base == "" {
+		base = "https://api.github.com"
+	}
+	data, err := c.Fetch(ctx, fmt.Sprintf("%s/repos/%s/releases/tags/%s", base, repository, url.PathEscape("v"+version)), 4<<20)
+	if err != nil {
+		return Release{}, err
+	}
+	var found githubRelease
+	if err := json.Unmarshal(data, &found); err != nil {
+		return Release{}, cli.Errorf("SETUP_MANIFEST_INVALID", "The release could not be read.")
+	}
+	rel, ok := releaseWithManifest(found, Beta, manifestPrefix)
+	if !ok {
+		return Release{}, cli.Errorf("SETUP_RUNTIME_NOT_PUBLISHED", "Release v%s has no verified runtime.", version)
+	}
+	return rel, nil
+}

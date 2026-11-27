@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 type fakeRunner struct {
@@ -96,5 +97,19 @@ func TestFallbackProcessWritesPID(t *testing.T) {
 	m.Stop()
 	if _, err := os.Stat(s.PIDFile); !os.IsNotExist(err) {
 		t.Fatal("pid file left")
+	}
+}
+
+func TestRenderersCarryTheStopTimeout(t *testing.T) {
+	s := spec("/tmp/d")
+	if strings.Contains(RenderLaunchAgent(s), "ExitTimeOut") || strings.Contains(RenderSystemdUnit(s), "TimeoutStopSec") {
+		t.Fatal("a stop timeout appeared without one")
+	}
+	s.StopTimeout = 40 * time.Second
+	if got := RenderLaunchAgent(s); !strings.Contains(got, "<key>ExitTimeOut</key>\n    <integer>40</integer>") {
+		t.Fatalf("plist: %s", got)
+	}
+	if got := RenderSystemdUnit(s); !strings.Contains(got, "TimeoutStopSec=40\n") {
+		t.Fatalf("unit: %s", got)
 	}
 }

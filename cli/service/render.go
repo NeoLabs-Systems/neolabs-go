@@ -2,7 +2,9 @@ package service
 
 import (
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func escapeXML(s string) string {
@@ -47,7 +49,11 @@ func RenderLaunchAgent(s Spec) string {
 
     <key>ThrottleInterval</key>
     <integer>10</integer>
-
+`)
+	if s.StopTimeout > 0 {
+		b.WriteString("\n    <key>ExitTimeOut</key>\n    <integer>" + seconds(s.StopTimeout) + "</integer>\n")
+	}
+	b.WriteString(`
     <key>StandardOutPath</key>
     <string>` + escapeXML(filepath.Join(s.LogDir, s.LogName+".log")) + `</string>
 
@@ -58,6 +64,8 @@ func RenderLaunchAgent(s Spec) string {
 `)
 	return b.String()
 }
+
+func seconds(d time.Duration) string { return strconv.Itoa(int(d / time.Second)) }
 
 func quoteSystemd(s string) string {
 	return `"` + strings.NewReplacer(`\`, `\\`, `"`, `\"`).Replace(s) + `"`
@@ -80,6 +88,9 @@ func RenderSystemdUnit(s Spec) string {
 		"ExecStart=" + exec,
 		"Restart=always",
 		"RestartSec=10",
+	}
+	if s.StopTimeout > 0 {
+		lines = append(lines, "TimeoutStopSec="+seconds(s.StopTimeout))
 	}
 	if s.EnvFile != "" {
 		lines = append(lines, "EnvironmentFile=-"+s.EnvFile)

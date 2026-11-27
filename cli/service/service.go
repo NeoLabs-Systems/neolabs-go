@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/NeoLabs-Systems/neolabs-go/cli/envfile"
 )
@@ -32,6 +33,9 @@ type Spec struct {
 	// LogDir receives <LogName>.log and <LogName>.error.log.
 	LogDir, LogName string
 	PIDFile         string
+	// StopTimeout is how long the service manager waits for the program to
+	// finish after asking it to stop; 0 keeps the manager's default.
+	StopTimeout time.Duration
 }
 
 // Runner runs system commands; tests replace it.
