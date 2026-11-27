@@ -32,10 +32,19 @@ const (
 	LongPollMax = 25 * time.Second
 )
 
+// The error codes are stable; apps with their own wording match on them.
+const (
+	CodeNotFound    = "NOT_FOUND"
+	CodeDeclined    = "QR_LOGIN_DECLINED"
+	CodeApproved    = "QR_LOGIN_APPROVED"
+	CodeUsed        = "QR_LOGIN_USED"
+	CodeNotApproved = "QR_LOGIN_NOT_APPROVED"
+)
+
 func notFound() error {
-	return apperr.New(404, "QR login request was not found or has expired.", "")
+	return apperr.New(404, "QR login request was not found or has expired.", CodeNotFound)
 }
-func conflict(msg string) error { return apperr.New(409, msg, "") }
+func conflict(msg, code string) error { return apperr.New(409, msg, code) }
 
 // Metadata is what a device says about itself; unknown fields are dropped and
 // every value is length-limited.
@@ -523,7 +532,7 @@ func (s *Store) MarkScanned(ctx context.Context, id, secret string, scanner any)
 		return nil, notFound()
 	}
 	if r.status == "declined" {
-		return nil, conflict("This QR login request was cancelled.")
+		return nil, conflict("This QR login request was cancelled.", CodeDeclined)
 	}
 	if r.status == "pending" {
 		meta, _ := json.Marshal(NormalizeMetadata(scanner))
@@ -554,7 +563,7 @@ func (s *Store) decline(ctx context.Context, r *row) error {
 		return nil
 	}
 	if r.status != "pending" && r.status != "scanned" {
-		return conflict("This QR login request was already approved.")
+		return conflict("This QR login request was already approved.", CodeApproved)
 	}
 	if _, err := s.DB.W.ExecContext(ctx, `UPDATE user_qr_login_challenges SET status = 'declined'
 		WHERE id = ? AND status IN ('pending','scanned')`, r.id); err != nil {
@@ -594,11 +603,11 @@ func (s *Store) Approve(ctx context.Context, id, secret string, userID userid.ID
 	}
 	switch {
 	case r.status == "claimed":
-		return nil, conflict("This QR login request was already used.")
+		return nil, conflict("This QR login request was already used.", CodeUsed)
 	case r.status == "declined":
-		return nil, conflict("This QR login request was cancelled.")
+		return nil, conflict("This QR login request was cancelled.", CodeDeclined)
 	case r.status == "approved" && r.approvedBy != "" && r.approvedBy != userID:
-		return nil, conflict("This QR login request was already approved.")
+		return nil, conflict("This QR login request was already approved.", CodeApproved)
 	}
 	meta, _ := json.Marshal(NormalizeMetadata(approval))
 	var hash any
@@ -743,10 +752,10 @@ func (s *Store) Claim(ctx context.Context, id, pollToken string) (*Claimed, erro
 		return nil, notFound()
 	}
 	if r.status == "claimed" {
-		return nil, conflict("This QR login request was already used.")
+		return nil, conflict("This QR login request was already used.", CodeUsed)
 	}
 	if r.status != "approved" || r.approvedBy == "" {
-		return nil, conflict("This QR login request is not approved yet.")
+		return nil, conflict("This QR login request is not approved yet.", CodeNotApproved)
 	}
 	now := sqliteTime(s.now())
 	res, err := s.DB.W.ExecContext(ctx, `UPDATE user_qr_login_challenges SET status = 'claimed', claimed_at = ?
@@ -755,7 +764,7 @@ func (s *Store) Claim(ctx context.Context, id, pollToken string) (*Claimed, erro
 		return nil, err
 	}
 	if n, _ := res.RowsAffected(); n != 1 {
-		return nil, conflict("This QR login request is no longer available.")
+		return nil, conflict("This QR login request is no longer available.", CodeNotFound)
 	}
 	s.notify(r.id)
 	r.status, r.claimedAt = "claimed", sql.NullString{String: now, Valid: true}

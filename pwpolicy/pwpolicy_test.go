@@ -29,7 +29,7 @@ func TestMatchesNodeImplementation(t *testing.T) {
 		t.Fatalf("only %d vectors", len(v.Cases))
 	}
 	for _, c := range v.Cases {
-		got := Evaluate(c.Password, Context{c.Context.Username, c.Context.Email})
+		got := Evaluate(c.Password, Context{Username: c.Context.Username, Email: c.Context.Email})
 		if !reflect.DeepEqual(got, c.Result) {
 			t.Errorf("%q (ctx %+v)\n got: %+v\nwant: %+v", c.Password, c.Context, got, c.Result)
 		}

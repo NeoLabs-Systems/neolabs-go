@@ -16,7 +16,9 @@ const (
 	commonPatternFeedback = "Avoid common words, repeated characters, or obvious sequences."
 )
 
-var commonPatterns = []string{"password", "123456", "qwerty", "letmein", "welcome", "admin", "neoagent"}
+var commonPatterns = []string{"password", "123456", "qwerty", "letmein", "welcome", "admin"}
+
+const defaultAppName = "neoagent"
 
 var sequences = []string{
 	"abcdefghijklmnopqrstuvwxyz",
@@ -28,6 +30,9 @@ var sequences = []string{
 type Context struct {
 	Username string
 	Email    string
+	// AppName is the product name a password must not be built on, in lower
+	// case. It defaults to "neoagent".
+	AppName string
 }
 
 // Strength is the evaluation result; JSON names match the Node API.
@@ -146,7 +151,11 @@ func Evaluate(password string, ctx Context) Strength {
 			containsPersonal = true
 		}
 	}
-	commonPattern := false
+	appName := ctx.AppName
+	if appName == "" {
+		appName = defaultAppName
+	}
+	commonPattern := strings.Contains(normalized, appName)
 	for _, p := range commonPatterns {
 		if strings.Contains(normalized, p) {
 			commonPattern = true

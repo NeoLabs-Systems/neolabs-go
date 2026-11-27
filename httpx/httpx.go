@@ -179,7 +179,7 @@ func CORS(o Origins) Middleware {
 				return
 			}
 			if !o.Allowed(origin, false) {
-				Error(w, http.StatusForbidden, "Origin not allowed")
+				ErrorCode(w, http.StatusForbidden, "Origin not allowed", "ORIGIN_NOT_ALLOWED")
 				return
 			}
 			h := w.Header()
@@ -228,7 +228,7 @@ func OriginGuard(o Origins) Middleware {
 					origin = originOfReferer(r.Header.Get("Referer"))
 				}
 				if origin != "" && !o.Allowed(origin, false) {
-					Error(w, http.StatusForbidden, "Origin not allowed")
+					ErrorCode(w, http.StatusForbidden, "Origin not allowed", "ORIGIN_NOT_ALLOWED")
 					return
 				}
 			}
