@@ -80,6 +80,14 @@ func TestCORS(t *testing.T) {
 	if rec := do(h, "GET", "/api/x", map[string]string{"Origin": "https://evil.example"}); rec.Code != 403 {
 		t.Fatalf("evil: %d", rec.Code)
 	}
+	fontReq := httptest.NewRequest("GET", "/fonts/inter.woff2", nil)
+	fontReq.Host = "cloud.example.com"
+	fontReq.Header.Set("Origin", "http://cloud.example.com")
+	fontRec := httptest.NewRecorder()
+	h.ServeHTTP(fontRec, fontReq)
+	if fontRec.Code != 204 {
+		t.Fatalf("same-origin font fetch must pass even with ALLOWED_ORIGINS set: %d", fontRec.Code)
+	}
 	pre := do(h, "OPTIONS", "/api/x", map[string]string{
 		"Origin": "https://app.example.com", "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "content-type",
 	})

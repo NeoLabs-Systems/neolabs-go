@@ -169,12 +169,13 @@ func (o Origins) Allowed(origin string, allowMissing bool) bool {
 const corsMethods = "GET,HEAD,PUT,PATCH,POST,DELETE"
 
 // CORS answers cross-origin requests for allowed origins with credentials
-// support and rejects other browser origins with 403.
+// support and rejects other browser origins with 403. Same-origin requests
+// (such as @font-face fetches) always pass.
 func CORS(o Origins) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			origin := r.Header.Get("Origin")
-			if origin == "" {
+			if origin == "" || sameOrigin(r, origin) {
 				next.ServeHTTP(w, r)
 				return
 			}
@@ -217,6 +218,21 @@ func isStateChanging(method string) bool {
 	return false
 }
 
+func sameOrigin(r *http.Request, origin string) bool {
+	if r.Host == "" || origin == "" {
+		return false
+	}
+	u, err := url.Parse(origin)
+	if err != nil {
+		return false
+	}
+	scheme := "http"
+	if r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https") {
+		scheme = "https"
+	}
+	return u.Scheme == scheme && strings.EqualFold(u.Host, r.Host)
+}
+
 // OriginGuard blocks state-changing `/api/` requests whose Origin (or Referer)
 // is not allowed. Requests without either header are native clients and pass.
 func OriginGuard(o Origins) Middleware {
@@ -227,7 +243,7 @@ func OriginGuard(o Origins) Middleware {
 				if origin == "" {
 					origin = originOfReferer(r.Header.Get("Referer"))
 				}
-				if origin != "" && !o.Allowed(origin, false) {
+				if origin != "" && !sameOrigin(r, origin) && !o.Allowed(origin, false) {
 					ErrorCode(w, http.StatusForbidden, "Origin not allowed", "ORIGIN_NOT_ALLOWED")
 					return
 				}
