@@ -13,6 +13,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"strings"
@@ -172,9 +173,21 @@ func (s *Service) relyingParty(r *http.Request) (origin, rpID string, err error)
 	return origin, u.Hostname(), nil
 }
 
+// A server reached by IP address is its own relying party, as browsers and the
+// Node servers allow; go-webauthn only accepts a domain name when it builds
+// options, so it is told standInDomain and the address is put back.
+const standInDomain = "localhost"
+
+func relyingDomain(rpID string) string {
+	if net.ParseIP(rpID) != nil {
+		return standInDomain
+	}
+	return rpID
+}
+
 func (s *Service) client(origin, rpID string) (*webauthn.WebAuthn, error) {
 	return webauthn.New(&webauthn.Config{
-		RPID:                  rpID,
+		RPID:                  relyingDomain(rpID),
 		RPDisplayName:         s.RPName,
 		RPOrigins:             []string{origin},
 		AttestationPreference: protocol.PreferNoAttestation,
@@ -300,6 +313,7 @@ func (s *Service) BeginRegistration(ctx context.Context, r *http.Request, userID
 	if err != nil {
 		return nil, nil, fmt.Errorf("webauthnx: begin registration: %w", err)
 	}
+	creation.Response.RelyingParty.ID, session.RelyingPartyID = rpID, rpID
 	return creation.Response, s.newPending(session, rpID), nil
 }
 
@@ -317,6 +331,7 @@ func (s *Service) CompleteRegistration(ctx context.Context, r *http.Request, use
 	if err != nil {
 		return err
 	}
+	wa.Config.RPID = rpID
 	parsed, perr := protocol.ParseCredentialCreationResponseBytes(response)
 	if perr != nil {
 		return fail(400, "SECURITY_KEY_REJECTED", "Security key could not be verified.")
@@ -403,6 +418,7 @@ func (s *Service) BeginLogin(ctx context.Context, r *http.Request, username stri
 	if err != nil {
 		return nil, nil, fmt.Errorf("webauthnx: begin login: %w", err)
 	}
+	assertion.Response.RelyingPartyID, session.RelyingPartyID = rpID, rpID
 	return assertion.Response, s.newPending(session, rpID), nil
 }
 
@@ -462,6 +478,7 @@ func (s *Service) CompleteLogin(ctx context.Context, r *http.Request, response j
 	if err != nil {
 		return LoginResult{}, err
 	}
+	wa.Config.RPID = rpID
 	// With a username the browser was offered all of that account's keys, and
 	// the library requires the account to own every one of them, not only the
 	// one that answered.

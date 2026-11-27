@@ -480,3 +480,42 @@ func TestLoginByUsernameWithSeveralKeysAndWithoutAUserHandle(t *testing.T) {
 		}
 	}
 }
+
+func TestServerReachedByIPAddressIsItsOwnRelyingParty(t *testing.T) {
+	s, st := newService()
+	ctx := context.Background()
+	a := newAuthenticator(t)
+	const address = "http://127.0.0.1:3344"
+	request := func() *http.Request { return httptest.NewRequest("POST", address+"/api/x", nil) }
+
+	options, pending, err := s.BeginRegistration(ctx, request(), "7")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if raw, _ := json.Marshal(options); !strings.Contains(string(raw), `"id":"127.0.0.1"`) {
+		t.Fatalf("relying party: %s", raw)
+	}
+	if err := s.CompleteRegistration(ctx, request(), "7", a.register(t, "127.0.0.1", address, challengeOf(t, options)), "", pending); err != nil {
+		t.Fatalf("register: %v", err)
+	}
+	if st.rows[0].RPID != "127.0.0.1" {
+		t.Fatalf("stored relying party %q", st.rows[0].RPID)
+	}
+	for _, username := range []string{"", "neo"} {
+		options, pending, err = s.BeginLogin(ctx, request(), username)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if raw, _ := json.Marshal(options); !strings.Contains(string(raw), `"rpId":"127.0.0.1"`) {
+			t.Fatalf("login relying party: %s", raw)
+		}
+		if _, err := s.CompleteLogin(ctx, request(), a.assert(t, "127.0.0.1", address, challengeOf(t, options), "7"), pending); err != nil {
+			t.Fatalf("login with username %q: %v", username, err)
+		}
+	}
+	// The stand-in is never accepted as the relying party itself.
+	options, pending, _ = s.BeginLogin(ctx, request(), "")
+	if _, err := s.CompleteLogin(ctx, request(), a.assert(t, "localhost", address, challengeOf(t, options), "7"), pending); err == nil {
+		t.Fatal("an assertion for another relying party was accepted")
+	}
+}
