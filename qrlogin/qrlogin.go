@@ -626,11 +626,16 @@ func (s *Store) Approve(ctx context.Context, id, secret string, userID userid.ID
 	if approverSessionHash != "" {
 		hash = approverSessionHash
 	}
-	if _, err := s.DB.W.ExecContext(ctx, `UPDATE user_qr_login_challenges
+	// Two approvals can race past the read above; only the first account wins.
+	result, err := s.DB.W.ExecContext(ctx, `UPDATE user_qr_login_challenges
 		SET status = 'approved', approved_by_user_id = ?, approved_session_hash = ?, approved_metadata_json = ?, approved_at = ?
-		WHERE id = ? AND status IN ('pending','scanned','approved')`,
-		string(userID), hash, string(meta), sqliteTime(s.now()), r.id); err != nil {
+		WHERE id = ? AND (status IN ('pending','scanned') OR (status = 'approved' AND approved_by_user_id = ?))`,
+		string(userID), hash, string(meta), sqliteTime(s.now()), r.id, string(userID))
+	if err != nil {
 		return nil, err
+	}
+	if n, _ := result.RowsAffected(); n != 1 {
+		return nil, conflict("This QR login request was already approved.", CodeApproved)
 	}
 	s.notify(r.id)
 	return s.Resolve(ctx, id, secret)
