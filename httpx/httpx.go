@@ -96,7 +96,7 @@ func APICaseGuard() Middleware {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			p := r.URL.Path
 			if apiPrefix.MatchString(p) && !strings.HasPrefix(p, "/api/") && p != "/api" {
-				Error(w, http.StatusNotFound, "Not found")
+				ErrorCode(w, http.StatusNotFound, "Not found", "NOT_FOUND")
 				return
 			}
 			next.ServeHTTP(w, r)
