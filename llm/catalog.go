@@ -44,6 +44,8 @@ type ModelFacts struct {
 	CreatedAtMs   *int64
 	InputCostPerM *float64
 	SupportsTools *bool
+	// SupportsVision says whether the model reads images.
+	SupportsVision *bool
 }
 
 var jsFloat = regexp.MustCompile(`^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?`)
@@ -58,8 +60,31 @@ func ParseFloatPrefix(s string) (float64, bool) {
 	return f, err == nil
 }
 
-// ReadCatalogFacts reads release time, input price per million tokens and tool
-// support from any OpenAI-style catalog entry.
+// readVision reads image support from supports_vision, NeoRouter's own facts or
+// the input modalities.
+func readVision(model map[string]any) *bool {
+	if vision, ok := model["supports_vision"].(bool); ok {
+		return &vision
+	}
+	if facts, ok := model["neorouter"].(map[string]any); ok {
+		if vision, ok := facts["vision"].(bool); ok {
+			return &vision
+		}
+	}
+	architecture, _ := model["architecture"].(map[string]any)
+	inputs, ok := architecture["input_modalities"].([]any)
+	if !ok {
+		return nil
+	}
+	vision := false
+	for _, input := range inputs {
+		vision = vision || input == "image"
+	}
+	return &vision
+}
+
+// ReadCatalogFacts reads release time, input price per million tokens, tool and
+// image support from any OpenAI-style catalog entry.
 func ReadCatalogFacts(model map[string]any) ModelFacts {
 	var facts ModelFacts
 	if seconds, ok := model["created"].(float64); ok && seconds > 0 {
@@ -95,7 +120,10 @@ func ReadCatalogFacts(model map[string]any) ModelFacts {
 			}
 		}
 		facts.SupportsTools = &supports
+	} else if supports, ok := model["supports_tools"].(bool); ok {
+		facts.SupportsTools = &supports
 	}
+	facts.SupportsVision = readVision(model)
 	return facts
 }
 
@@ -142,6 +170,8 @@ func PriceTierForCost(costPerM *float64) string {
 // tool support), read from OpenRouter's public catalog. Routing ranks on them,
 // so it follows new releases without naming a model in code.
 type Reference struct {
+	// URL replaces ReferenceURL; set it before the first load.
+	URL     string
 	mu      sync.Mutex
 	byID    map[string]ModelFacts
 	byName  map[string]ModelFacts
@@ -276,7 +306,11 @@ func (r *Reference) load(hc *http.Client) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err := func() error {
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, ReferenceURL, nil)
+		target := r.URL
+		if target == "" {
+			target = ReferenceURL
+		}
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, target, nil)
 		if err != nil {
 			return err
 		}

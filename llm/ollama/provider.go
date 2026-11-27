@@ -146,6 +146,31 @@ func (p *Provider) Models(ctx context.Context) ([]llm.Model, error) {
 	return out, nil
 }
 
+// Catalog lists every installed model but the decision ones, with the kind and
+// image support its tags declare. Tags without capabilities leave both unknown.
+func (p *Provider) Catalog(ctx context.Context) ([]llm.CatalogModel, error) {
+	tags, err := p.listTags(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var out []llm.CatalogModel
+	for _, t := range tags {
+		if hasCapability(t, decisionCapability) {
+			continue
+		}
+		entry := llm.CatalogModel{Model: llm.Model{ID: t.Name, Name: t.Name, ContextWindow: 128000, Vision: hasCapability(t, "vision")}, Raw: map[string]any{}}
+		if t.Capabilities != nil {
+			entry.Kind = llm.KindChat
+			if hasCapability(t, string(llm.KindEmbedding)) {
+				entry.Kind = llm.KindEmbedding
+			}
+			entry.Raw["supports_vision"] = entry.Vision
+		}
+		out = append(out, entry)
+	}
+	return out, nil
+}
+
 // EmbeddingModels returns Ollama models whose /api/tags capabilities explicitly
 // include embedding. Model names are not examined.
 func (p *Provider) EmbeddingModels(ctx context.Context) ([]llm.CatalogModel, error) {
@@ -328,6 +353,19 @@ func wireMessages(msgs []llm.Message) []any {
 			content = m.Content
 		}
 		o := transport.NewObj().Set("role", m.Role).Set("content", content)
+		// Ollama takes text in content and images as bare base64.
+		if parts, ok := m.Content.([]any); ok {
+			o.Set("content", llm.ContentText(parts))
+			var images []string
+			for _, part := range parts {
+				if _, data, isImage := llm.ImagePart(part); isImage {
+					images = append(images, data)
+				}
+			}
+			if len(images) > 0 {
+				o.Set("images", images)
+			}
+		}
 		if m.ToolCallID != "" {
 			o.Set("tool_call_id", m.ToolCallID)
 		}
@@ -385,6 +423,9 @@ func (p *Provider) chatBody(model string, msgs []llm.Message, tools []llm.Tool, 
 		Set("options", transport.NewObj().Set("temperature", temperature).Set("num_predict", numPredict))
 	if len(tools) > 0 {
 		body.Set("tools", formatTools(tools))
+	}
+	if opt.JSON {
+		body.Set("format", "json")
 	}
 	return body
 }

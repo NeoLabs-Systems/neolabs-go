@@ -56,6 +56,9 @@ type Options struct {
 	MaxTokens       int
 	Temperature     *float64
 	ReasoningEffort string
+	// JSON asks for a JSON object answer where the API has a switch for it
+	// (Anthropic has none).
+	JSON bool
 	// Extra carries provider-specific settings the engine passes through.
 	Extra map[string]any
 }

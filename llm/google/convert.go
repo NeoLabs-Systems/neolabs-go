@@ -77,6 +77,23 @@ func contentText(c any) string {
 	return s
 }
 
+// contentParts maps a message's text and image parts to Gemini parts.
+func contentParts(content any) []any {
+	list, ok := content.([]any)
+	if !ok {
+		return []any{transport.NewObj().Set("text", contentText(content))}
+	}
+	var parts []any
+	for _, part := range list {
+		if text, isText := llm.TextPart(part); isText {
+			parts = append(parts, transport.NewObj().Set("text", text))
+		} else if mimeType, data, isImage := llm.ImagePart(part); isImage {
+			parts = append(parts, transport.NewObj().Set("inlineData", transport.NewObj().Set("mimeType", mimeType).Set("data", data)))
+		}
+	}
+	return parts
+}
+
 type turn struct {
 	role  string
 	parts []any
@@ -97,7 +114,7 @@ func (p *Provider) convertMessages(msgs []llm.Message, model string) (string, []
 			if system.Len() > 0 {
 				system.WriteString("\n\n")
 			}
-			system.WriteString(contentText(m.Content))
+			system.WriteString(llm.ContentText(m.Content))
 		case m.Role == "tool" && unsigned[m.ToolCallID]:
 			name := m.Name
 			if name == "" {
@@ -159,7 +176,7 @@ func (p *Provider) convertMessages(msgs []llm.Message, model string) (string, []
 			if m.Role == "assistant" {
 				role = "model"
 			}
-			history = append(history, turn{role, []any{transport.NewObj().Set("text", contentText(m.Content))}})
+			history = append(history, turn{role, contentParts(m.Content)})
 		}
 	}
 
@@ -198,6 +215,9 @@ func (p *Provider) requestBody(model string, msgs []llm.Message, tools []llm.Too
 	gen := transport.NewObj()
 	if opt.MaxTokens > 0 {
 		gen.Set("maxOutputTokens", opt.MaxTokens)
+	}
+	if opt.JSON {
+		gen.Set("responseMimeType", "application/json")
 	}
 	if thinking := p.thinkingConfig(model, opt.ReasoningEffort); thinking != nil {
 		gen.Set("thinkingConfig", thinking)

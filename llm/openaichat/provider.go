@@ -169,13 +169,22 @@ func (p *Provider) wrap(err error, prefix string) error {
 	return llm.WrapError(p.name, err, prefix)
 }
 
+// request is the provider's body for one completion, without the stream flags.
+func (p *Provider) request(model string, msgs []llm.Message, tools []llm.Tool, opt llm.Options) *transport.Obj {
+	body := p.build(model, p.messages(msgs, model), tools, opt)
+	if opt.JSON {
+		body.Set("response_format", transport.NewObj().Set("type", "json_object"))
+	}
+	return body
+}
+
 // Chat runs one non-streamed completion.
 func (p *Provider) Chat(ctx context.Context, msgs []llm.Message, tools []llm.Tool, opt llm.Options) (*llm.Result, error) {
 	model, err := p.requireModel(opt)
 	if err != nil {
 		return nil, err
 	}
-	body := p.build(model, p.messages(msgs, model), tools, opt)
+	body := p.request(model, msgs, tools, opt)
 	request := func(body *transport.Obj) (map[string]any, error) {
 		return withAuthRetry(ctx, p, func() (map[string]any, error) {
 			r, err := p.post(ctx, "/chat/completions", body)
@@ -210,7 +219,7 @@ func (p *Provider) Stream(ctx context.Context, msgs []llm.Message, tools []llm.T
 			yield(llm.Event{}, err)
 			return
 		}
-		body := p.build(model, p.messages(msgs, model), tools, opt)
+		body := p.request(model, msgs, tools, opt)
 		body.Set("stream", true)
 		if p.streamUsage {
 			body.Set("stream_options", transport.NewObj().Set("include_usage", true))

@@ -203,7 +203,7 @@ func convertMessages(msgs []llm.Message) (system []any, messages []any) {
 	toolTurnSeen := false
 	for _, msg := range msgs {
 		if msg.Role == "system" {
-			text, _ := msg.Content.(string)
+			text := llm.ContentText(msg.Content)
 			block := transport.NewObj().Set("type", "text").Set("text", text)
 			if toolTurnSeen {
 				messages = append(messages, transport.NewObj().Set("role", "user").Set("content", []any{block}))
@@ -252,11 +252,29 @@ func convertMessages(msgs []llm.Message) (system []any, messages []any) {
 		}
 		o := transport.NewObj().Set("role", role)
 		if msg.Content != nil {
-			o.Set("content", msg.Content)
+			o.Set("content", imageBlocks(msg.Content))
 		}
 		messages = append(messages, o)
 	}
 	return system, messages
+}
+
+// imageBlocks turns OpenAI image_url parts into Anthropic image blocks; other
+// content passes unchanged.
+func imageBlocks(content any) any {
+	parts, ok := content.([]any)
+	if !ok {
+		return content
+	}
+	out := make([]any, len(parts))
+	for i, part := range parts {
+		out[i] = part
+		if mimeType, data, isImage := llm.ImagePart(part); isImage {
+			out[i] = transport.NewObj().Set("type", "image").
+				Set("source", transport.NewObj().Set("type", "base64").Set("media_type", mimeType).Set("data", data))
+		}
+	}
+	return out
 }
 
 // parseInput reads a tool call's arguments as the model produced them, keeping
