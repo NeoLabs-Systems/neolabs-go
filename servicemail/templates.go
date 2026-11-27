@@ -23,11 +23,27 @@ const (
     .na-btn { background:#e1b052 !important; color:#0e1511 !important; }
   }`
 
+	quoteDarkStyle = `
+  @media (prefers-color-scheme: dark) {
+    .na-quote { background:#1c261f !important; border-color:#e1b052 !important; }
+  }`
+
 	detailRowTmpl = `
     <tr>
       <td class="na-line na-ink-3" style="{{border}}padding:12px 12px 12px 0;color:#7e8470;font-family:{{mono}};font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;vertical-align:top;white-space:nowrap;">{{label}}</td>
       <td class="na-line na-ink" style="{{border}}padding:12px 0;color:#1c2117;font-size:13.5px;font-weight:600;text-align:right;word-break:break-word;">{{value}}</td>
     </tr>`
+
+	paragraphTmpl = `
+                <p class="na-ink-2" style="margin:14px 0 0;color:#49503f;font-size:15.5px;line-height:1.65;">{{text}}</p>`
+
+	quoteTmpl = `
+    <div class="na-quote" style="margin-top:22px;padding:14px 16px;border-left:3px solid #b07d2b;border-radius:6px;background:#f4f1e8;">
+      {{label}}
+      <div class="na-ink" style="color:#1c2117;font-size:14.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;">{{text}}</div>
+    </div>`
+
+	quoteLabelTmpl = `<div class="na-ink-3" style="margin-bottom:6px;color:#7e8470;font-family:{{mono}};font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;">{{label}}</div>`
 
 	detailsTableTmpl = `
     <table role="presentation" class="na-line" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #e6e2d6;border-bottom:1px solid #e6e2d6;">
@@ -43,11 +59,11 @@ const (
         </td>
       </tr>
     </table>
-    <p class="na-ink-3" style="margin:18px 0 0;color:#7e8470;font-size:12px;line-height:1.6;">If the button does not work, open this link:<br><a href="{{actionUrl}}" class="na-gold" style="color:#8a5f1c;word-break:break-all;">{{actionUrl}}</a></p>
+    <p class="na-ink-3" style="margin:18px 0 0;color:#7e8470;font-size:12px;line-height:1.6;">{{fallback}}<br><a href="{{actionUrl}}" class="na-gold" style="color:#8a5f1c;word-break:break-all;">{{actionUrl}}</a></p>
   `
 
 	pageTmpl = `<!doctype html>
-<html lang="en">
+<html lang="{{lang}}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -76,11 +92,11 @@ const (
                 <table role="presentation" cellspacing="0" cellpadding="0">
                   <tr>
                     <td style="padding-right:9px;vertical-align:middle;"><div class="na-dot" style="width:6px;height:6px;border-radius:999px;background:#b07d2b;box-shadow:0 0 0 4px rgba(176,125,43,0.14);"></div></td>
-                    <td class="na-gold" style="vertical-align:middle;color:#8a5f1c;font-family:{{mono}};font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;">Account</td>
+                    <td class="na-gold" style="vertical-align:middle;color:#8a5f1c;font-family:{{mono}};font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;">{{eyebrow}}</td>
                   </tr>
                 </table>
                 <h1 class="na-ink" style="margin:18px 0 0;color:#1c2117;font-family:{{serif}};font-size:30px;font-weight:560;line-height:1.1;letter-spacing:-0.015em;">{{title}}</h1>
-                <p class="na-ink-2" style="margin:14px 0 0;color:#49503f;font-size:15.5px;line-height:1.65;">{{intro}}</p>
+                <p class="na-ink-2" style="margin:14px 0 0;color:#49503f;font-size:15.5px;line-height:1.65;">{{intro}}</p>{{extra}}
                 {{action}}
                 {{details}}
               </td>

@@ -1,6 +1,7 @@
 package servicemail
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
 	"errors"
@@ -57,8 +58,23 @@ func (s Sender) message(to string, m Message) (*mail.Msg, error) {
 		}
 	}
 	msg.Subject(m.Subject)
+	for name, value := range m.Headers {
+		if strings.ContainsAny(name+value, "\r\n") {
+			return nil, errors.New("servicemail: header values must be a single line")
+		}
+		msg.SetGenHeader(mail.Header(name), value)
+	}
 	msg.SetBodyString(mail.TypeTextPlain, RenderText(m))
 	msg.AddAlternativeString(mail.TypeTextHTML, RenderHTML(m))
+	for _, a := range m.Attachments {
+		var opts []mail.FileOption
+		if a.ContentType != "" {
+			opts = append(opts, mail.WithFileContentType(mail.ContentType(a.ContentType)))
+		}
+		if err := msg.AttachReader(a.Name, bytes.NewReader(a.Content), opts...); err != nil {
+			return nil, fmt.Errorf("servicemail: attachment: %w", err)
+		}
+	}
 	return msg, nil
 }
 
