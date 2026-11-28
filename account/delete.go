@@ -69,7 +69,11 @@ type Deleter struct {
 	// OtherAdmins counts the active admins besides the account, inside the
 	// transaction. Required with KeepLastAdmin.
 	OtherAdmins func(ctx context.Context, tx *sql.Tx, id userid.ID) (int, error)
-	Steps       []Step
+	// Before runs ahead of the transaction, once the guards passed: stop
+	// the account's background work, leave remote pools. An error stops the
+	// deletion.
+	Before []func(ctx context.Context, d *Deletion) error
+	Steps  []Step
 	// Sessions are ended after the commit (sessions kept in another database
 	// or not cascaded by the rows).
 	Sessions Revoker
@@ -107,22 +111,25 @@ func (x *Deleter) run(ctx context.Context, d *Deletion) (*Deletion, error) {
 		return nil, errors.New("account: no erase steps configured")
 	}
 	d.Result = map[string]any{}
+	if len(x.Before) > 0 {
+		// Check the last-admin rule before work that cannot be undone; the
+		// transaction checks it again.
+		if err := x.inTx(ctx, func(tx *sql.Tx) error { return x.keepAdmin(ctx, tx, d) }); err != nil {
+			return nil, err
+		}
+		for _, fn := range x.Before {
+			if err := fn(ctx, d); err != nil {
+				return nil, err
+			}
+		}
+	}
 	tx, err := x.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	if d.Account.Admin && x.Rule == KeepLastAdmin {
-		if x.OtherAdmins == nil {
-			return nil, errors.New("account: OtherAdmins is required to delete an admin")
-		}
-		n, err := x.OtherAdmins(ctx, tx, d.Account.ID)
-		if err != nil {
-			return nil, err
-		}
-		if n == 0 {
-			return nil, ErrLastAdmin
-		}
+	if err := x.keepAdmin(ctx, tx, d); err != nil {
+		return nil, err
 	}
 	for _, step := range x.Steps {
 		if err := step(ctx, tx, d); err != nil {
@@ -134,6 +141,33 @@ func (x *Deleter) run(ctx context.Context, d *Deletion) (*Deletion, error) {
 	}
 	x.finish(context.WithoutCancel(ctx), d)
 	return d, nil
+}
+
+func (x *Deleter) inTx(ctx context.Context, fn func(tx *sql.Tx) error) error {
+	tx, err := x.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	return fn(tx)
+}
+
+// keepAdmin refuses to remove the last active admin.
+func (x *Deleter) keepAdmin(ctx context.Context, tx *sql.Tx, d *Deletion) error {
+	if !d.Account.Admin || x.Rule != KeepLastAdmin {
+		return nil
+	}
+	if x.OtherAdmins == nil {
+		return errors.New("account: OtherAdmins is required to delete an admin")
+	}
+	n, err := x.OtherAdmins(ctx, tx, d.Account.ID)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrLastAdmin
+	}
+	return nil
 }
 
 func (x *Deleter) finish(ctx context.Context, d *Deletion) {

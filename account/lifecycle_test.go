@@ -343,6 +343,30 @@ func TestLastAdminAndAdminRules(t *testing.T) {
 	}
 }
 
+func TestBeforeRunsOnlyWhenTheGuardsPass(t *testing.T) {
+	a := newFakeApp(t, false)
+	withLifecycle(a, JSON, KeepLastAdmin)
+	var stopped []string
+	a.h.Deleter.Before = []func(context.Context, *Deletion) error{func(_ context.Context, d *Deletion) error {
+		stopped = append(stopped, d.Account.Username)
+		return nil
+	}}
+	ctx := context.Background()
+	root, _ := a.Account(ctx, a.addUser("root", true, false))
+	if _, err := a.h.Deleter.Delete(ctx, root); err != ErrLastAdmin || len(stopped) != 0 {
+		t.Fatalf("%v %v", err, stopped)
+	}
+	user, _ := a.Account(ctx, a.addUser("user", false, false))
+	if _, err := a.h.Deleter.Delete(ctx, user); err != nil || len(stopped) != 1 {
+		t.Fatalf("%v %v", err, stopped)
+	}
+	a.h.Deleter.Before = append(a.h.Deleter.Before, func(context.Context, *Deletion) error { return errors.New("busy") })
+	other, _ := a.Account(ctx, a.addUser("other", false, false))
+	if _, err := a.h.Deleter.Delete(ctx, other); err == nil || a.count(`SELECT COUNT(*) FROM users WHERE username = 'other'`) != 1 {
+		t.Fatal("a failed Before must stop the deletion")
+	}
+}
+
 func TestRemoveInsideStaysInTheRoot(t *testing.T) {
 	root := t.TempDir()
 	outside := filepath.Join(t.TempDir(), "keep.txt")
