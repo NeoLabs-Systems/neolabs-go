@@ -163,9 +163,11 @@ func (r *Recovery) goFrom(parent context.Context, work func(ctx context.Context)
 func (r *Recovery) Wait() { r.wg.Wait() }
 
 // send issues a token of typ for the account and mails its link to an
-// address, within the per-account cap. A failed send retires the token.
-func (r *Recovery) send(ctx context.Context, a Account, typ, to string, build func(m Messages, link string) servicemail.Message) error {
-	if !r.Enabled() {
+// address, within the per-account cap. word picks the email from the
+// request's Messages; a failed send retires the token.
+func (r *Recovery) send(ctx context.Context, a Account, typ, to string, word func(m Messages) func(link string) servicemail.Message) error {
+	build := word(r.messages(ctx))
+	if !r.Enabled() || build == nil {
 		return ErrEmailOff
 	}
 	limit := r.MailCap
@@ -196,7 +198,7 @@ func (r *Recovery) send(ctx context.Context, a Account, typ, to string, build fu
 	if err != nil {
 		return err
 	}
-	if err := r.Mailer.Send(ctx, to, build(r.messages(ctx), link)); err != nil {
+	if err := r.Mailer.Send(ctx, to, build(link)); err != nil {
 		_ = tk.Retire(context.WithoutCancel(ctx), r.DB, a.ID, typ)
 		if errors.Is(err, servicemail.ErrNotConfigured) {
 			return ErrEmailOff
@@ -216,11 +218,21 @@ func bind(word func(a Account, link string) servicemail.Message, a Account) func
 	return func(link string) servicemail.Message { return word(a, link) }
 }
 
-func (r *Recovery) changeMessage(a Account, email string) func(link string) servicemail.Message {
-	if r.Messages.Change == nil {
-		return nil
+func resetMessage(a Account) func(m Messages) func(link string) servicemail.Message {
+	return func(m Messages) func(link string) servicemail.Message { return bind(m.Reset, a) }
+}
+
+func signupMessage(a Account) func(m Messages) func(link string) servicemail.Message {
+	return func(m Messages) func(link string) servicemail.Message { return bind(m.Signup, a) }
+}
+
+func changeMessage(a Account, email string) func(m Messages) func(link string) servicemail.Message {
+	return func(m Messages) func(link string) servicemail.Message {
+		if m.Change == nil {
+			return nil
+		}
+		return func(link string) servicemail.Message { return m.Change(a, email, link) }
 	}
-	return func(link string) servicemail.Message { return r.Messages.Change(a, email, link) }
 }
 
 // RequestReset mails a reset link when the login names an enabled account
@@ -240,7 +252,7 @@ func (r *Recovery) RequestReset(ctx context.Context, login string) error {
 	if a.Disabled || a.Email == "" || (r.CanReset != nil && !r.CanReset(a)) {
 		return nil
 	}
-	err = r.send(ctx, a, TokenPasswordReset, a.Email, bind(r.Messages.Reset, a))
+	err = r.send(ctx, a, TokenPasswordReset, a.Email, resetMessage(a))
 	if errors.Is(err, ErrMailLimited) {
 		return nil
 	}
@@ -447,7 +459,7 @@ func (r *Recovery) SendSignupConfirmation(ctx context.Context, a Account) error 
 	if a.Email == "" || a.EmailVerified {
 		return ErrNothingToConfirm
 	}
-	return r.send(ctx, a, TokenSignup, a.Email, bind(r.Messages.Signup, a))
+	return r.send(ctx, a, TokenSignup, a.Email, signupMessage(a))
 }
 
 // ResendSignupConfirmation is the anonymous "send the link again": it mails
@@ -514,7 +526,7 @@ func (r *Recovery) ChangeEmail(ctx context.Context, a Account, email string) (pe
 		if taken {
 			return "", ErrEmailTaken
 		}
-		if err := r.send(ctx, a, TokenEmailChange, email, r.changeMessage(a, email)); err != nil {
+		if err := r.send(ctx, a, TokenEmailChange, email, changeMessage(a, email)); err != nil {
 			return "", err
 		}
 		if notice := r.messages(ctx).ChangeRequested; notice != nil && a.Email != "" {
@@ -552,5 +564,5 @@ func (r *Recovery) ResendConfirmation(ctx context.Context, a Account) (pending s
 	if pending == "" {
 		return "", r.SendSignupConfirmation(ctx, a)
 	}
-	return pending, r.send(ctx, a, TokenEmailChange, pending, r.changeMessage(a, pending))
+	return pending, r.send(ctx, a, TokenEmailChange, pending, changeMessage(a, pending))
 }

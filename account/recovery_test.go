@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/NeoLabs-Systems/neolabs-go/lockout"
+	"github.com/NeoLabs-Systems/neolabs-go/servicemail"
 	"github.com/NeoLabs-Systems/neolabs-go/userid"
 )
 
@@ -415,5 +416,47 @@ func TestUnwordedEmailsAreRefusedNotSent(t *testing.T) {
 	}
 	if a.count(`SELECT COUNT(*) FROM user_email_tokens`) != 0 {
 		t.Fatal("no link may be issued for an email nobody worded")
+	}
+}
+
+type langKey struct{}
+
+func TestMessagesForWordsMailInTheRequestsLanguage(t *testing.T) {
+	a := newFakeApp(t, false)
+	id := a.addUser("neo", false, false)
+	a.rec.MessagesFor = func(ctx context.Context) Messages {
+		lang, _ := ctx.Value(langKey{}).(string)
+		return Messages{
+			Reset: func(_ Account, link string) servicemail.Message {
+				return servicemail.Message{Subject: "reset " + lang, ActionURL: link}
+			},
+			Change: func(_ Account, _, link string) servicemail.Message {
+				return servicemail.Message{Subject: "change " + lang, ActionURL: link}
+			},
+			ChangeRequested: func(Account, string) servicemail.Message {
+				return servicemail.Message{Subject: "requested " + lang}
+			},
+		}
+	}
+	req := httptest.NewRequest("POST", "/api/auth/password/forgot", strings.NewReader(`{"account":"neo"}`))
+	req.Header.Set("Content-Type", "application/json")
+	req = req.WithContext(context.WithValue(req.Context(), langKey{}, "de"))
+	a.h.Forgot().ServeHTTP(httptest.NewRecorder(), req)
+	a.rec.Wait()
+	if got := a.mail.last(t).Msg.Subject; got != "reset de" {
+		t.Fatalf("background reset mail lost the request's language: %q", got)
+	}
+	ctx := context.WithValue(context.Background(), langKey{}, "fr")
+	acc, _ := a.Account(ctx, id)
+	if _, err := a.rec.ChangeEmail(ctx, acc, "new@example.com"); err != nil {
+		t.Fatal(err)
+	}
+	a.rec.Wait()
+	subjects := map[string]bool{}
+	for _, m := range a.mail.all() {
+		subjects[m.Msg.Subject] = true
+	}
+	if !subjects["change fr"] || !subjects["requested fr"] {
+		t.Fatalf("change mails %v", subjects)
 	}
 }

@@ -167,7 +167,7 @@ func (h *Handlers) anonymous(kind string, work func(ctx context.Context, login s
 			return
 		}
 		if login != "" {
-			h.Recovery.Go(func(ctx context.Context) error { return work(ctx, login) })
+			h.Recovery.goFrom(r.Context(), func(ctx context.Context) error { return work(ctx, login) })
 		}
 		pad := h.MinLatency
 		if pad <= 0 {
