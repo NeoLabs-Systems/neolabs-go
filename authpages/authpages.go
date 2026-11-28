@@ -1,5 +1,7 @@
 // Package authpages renders the browser pages account emails link to: the
-// confirmation result and the password reset form, the same in every app.
+// confirmation form and result and the password reset form, the same in every
+// app. The pages carry a token, so they are never cached, indexed or leaked in
+// a Referer header.
 package authpages
 
 import (
@@ -14,7 +16,11 @@ var htmlEscaper = strings.NewReplacer("&", "&amp;", "<", "&lt;", ">", "&gt;", `"
 func escapeHTML(s string) string { return htmlEscaper.Replace(s) }
 
 func writePage(w http.ResponseWriter, status int, body string) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	h := w.Header()
+	h.Set("Content-Type", "text/html; charset=utf-8")
+	h.Set("Cache-Control", "no-store")
+	h.Set("Referrer-Policy", "no-referrer")
+	h.Set("X-Robots-Tag", "noindex")
 	w.WriteHeader(status)
 	_, _ = fmt.Fprint(w, body)
 }
@@ -50,6 +56,20 @@ func Confirmation(w http.ResponseWriter, brand string, ok bool, title, message s
 		`        <a href="/" style="display:inline-block;margin-top:26px;background:` + accent + `;color:#ffffff;text-decoration:none;font-weight:700;border-radius:8px;padding:13px 18px;">Open ` + escapeHTML(brand) + `</a>
 ` + pageTail
 	writePage(w, status, body)
+}
+
+// EmailConfirm shows the button that confirms an address by posting the token
+// to action. Opening the link spends nothing, so a mail scanner that follows
+// links cannot confirm for the account owner.
+func EmailConfirm(w http.ResponseWriter, brand, action, token, title, message, button string) {
+	t := escapeHTML(title)
+	body := fmt.Sprintf(pageHead, t, escapeHTML(brand), t, escapeHTML(message)) +
+		`        <form method="post" action="` + escapeHTML(action) + `" style="margin-top:24px;">
+          <input type="hidden" name="token" value="` + escapeHTML(token) + `">
+          <button type="submit" style="width:100%;background:#0f766e;color:#ffffff;border:0;border-radius:8px;padding:14px 18px;font-weight:800;font-size:15px;cursor:pointer;">` + escapeHTML(button) + `</button>
+        </form>
+` + pageTail
+	writePage(w, http.StatusOK, body)
 }
 
 // PasswordReset shows the reset form, or its error or success state.

@@ -288,3 +288,22 @@ func TestSessionIDsPerUserMaxAgeAndHelpers(t *testing.T) {
 		t.Fatalf("ID()=%q userId=%q (numbers must stringify)", sid, uid)
 	}
 }
+
+func TestForUserListsLiveSessionsWithData(t *testing.T) {
+	_, store := newTestManager(t, Options{})
+	ctx := context.Background()
+	store.Set(ctx, "a", map[string]any{"userId": 7, "userAgent": "phone"}, time.Hour)
+	store.Set(ctx, "b", map[string]any{"userId": "7"}, 2*time.Hour)
+	store.Set(ctx, "c", map[string]any{"userId": 8}, time.Hour)
+	store.Set(ctx, "d", map[string]any{"userId": 7}, -time.Hour)
+	rows, err := store.ForUser(ctx, "7")
+	if err != nil || len(rows) != 2 {
+		t.Fatalf("%+v %v", rows, err)
+	}
+	if rows[0].SID != "b" || rows[1].SID != "a" || rows[1].Data["userAgent"] != "phone" {
+		t.Fatalf("order or data: %+v", rows)
+	}
+	if time.Until(rows[0].Expire) < time.Hour {
+		t.Fatalf("expiry not read: %v", rows[0].Expire)
+	}
+}

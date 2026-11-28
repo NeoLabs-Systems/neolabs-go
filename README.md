@@ -4,6 +4,7 @@ Shared Go foundation of the NeoLabs apps (NeoAgent, NeoRouter, NeoCloud, NeoReca
 
 | Package | What it gives you |
 |---|---|
+| `account` | the account lifecycle: password reset, email confirmation and change, re-authentication, data export (JSON or zip, redaction), deletion (ordered erase steps, files and sessions after commit, last-admin guard), session lists; HTTP handlers apps mount on their own paths |
 | `authpages` | the browser pages account emails link to |
 | `userid` | account ids that are numbers in one app and UUIDs in another |
 | `secretbox` | AES-256-GCM sealed secrets at rest (`enc:v1:` layout) |

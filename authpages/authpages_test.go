@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -67,4 +68,22 @@ func firstDiff(a, b string) string {
 		}
 	}
 	return "length differs (prefix equal)"
+}
+
+func TestEmailConfirmPostsTheTokenAndIsNeverCached(t *testing.T) {
+	rec := httptest.NewRecorder()
+	EmailConfirm(rec, "Neo<", "/api/auth/email/confirm", `tok"en`, "Confirm", "Confirm your address.", "Confirm email")
+	body := rec.Body.String()
+	for _, want := range []string{
+		`<form method="post" action="/api/auth/email/confirm"`,
+		`name="token" value="tok&quot;en"`, "Neo&lt;", "Confirm email</button>",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in\n%s", want, body)
+		}
+	}
+	h := rec.Header()
+	if rec.Code != 200 || h.Get("Cache-Control") != "no-store" || h.Get("Referrer-Policy") != "no-referrer" || h.Get("X-Robots-Tag") != "noindex" {
+		t.Fatalf("%d %v", rec.Code, h)
+	}
 }

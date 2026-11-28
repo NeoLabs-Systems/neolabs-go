@@ -333,3 +333,56 @@ func TestSenderRefusesWhenDisabledAndHeaderInjection(t *testing.T) {
 		t.Fatal("recipient injection must be refused")
 	}
 }
+
+func TestTokensConsumeRetireRecentPending(t *testing.T) {
+	db := tokenDB(t)
+	tk := Tokens{DB: db}
+	ctx := context.Background()
+
+	reset, _, _ := tk.Create(ctx, "1", "password_reset", "neo@example.com", time.Hour)
+	row, _ := tk.Find(ctx, db, reset, "password_reset")
+	if err := tk.Consume(ctx, db, row.ID); err != nil {
+		t.Fatal(err)
+	}
+	if err := tk.Consume(ctx, db, row.ID); err != ErrTokenSpent {
+		t.Fatalf("a token is spent once: %v", err)
+	}
+	expired, _, _ := tk.Create(ctx, "1", "signup_confirmation", "neo@example.com", -time.Minute)
+	_ = expired
+	var expiredID int64
+	db.QueryRow(`SELECT id FROM user_email_tokens WHERE type = 'signup_confirmation'`).Scan(&expiredID)
+	if err := tk.Consume(ctx, db, expiredID); err != ErrTokenSpent {
+		t.Fatalf("an expired token cannot be spent: %v", err)
+	}
+
+	if n, err := tk.Recent(ctx, "1", "password_reset", time.Now().Add(-time.Minute)); err != nil || n != 1 {
+		t.Fatalf("recent %d %v", n, err)
+	}
+	if n, _ := tk.Recent(ctx, "1", "password_reset", time.Now().Add(time.Hour)); n != 0 {
+		t.Fatalf("recent counts only since the given time: %d", n)
+	}
+
+	if p, err := tk.Pending(ctx, "1", "email_change_confirmation"); err != nil || p != "" {
+		t.Fatalf("no pending change: %q %v", p, err)
+	}
+	tk.Create(ctx, "1", "email_change_confirmation", "new@example.com", time.Hour)
+	if p, _ := tk.Pending(ctx, "1", "email_change_confirmation"); p != "new@example.com" {
+		t.Fatalf("pending %q", p)
+	}
+	keep, _, _ := tk.Create(ctx, "1", "password_reset", "neo@example.com", time.Hour)
+	if err := tk.Retire(ctx, db, "1", "email_change_confirmation"); err != nil {
+		t.Fatal(err)
+	}
+	if p, _ := tk.Pending(ctx, "1", "email_change_confirmation"); p != "" {
+		t.Fatal("retired change still pending")
+	}
+	if r, _ := tk.Find(ctx, db, keep, ""); r == nil {
+		t.Fatal("retire touched another type")
+	}
+	if err := tk.Retire(ctx, db, "1"); err != nil {
+		t.Fatal(err)
+	}
+	if r, _ := tk.Find(ctx, db, keep, ""); r != nil {
+		t.Fatal("retire without types spends all")
+	}
+}

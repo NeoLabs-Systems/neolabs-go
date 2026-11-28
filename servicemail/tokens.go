@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -169,4 +170,69 @@ func (l *AttemptLimiter) Reset(key string) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	delete(l.state, key)
+}
+
+// Execer runs a statement; *sql.DB and *sql.Tx satisfy it.
+type Execer interface {
+	ExecContext(context.Context, string, ...any) (sql.Result, error)
+}
+
+// ErrTokenSpent is returned when a token was used, expired or retired between
+// finding it and spending it.
+var ErrTokenSpent = errors.New("servicemail: token already used or expired")
+
+// Consume spends the token with one write that only succeeds while it is
+// live, so two requests racing on the same link cannot both act on it. Run it
+// in the transaction that applies the token's effect.
+func (t Tokens) Consume(ctx context.Context, q Execer, id int64) error {
+	res, err := q.ExecContext(ctx, `UPDATE user_email_tokens SET consumed_at = datetime('now')
+		WHERE id = ? AND consumed_at IS NULL AND datetime(expires_at) > datetime('now')`, id)
+	if err != nil {
+		return err
+	}
+	if n, err := res.RowsAffected(); err != nil || n != 1 {
+		if err != nil {
+			return err
+		}
+		return ErrTokenSpent
+	}
+	return nil
+}
+
+// Retire spends every unused token of the given types for the account; no
+// types retires them all.
+func (t Tokens) Retire(ctx context.Context, q Execer, userID userid.ID, types ...string) error {
+	query := `UPDATE user_email_tokens SET consumed_at = datetime('now') WHERE user_id = ? AND consumed_at IS NULL`
+	args := []any{string(userID)}
+	if len(types) > 0 {
+		query += ` AND type IN (?` + strings.Repeat(`, ?`, len(types)-1) + `)`
+		for _, typ := range types {
+			args = append(args, typ)
+		}
+	}
+	_, err := q.ExecContext(ctx, query, args...)
+	return err
+}
+
+// Recent counts the tokens of a type issued to the account since the given
+// time, used or not, to cap how much mail one account can trigger.
+func (t Tokens) Recent(ctx context.Context, userID userid.ID, typ string, since time.Time) (int, error) {
+	var n int
+	err := t.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM user_email_tokens
+		WHERE user_id = ? AND type = ? AND datetime(created_at) >= datetime(?)`,
+		string(userID), typ, SQLiteTime(since)).Scan(&n)
+	return n, err
+}
+
+// Pending is the address of the account's newest live token of a type, such
+// as an email change waiting for confirmation; "" when there is none.
+func (t Tokens) Pending(ctx context.Context, userID userid.ID, typ string) (string, error) {
+	var email string
+	err := t.DB.QueryRowContext(ctx, `SELECT email FROM user_email_tokens
+		WHERE user_id = ? AND type = ? AND consumed_at IS NULL AND datetime(expires_at) > datetime('now')
+		ORDER BY id DESC LIMIT 1`, string(userID), typ).Scan(&email)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", nil
+	}
+	return email, err
 }

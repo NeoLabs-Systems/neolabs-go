@@ -101,3 +101,38 @@ func (s *Store) DestroyForUser(ctx context.Context, userID string) error {
 		`DELETE FROM sessions WHERE CAST(json_extract(sess, '$.userId') AS TEXT) = ?`, userID)
 	return err
 }
+
+// Row is one live stored session.
+type Row struct {
+	SID    string
+	Data   map[string]any
+	Expire time.Time
+}
+
+// ForUser lists an account's live sessions with their data, newest expiry
+// first, for session lists.
+func (s *Store) ForUser(ctx context.Context, userID string) ([]Row, error) {
+	rows, err := s.db.QueryContext(ctx,
+		`SELECT sid, sess, expire FROM sessions WHERE CAST(json_extract(sess, '$.userId') AS TEXT) = ? AND datetime('now') < datetime(expire)
+		ORDER BY datetime(expire) DESC`, userID)
+	if err != nil {
+		return nil, fmt.Errorf("sessionx: list user sessions: %w", err)
+	}
+	defer rows.Close()
+	var out []Row
+	for rows.Next() {
+		var sid, raw, expire string
+		if err := rows.Scan(&sid, &raw, &expire); err != nil {
+			return nil, err
+		}
+		dec := json.NewDecoder(bytes.NewReader([]byte(raw)))
+		dec.UseNumber()
+		var data map[string]any
+		if dec.Decode(&data) != nil {
+			continue
+		}
+		exp, _ := time.Parse(time.RFC3339Nano, expire)
+		out = append(out, Row{SID: sid, Data: data, Expire: exp})
+	}
+	return out, rows.Err()
+}
