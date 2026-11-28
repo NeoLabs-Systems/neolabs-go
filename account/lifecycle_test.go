@@ -321,6 +321,15 @@ func TestLastAdminAndAdminRules(t *testing.T) {
 	if _, err := a.h.Deleter.Delete(ctx, last); err != ErrLastAdmin {
 		t.Fatal(err)
 	}
+	third := a.addUser("third", true, false)
+	a.h.Deleter.ProtectAdminTargets = true
+	if r := a.do("DELETE", "/api/admin/users/"+string(third), second, "", nil); r.json(t)["code"] != "ADMIN_ACCOUNT" {
+		t.Fatal(r.Body)
+	}
+	a.h.Deleter.ProtectAdminTargets = false
+	if r := a.do("DELETE", "/api/admin/users/"+string(third), second, "", nil); r.Code != 204 {
+		t.Fatal(r.Code, r.Body)
+	}
 
 	b := newFakeApp(t, true)
 	withLifecycle(b, JSON, KeepAdmins)

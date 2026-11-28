@@ -25,7 +25,9 @@ const (
 )
 
 // Step is one part of erasing an account, run in order inside the deletion's
-// transaction. Steps erase rows and plan what happens after the commit.
+// transaction. Steps erase rows and plan what happens after the commit. They
+// must use tx only: the writer pool has one connection, which the
+// transaction holds.
 type Step func(ctx context.Context, tx *sql.Tx, d *Deletion) error
 
 // Deletion is one account being deleted.
@@ -61,6 +63,9 @@ func (d *Deletion) AfterCommit(fn func(ctx context.Context)) { d.after = append(
 type Deleter struct {
 	DB   *sql.DB // writer
 	Rule AdminRule
+	// ProtectAdminTargets makes DeleteByAdmin refuse admin accounts even
+	// under KeepLastAdmin; the role is removed first.
+	ProtectAdminTargets bool
 	// OtherAdmins counts the active admins besides the account, inside the
 	// transaction. Required with KeepLastAdmin.
 	OtherAdmins func(ctx context.Context, tx *sql.Tx, id userid.ID) (int, error)
@@ -91,7 +96,7 @@ func (x *Deleter) DeleteByAdmin(ctx context.Context, actor userid.ID, a Account)
 	if actor == a.ID {
 		return nil, ErrDeleteSelf
 	}
-	if a.Admin && x.Rule == KeepAdmins {
+	if a.Admin && (x.Rule == KeepAdmins || x.ProtectAdminTargets) {
 		return nil, ErrAdminAccount
 	}
 	return x.run(ctx, &Deletion{Account: a, Actor: actor})
