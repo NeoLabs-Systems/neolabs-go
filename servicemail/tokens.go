@@ -225,12 +225,14 @@ func (t Tokens) Recent(ctx context.Context, userID userid.ID, typ string, since 
 }
 
 // Pending is the address of the account's newest live token of a type, such
-// as an email change waiting for confirmation; "" when there is none.
+// as an email change waiting for confirmation; "" when there is none. A token
+// for the address the account already has is no pending change.
 func (t Tokens) Pending(ctx context.Context, userID userid.ID, typ string) (string, error) {
 	var email string
-	err := t.DB.QueryRowContext(ctx, `SELECT email FROM user_email_tokens
-		WHERE user_id = ? AND type = ? AND consumed_at IS NULL AND datetime(expires_at) > datetime('now')
-		ORDER BY id DESC LIMIT 1`, string(userID), typ).Scan(&email)
+	err := t.DB.QueryRowContext(ctx, `SELECT t.email FROM user_email_tokens t JOIN users u ON u.id = t.user_id
+		WHERE t.user_id = ? AND t.type = ? AND t.consumed_at IS NULL AND datetime(t.expires_at) > datetime('now')
+		AND lower(t.email) <> lower(COALESCE(u.email, ''))
+		ORDER BY t.id DESC LIMIT 1`, string(userID), typ).Scan(&email)
 	if errors.Is(err, sql.ErrNoRows) {
 		return "", nil
 	}

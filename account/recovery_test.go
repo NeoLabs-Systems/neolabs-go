@@ -460,3 +460,37 @@ func TestMessagesForWordsMailInTheRequestsLanguage(t *testing.T) {
 		t.Fatalf("change mails %v", subjects)
 	}
 }
+
+// Where an owed sign-up confirmation holds sign-in, nobody may start a hold
+// on an account that never owed one: the anonymous resend skips it, and the
+// owner's own resend confirms the address through a change link to itself.
+func TestSignupPendingKeepsUnowedAccountsOutOfTheHold(t *testing.T) {
+	a := newFakeApp(t, false)
+	owed := a.addUser("owed", false, false)
+	free := a.addUser("free", false, false)
+	a.rec.SignupPending = func(_ context.Context, id userid.ID) (bool, error) { return id == owed, nil }
+	for _, name := range []string{"owed", "free"} {
+		a.do("POST", "/api/auth/email/resend", "", "", map[string]any{"account": name})
+	}
+	a.rec.Wait()
+	if m := a.mail.all(); len(m) != 1 || m[0].To != "owed@example.com" {
+		t.Fatalf("anonymous resend mailed %+v", m)
+	}
+	resent := a.do("POST", "/api/account/email/resend", free, "", nil)
+	if resent.Code != 200 || resent.json(t)["pendingEmail"] != nil {
+		t.Fatalf("%d %s", resent.Code, resent.Body)
+	}
+	if n := a.count(`SELECT COUNT(*) FROM user_email_tokens WHERE user_id = ? AND type = ?`, string(free), TokenSignup); n != 0 {
+		t.Fatal("the owner's resend started a sign-up hold")
+	}
+	if p, _ := a.rec.PendingEmail(context.Background(), free); p != "" {
+		t.Fatalf("the current address is no pending change: %q", p)
+	}
+	ev, err := a.rec.ConfirmEmail(context.Background(), tokenOf(t, a.mail.last(t).Msg.ActionURL))
+	if err != nil || ev.Kind != EmailConfirmed || ev.Email != "free@example.com" {
+		t.Fatalf("%+v %v", ev, err)
+	}
+	if acc, _ := a.Account(context.Background(), free); !acc.EmailVerified {
+		t.Fatal("not confirmed")
+	}
+}

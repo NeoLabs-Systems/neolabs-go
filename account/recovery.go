@@ -88,6 +88,12 @@ type Recovery struct {
 	// the request's context values.
 	MessagesFor func(ctx context.Context) Messages
 
+	// SignupPending, when set, reports whether an unconfirmed account still
+	// owes the confirmation it got at sign-up, for apps where that holds its
+	// sign-in. Only such accounts get the sign-up link again; another
+	// unconfirmed address is confirmed through an email-change link to
+	// itself, so asking for one never starts a hold.
+	SignupPending func(ctx context.Context, id userid.ID) (bool, error)
 	// CanReset narrows who may get a reset link, beyond accounts that are
 	// enabled and have an address.
 	CanReset         func(a Account) bool
@@ -415,7 +421,8 @@ func (r *Recovery) ConfirmEmail(ctx context.Context, token string) (Event, error
 		lim.Register(key)
 		return Event{}, ErrConfirmLink
 	}
-	change := row.Type == TokenEmailChange
+	// A change link to the address the account already has confirms it.
+	change := row.Type == TokenEmailChange && !sameAddress(row)
 	err = r.inTx(ctx, func(tx *sql.Tx) error {
 		if change {
 			taken, err := r.emailInUse(ctx, tx, row.Email, a.ID)
@@ -478,6 +485,12 @@ func (r *Recovery) ResendSignupConfirmation(ctx context.Context, login string) e
 	}
 	if a.Disabled || a.Email == "" || a.EmailVerified {
 		return nil
+	}
+	if r.SignupPending != nil {
+		owed, err := r.SignupPending(ctx, a.ID)
+		if err != nil || !owed {
+			return err
+		}
 	}
 	err = r.SendSignupConfirmation(ctx, a)
 	if errors.Is(err, ErrMailLimited) {
@@ -562,6 +575,15 @@ func (r *Recovery) ResendConfirmation(ctx context.Context, a Account) (pending s
 		return "", err
 	}
 	if pending == "" {
+		if r.SignupPending != nil && a.Email != "" && !a.EmailVerified {
+			owed, err := r.SignupPending(ctx, a.ID)
+			if err != nil {
+				return "", err
+			}
+			if !owed {
+				return "", r.send(ctx, a, TokenEmailChange, a.Email, signupMessage(a))
+			}
+		}
 		return "", r.SendSignupConfirmation(ctx, a)
 	}
 	return pending, r.send(ctx, a, TokenEmailChange, pending, changeMessage(a, pending))
