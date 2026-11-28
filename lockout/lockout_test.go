@@ -126,3 +126,24 @@ func TestMessageWording(t *testing.T) {
 		t.Fatal(m)
 	}
 }
+
+func TestParallelAttemptsAreCountedBeforeTheyPass(t *testing.T) {
+	s, _ := newStore(t)
+	ctx := context.Background()
+	results := make(chan error, 20)
+	for range 20 {
+		go func() { results <- s.Attempt(ctx, "k", "password") }()
+	}
+	passed := 0
+	for range 20 {
+		err := <-results
+		if err == nil {
+			passed++
+			continue
+		}
+		retryOf(t, err)
+	}
+	if passed != failuresDelay {
+		t.Fatalf("%d parallel tries passed the check, want %d", passed, failuresDelay)
+	}
+}

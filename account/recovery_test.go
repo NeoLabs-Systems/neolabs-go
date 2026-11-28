@@ -397,3 +397,23 @@ func TestWriteErrorEnvelope(t *testing.T) {
 		t.Fatal(rec.Body.String())
 	}
 }
+
+func TestUnwordedEmailsAreRefusedNotSent(t *testing.T) {
+	a := newFakeApp(t, false)
+	id := a.addUser("neo", false, false)
+	ctx := context.Background()
+	a.rec.Messages = Messages{}
+	acc, _ := a.Account(ctx, id)
+	if err := a.rec.SendSignupConfirmation(ctx, acc); err != ErrEmailOff {
+		t.Fatal(err)
+	}
+	if _, err := a.rec.ChangeEmail(ctx, acc, "new@example.com"); err != ErrEmailOff {
+		t.Fatal(err)
+	}
+	if err := a.rec.RequestReset(ctx, "neo"); err != ErrEmailOff {
+		t.Fatal(err)
+	}
+	if a.count(`SELECT COUNT(*) FROM user_email_tokens`) != 0 {
+		t.Fatal("no link may be issued for an email nobody worded")
+	}
+}

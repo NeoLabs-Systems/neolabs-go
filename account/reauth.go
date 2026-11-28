@@ -23,8 +23,8 @@ type Verifier interface {
 
 // Reauth confirms that the person at a signed-in session knows the account's
 // secrets before a sensitive action. Every try counts against the account's
-// confirmation lockout before the secret is checked; a success takes its
-// failures back.
+// confirmation lockout before the secret is checked, checked and counted as
+// one step (lockout.Store.Attempt); a success takes its failures back.
 type Reauth struct {
 	Lockout  lockout.Store
 	Verifier Verifier
@@ -76,7 +76,7 @@ func (a Reauth) Confirm(ctx context.Context, id userid.ID, password, code string
 const maxSecret = 1024
 
 func (a Reauth) check(ctx context.Context, key, kind string, wrong *Error, verify func() (bool, error)) error {
-	if err := a.Lockout.Record(ctx, key, kind); err != nil {
+	if err := a.Lockout.Attempt(ctx, key, kind); err != nil {
 		return err
 	}
 	ok, err := verify()

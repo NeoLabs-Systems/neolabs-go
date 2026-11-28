@@ -16,6 +16,7 @@ import (
 	"database/sql"
 	"fmt"
 	"math"
+	"sync"
 	"time"
 )
 
@@ -117,6 +118,21 @@ func (s Store) Record(ctx context.Context, key, kind string) error {
 		return fmt.Errorf("lockout: record: %w", err)
 	}
 	return nil
+}
+
+// attempts makes Attempt's check and record one step within the process.
+var attempts sync.Mutex
+
+// Attempt checks the key and, when it is not throttled, records the try as
+// failed, as one step: parallel guesses cannot all pass the check before any
+// of them is counted. Clear the kind once the secret proved right.
+func (s Store) Attempt(ctx context.Context, key, kind string) error {
+	attempts.Lock()
+	defer attempts.Unlock()
+	if err := s.Check(ctx, key); err != nil {
+		return err
+	}
+	return s.Record(ctx, key, kind)
 }
 
 // Clear takes back the failures of one kind (empty kind clears them all) after
