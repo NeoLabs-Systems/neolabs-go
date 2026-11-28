@@ -73,29 +73,40 @@ func NormalizeCode(value string) string {
 
 // Verify reports whether token is the current code or one adjacent step away.
 func Verify(secret, token string, now time.Time) bool {
+	_, ok := MatchStep(secret, token, now)
+	return ok
+}
+
+// MatchStep reports the time step (Unix time / 30 s) whose code token is, from
+// one step before now to one step after. Apps keep the last step an account
+// used and accept only newer ones, so an accepted code cannot be replayed.
+func MatchStep(secret, token string, now time.Time) (int64, bool) {
 	token = NormalizeCode(token)
 	if len(token) != digits {
-		return false
+		return 0, false
 	}
 	for _, c := range token {
 		if c < '0' || c > '9' {
-			return false
+			return 0, false
 		}
 	}
 	key, err := decodeSecret(secret)
 	if err != nil {
-		return false
+		return 0, false
 	}
 	t := now.Unix()
 	lo, hi := (t-toleranceS)/periodSecs, (t+toleranceS)/periodSecs
+	var step int64
 	ok := 0
 	for c := lo; c <= hi; c++ {
 		if c < 0 {
 			continue
 		}
-		ok |= subtle.ConstantTimeCompare([]byte(token), []byte(counterCode(key, uint64(c))))
+		hit := subtle.ConstantTimeCompare([]byte(token), []byte(counterCode(key, uint64(c))))
+		step = int64(subtle.ConstantTimeSelect(hit, int(c), int(step)))
+		ok |= hit
 	}
-	return ok == 1
+	return step, ok == 1
 }
 
 // encodeURIComponent: everything but A-Z a-z 0-9 - _ . ! ~ * ' ( ) is percent-encoded.

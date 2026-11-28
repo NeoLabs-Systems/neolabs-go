@@ -113,3 +113,19 @@ func TestSecretsAndRecoveryCodes(t *testing.T) {
 		t.Fatal("alphabet must avoid look-alikes")
 	}
 }
+
+func TestMatchStepNamesTheCodesStep(t *testing.T) {
+	const secret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
+	now := time.Unix(1_700_000_000, 0)
+	cur := now.Unix() / 30
+	for _, off := range []int64{-1, 0, 1} {
+		code, _ := Code(secret, time.Unix((cur+off)*30, 0))
+		if step, ok := MatchStep(secret, code, now); !ok || step != cur+off {
+			t.Fatalf("offset %d: step %d ok %v, want %d", off, step, ok, cur+off)
+		}
+	}
+	old, _ := Code(secret, time.Unix((cur-2)*30, 0))
+	if _, ok := MatchStep(secret, old, now); ok {
+		t.Fatal("a code two steps old matched")
+	}
+}
